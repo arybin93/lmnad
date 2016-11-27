@@ -1,0 +1,17 @@
+{% extends 'lmnad/base.html' %}
+{% load markup_tags %}
+
+{% block content %}
+<h3 class="page-header">Cписок публикаций</h3>
+    {% for article in articles|dictsortreversed:"year"%}
+        <h3>{{ article.title }}</h3>
+        <h4>{{ article.authors }}</h4>
+        <p>
+            {{ article.source }}
+            <a href="{{ article.link }}">Download</a>
+            <br>
+            <small><b>{{ article.year }}</b></small>
+        </p>
+        <hr>
+    {% endfor %}
+{% endblock %}

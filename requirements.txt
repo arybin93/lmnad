@@ -1,0 +1,8 @@
+Django>=1.9,<1.10
+djangorestframework
+djangorestframework-filters
+PyYAML
+Markdown
+django-markdown
+django-markup
+MySQL-python

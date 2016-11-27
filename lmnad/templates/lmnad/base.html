@@ -1,0 +1,61 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+</head>
+<html lang="en">
+<head>
+    <title>LMNAD</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="demo_icon.gif" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css"-->
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" integrity="sha384-L/tgI3wSsbb3f/nW9V6Yqlaw3Gj7mpE56LWrhew/c8MIhAYWZ/FNirA64AVkB5pI" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'lmnad/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{% static 'lmnad/app.js' %}"></script>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-left" href="{% url 'home' %}">
+                <img class="logo" src="{% static 'lmnad/logo.png' %}" alt="LMNAD">
+            </a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+          <li><a href="{% url 'home' %}">Главная</a></li>
+          <li><a href="{% url 'people' %}">Люди</a></li>
+          <li><a href="{% url 'articles' %}">Публикации</a></li>
+          <li><a href="{% url 'seminars' %}">Семинары</a></li>
+          <li><a href="{% url 'protections' %}">Защиты</a></li>
+          <li class="dropdown">
+              <a href="#projects" class="dropdown-toggle" data-toggle="dropdown">Проекты <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                  <li><a href="{% url 'igwresearch' %}">IGWResearch</a></li>
+              </ul>
+          </li>
+          <li><a href="{% url 'events' %}">События</a></li>
+          <li><a href="{% url 'contacts' %}">Контакты</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer class="container-fluid text-center">
+  <p>Лаборатория «Моделирования природных и техногенных катастроф © 2016»</p>
+</footer>
+
+</body>
+</html>

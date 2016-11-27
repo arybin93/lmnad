@@ -1,0 +1,9 @@
+{% extends 'lmnad/base.html' %}
+{% load markup_tags %}
+
+{% block content %}
+<h3 class="page-header">Контакты</h3>
+    <h4>
+        {{ contacts.text | apply_markup:"markdown" }}
+    </h4>
+{% endblock %}

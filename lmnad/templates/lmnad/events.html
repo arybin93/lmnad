@@ -1,0 +1,17 @@
+{% extends 'lmnad/base.html' %}
+{% load markup_tags %}
+
+{% block content %}
+<h3 class="page-header">События</h3>
+    {% for event in events|dictsortreversed:"date" %}
+        <h3>{{ event.title }}</h3>
+        <p>
+            {{ event.text | apply_markup:"markdown" }}
+            <br>
+            <small><b>{{ event.date }}</b></small>
+        </p>
+        <hr>
+    {% empty %}
+        <p>Нет ближайших событий</p>
+    {% endfor %}
+{% endblock %}

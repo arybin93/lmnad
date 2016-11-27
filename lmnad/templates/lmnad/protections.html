@@ -1,0 +1,18 @@
+{% extends 'lmnad/base.html' %}
+{% load markup_tags %}
+
+{% block content %}
+<h3 class="page-header">Защиты</h3>
+    {% for protection in protections|dictsortreversed:"date" %}
+        <h4>{{ protection.author }}</h4>
+        <h3>{{ protection.title }}</h3>
+        <p>
+            {{ protection.message | apply_markup:"markdown" }}
+            <br>
+            <small><b>{{ protection.date }}</b></small>
+        </p>
+        <hr>
+    {% empty %}
+        <p>Нет ближайших защит</p>
+    {% endfor %}
+{% endblock %}

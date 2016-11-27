@@ -1,0 +1,29 @@
+{% extends 'lmnad/base.html' %}
+
+{% block content %}
+    <h3 class="page-header">Текущий состав</h3>
+  <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Фамилия Имя Отчество</th>
+            <th>Ученая степень, Должность</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for people in peoples %}
+        <tr>
+            <th class="row">{{ people.id }}</th>
+            <td>{{ people.fullname }}</td>
+            <td>
+            {% if people.degree %}
+                {{ people.degree }}, {{ people.position }}
+            {% else %}
+                {{ people.position }}
+            {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
