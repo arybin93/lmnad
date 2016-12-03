@@ -23,9 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'e^gzvyq8(f!5kg5o*(&a3!j(#0ky)80&8bd+_7i!i^7*3lbbno'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = FALSE
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'188.120.248.147',
+ 	'lmnad.nntu.ru'
+]
 
 
 # Application definition
@@ -84,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'lmnad_db',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '17ff0b32da',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -126,6 +129,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 STATIC_URL = '/static/'
 
