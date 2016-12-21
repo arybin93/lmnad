@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'suit_redactor',
     'suit_ckeditor',
+    'favicon'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -90,6 +91,8 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = 'media/'
+
+FAVICON_PATH = STATIC_URL + 'lmnad/favicon.ico'
 
 MARKDOWN_EDITOR_SKIN = 'simple'
 

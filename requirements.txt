@@ -5,4 +5,5 @@ MySQL-python
 django-suit==0.2.23
 django-suit-redactor
 django-suit-ckeditor
+django-favicon
 Pillow
