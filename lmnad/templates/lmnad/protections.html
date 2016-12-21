@@ -1,5 +1,4 @@
 {% extends 'lmnad/base.html' %}
-{% load markup_tags %}
 
 {% block content %}
 <h3 class="page-header">Защиты</h3>
@@ -7,7 +6,7 @@
         <h4>{{ protection.author }}</h4>
         <h3>{{ protection.title }}</h3>
         <p>
-            {{ protection.message | apply_markup:"markdown" }}
+            {{ protection.message | safe}}
             <br>
             <small><b>{{ protection.date }}</b></small>
         </p>

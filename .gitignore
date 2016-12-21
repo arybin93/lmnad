@@ -1,4 +1,5 @@
 *.pyc
 /media/*
+/.idea/*
 /static/*
 !static/lmnad/

@@ -1,12 +1,11 @@
 {% extends 'lmnad/base.html' %}
-{% load markup_tags %}
 
 {% block content %}
 <h3 class="page-header">Семинары</h3>
         {% for seminar in seminars|dictsortreversed:"date" %}
             <h3>{{ seminar.title }}</h3>
             <p>
-                {{ seminar.text | apply_markup:"markdown" }}
+                {{ seminar.text | safe  }}
                 <br>
                 <small><b>{{ seminar.date }}</b></small>
             </p>

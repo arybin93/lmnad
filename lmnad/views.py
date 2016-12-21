@@ -50,6 +50,13 @@ def igwresearch(request):
     }
     return render(request, 'lmnad/igwresearch.html', context)
 
+def amrk(request):
+    amrk = Page.objects.get(name='amrk')
+    context = {
+        'amrk': amrk
+    }
+    return render(request, 'lmnad/amrk.html', context)
+
 def events(request):
     events = Event.objects.all()
     context = {

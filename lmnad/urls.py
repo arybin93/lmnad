@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^seminars/$', views.seminars, name='seminars'),
     url(r'^protections/$', views.protections, name='protections'),
     url(r'^igwresearch/$', views.igwresearch, name='igwresearch'),
+    url(r'^amrk/$', views.amrk, name='amrk'),
     url(r'^events/$', views.events, name='events'),
     url(r'^contacts/$', views.contacts, name='contacts'),
 ]

@@ -15,15 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 from lmnad import views
 from rest_framework import routers
 
-#router = routers.DefaultRouter()
-#router.register(r'account', views.UserViewSet)
-
 urlpatterns = [
+    url(r'^admin/$', RedirectView.as_view(url='lmnad/article/')),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('lmnad.urls')),
-    url(r'^markdown/', include('django_markdown.urls'))
-    #url(r'^api/v1/', include(router.urls)),
 ]

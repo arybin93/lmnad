@@ -34,27 +34,6 @@ class Seminar(models.Model):
     text = models.TextField(verbose_name=u'Текст')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
 
-    '''
-    def save(self):
-        print 'send email'
-        if self.id:
-            print 'send email'
-            send_mail(
-                'Subject here',
-                'Here is the message.',
-                'arybin93@gmail.com',
-                ['artem.rybin93@yandex.ru'],
-                fail_silently=False,
-            )
-
-            datatuple = (
-                ('Subject', 'Message.', 'from@example.com', ['john@example.com']),
-                ('Subject', 'Message.', 'from@example.com', ['jane@example.com']),
-            )
-            send_mass_mail(datatuple)
-
-        return super(Seminar, self).save()
-     '''
 
 class People(models.Model):
     fullname = models.CharField(max_length=200, verbose_name=u'ФИО')
@@ -65,7 +44,8 @@ class People(models.Model):
 class Article(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Название')
     authors = models.CharField(max_length=200, verbose_name=u'Авторы')
-    abstract = models.CharField(max_length=2000,null=True, blank=True, verbose_name=u'Аннотация')
+    abstract = models.TextField(max_length=2000, null=True, blank=True, verbose_name=u'Аннотация')
+    file = models.FileField(null=True, blank=True, verbose_name="Файл с тектом статьи")
     link = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Ссылка')
     source = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Журнал, страницы')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')

@@ -1,11 +1,10 @@
 {% extends 'lmnad/base.html' %}
-{% load markup_tags %}
 
 {% block content %}
-    <h3 class="page-header">{{ home.title | apply_markup:"markdown" }}
+    <h3 class="page-header">{{ home.title }}
         <small>(Laboratory of Modeling of Natural and Anthropogenic Disasters)</small>
     </h3>
     <p class="text">
-         {{ home.text | apply_markup:"markdown" }}
+         {{ home.text | safe  }}
     </p>
 {% endblock %}
