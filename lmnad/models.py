@@ -45,7 +45,7 @@ class Article(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Название')
     authors = models.CharField(max_length=200, verbose_name=u'Авторы')
     abstract = models.TextField(max_length=2000, null=True, blank=True, verbose_name=u'Аннотация')
-    file = models.FileField(null=True, blank=True, verbose_name="Файл с тектом статьи")
+    file = models.FileField(upload_to='articles/', null=True, blank=True, verbose_name="Файл с тектом статьи")
     link = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Ссылка')
     source = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Журнал, страницы')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
