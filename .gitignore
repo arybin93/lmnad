@@ -2,4 +2,4 @@
 /media/*
 /.idea/*
 /static/*
-!static/lmnad/
+!static/lmnad/*
