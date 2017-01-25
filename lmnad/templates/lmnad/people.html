@@ -7,20 +7,36 @@
         <tr>
             <th>#</th>
             <th>Фамилия Имя Отчество</th>
-            <th>Ученая степень, Должность</th>
+            <th>Cтепень</th>
+            <th>Учёное звание</th>
+            <th>Должность</th>
         </tr>
     </thead>
     <tbody>
     {% for people in peoples %}
         <tr>
             <th class="row">{{ people.id }}</th>
-            <td>{{ people.fullname }}</td>
             <td>
-            {% if people.degree %}
-                {{ people.degree }}, {{ people.position }}
-            {% else %}
-                {{ people.position }}
-            {% endif %}
+                {% if people.account %}
+                    <a href="{{ people.account.get_absolute_url }}">{{ people.fullname }}</a>
+                {% else %}
+                    {{ people.fullname }}
+                {% endif %}
+            </td>
+            <td>
+                {% if people.degree %}
+                    {{ people.degree }}
+                {% endif %}
+            </td>
+            <td>
+                {% if people.rank %}
+                    {{ people.rank }}
+                {% endif %}
+            </td>
+            <td>
+                {% if people.position %}
+                    {{ people.position }}
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

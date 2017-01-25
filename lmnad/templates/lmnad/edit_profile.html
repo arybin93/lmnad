@@ -1,0 +1,22 @@
+{% extends 'lmnad/base.html' %}
+{% load bootstrap_tags %}
+
+{% block content %}
+<h3 class="page-header">Редактирование персональной страницы</h3>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.non_field_errors }}
+        {% for field in form.visible_fields %}
+            <div class="control-group {{ field.html_name }} {% if field.errors %}error{% endif %}">
+                <label class="control-label">{{ field.label }} {% if field.field.required %} *{% endif %}
+                    <div>
+                        {{ field }}
+                        {% if field.errors %}<span class="help-inline">{{ field.errors.as_text }}</span>{% endif %}
+                    </div>
+                </label>
+            </div>
+        {% endfor %}
+        <input type="submit" class="btn btn-primary" value="Сохранить"/>
+    </form>
+{% endblock %}

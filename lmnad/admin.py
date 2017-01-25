@@ -11,26 +11,13 @@ from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
 
 
-class AccountInline(admin.StackedInline):
-    model = Account
-    can_delete = True
-    verbose_name_plural = 'accounts'
-
-# Define a new User admin
-class UserAdmin(BaseUserAdmin):
-    inlines = (AccountInline, )
-
-# Re-register UserAdmin
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
-
-
 class TextFullEditForm(ModelForm):
     class Meta:
         widgets = {
             'message': CKEditorWidget(editor_options={'startupFocus': True}),
             'text': CKEditorWidget(editor_options={'startupFocus': True})
         }
+
 
 class TextEditForm(ModelForm):
     class Meta:
@@ -39,17 +26,35 @@ class TextEditForm(ModelForm):
             'abstract': RedactorWidget(editor_options={'lang': 'en'})
         }
 
+
+class AccountInline(admin.StackedInline):
+    model = Account
+    can_delete = True
+    form = TextEditForm
+    verbose_name_plural = 'accounts'
+
+
+class UserAdmin(BaseUserAdmin):
+    inlines = (AccountInline, )
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+
+
 class ProtectionAdmin(ModelAdmin):
     list_display = ['author', 'title', 'message', 'date']
     form = TextFullEditForm
 
 admin.site.register(Protection, ProtectionAdmin)
 
+
 class PageAdmin(ModelAdmin):
     list_display = ['name', 'title', 'text']
     form = TextFullEditForm
 
 admin.site.register(Page, PageAdmin)
+
 
 class EventAdmin(ModelAdmin):
     list_display = ['title', 'text', 'date']
@@ -65,9 +70,10 @@ admin.site.register(Seminar, SeminarAdmin)
 
 
 class PeopleAdmin(ModelAdmin):
-    list_display = ['fullname', 'degree', 'position']
+    list_display = ['fullname', 'degree', 'rank', 'position']
 
 admin.site.register(People, PeopleAdmin)
+
 
 class ArticleAdmin(ModelAdmin):
     list_display = ['authors', 'title', 'link', 'source', 'date', 'year']

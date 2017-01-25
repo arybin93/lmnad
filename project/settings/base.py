@@ -1,11 +1,11 @@
+# -*- coding: utf-8 -*-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
-INSTALLED_APPS = [
-    'lmnad',
+PREREQ_APPS = [
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,8 +16,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'suit_redactor',
     'suit_ckeditor',
-    'favicon'
+    'favicon',
+    'django_forms_bootstrap',
+    'constance',
+    'constance.backends.database',
+    'ckeditor'
 ]
+
+PROJECT_APPS = [
+   'lmnad'
+]
+
+INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,8 +59,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -70,7 +78,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'en-us'
+
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 
@@ -97,19 +107,36 @@ FAVICON_PATH = STATIC_URL + 'lmnad/favicon.ico'
 MARKDOWN_EDITOR_SKIN = 'simple'
 
 SUIT_CONFIG = {
-    'ADMIN_NAME': 'Admin panel',
+    'ADMIN_NAME': 'Админ панель',
     'LIST_PER_PAGE': 15,
     'SEARCH_URL': '',
     'MENU': (
-        {'app': 'lmnad', 'label': 'Main sections',
+        {
+            'label': u'Настройки',
+            'models': [
+                {'label': u'Основные настройки', 'url': '/admin/constance/config/'},
+                {'label': u'Редактирование страниц', 'url': 'lmnad.page'}
+            ]
+        },
+        {'app': 'lmnad', 'label': u'Основные разделы',
             'models': [
                 'article',
                 'event',
                 'seminar',
                 'protection',
                 'people',
-                'page'
         ]},
-        {'app': 'auth', 'label': 'Authorization', 'icon': 'icon-lock'}
+        {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
     )
 }
+
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+    'FEEDBACK_EMAIL': ('lmnad@nntu.ru', u'email для обратной связи', str),
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = 'lmnad@nntu.ru'
+EMAIL_HOST_PASSWORD = '&62dmRJSLkrs'

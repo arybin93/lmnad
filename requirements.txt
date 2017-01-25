@@ -5,5 +5,8 @@ MySQL-python
 django-suit==0.2.23
 django-suit-redactor
 django-suit-ckeditor
+django-forms-bootstrap
 django-favicon
 Pillow
+django-constance[database]
+django-ckeditor

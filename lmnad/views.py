@@ -1,12 +1,18 @@
-from django.shortcuts import render
+# -*- coding: utf-8 -*-
+from lmnad.models import *
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
-from rest_framework import viewsets
-from rest_framework.decorators import list_route
-from rest_framework.response import Response
-from lmnad.serializers import *
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login
+from django.contrib.auth import logout
+
+from django import forms
+from ckeditor.widgets import CKEditorWidget
+
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from lmnad.models import *
+from django.core.mail import send_mail, BadHeaderError
+from constance import config
 
 def home(request):
     home = Page.objects.get(name='home')
@@ -15,12 +21,14 @@ def home(request):
     }
     return render(request, 'lmnad/home.html', context)
 
+
 def people(request):
     peoples = People.objects.all()
     context = {
         'peoples': peoples
     }
     return render(request, 'lmnad/people.html', context)
+
 
 def articles(request):
     articles = Article.objects.all()
@@ -29,12 +37,14 @@ def articles(request):
     }
     return render(request, 'lmnad/articles.html', context)
 
+
 def seminars(request):
     seminars = Seminar.objects.all()
     context = {
         'seminars': seminars
     }
     return render(request, 'lmnad/seminars.html', context)
+
 
 def protections(request):
     protections = Protection.objects.all()
@@ -43,12 +53,14 @@ def protections(request):
     }
     return render(request, 'lmnad/protections.html', context)
 
+
 def igwresearch(request):
     igwresearch = Page.objects.get(name='igwresearch')
     context = {
         'igwresearch': igwresearch
     }
     return render(request, 'lmnad/igwresearch.html', context)
+
 
 def amrk(request):
     amrk = Page.objects.get(name='amrk')
@@ -57,6 +69,7 @@ def amrk(request):
     }
     return render(request, 'lmnad/amrk.html', context)
 
+
 def events(request):
     events = Event.objects.all()
     context = {
@@ -64,9 +77,134 @@ def events(request):
     }
     return render(request, 'lmnad/events.html', context)
 
+
 def contacts(request):
     contacts = Page.objects.get(name='contacts')
     context = {
         'contacts': contacts
     }
+    return render(request, 'lmnad/contacts.html', context)
+
+
+def profile(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        ## 404
+        pass
+    else:
+        context = {
+            'profile': user
+        }
+        return render(request, 'lmnad/profile.html', context)
+
+
+class EditProfileForm(forms.Form):
+    email = forms.EmailField(label='email', max_length=200, required=False,
+                             widget=forms.TextInput(attrs = {'class': 'form-control'}))
+    is_subscribe = forms.BooleanField(label=u'Подписка на рассылку', required=False)
+    text = forms.CharField(widget=CKEditorWidget(), required=False, label=u'Текст страницы')
+    cv_file = forms.FileField(required=False, label=u'CV файл')
+
+def EditProfileView(request):
+    current_user = request.user
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            is_subscribe = form.cleaned_data['is_subscribe']
+            text = form.cleaned_data['text']
+            current_user.email = email
+            current_user.account.is_subscribe = is_subscribe
+            current_user.account.text = text
+            current_user.account.save()
+            current_user.save()
+
+            context = {
+                'profile': current_user
+            }
+
+            return render(request, 'lmnad/profile.html', context)
+    else:
+        form = EditProfileForm(initial={"email": current_user.email,
+                                        "is_subscribe": current_user.account.is_subscribe,
+                                        "text": current_user.account.text,
+                                        "cv_file": current_user.account.cv_file})
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'lmnad/edit_profile.html', context)
+
+
+
+def logoutView(request):
+    logout(request)
+    return redirect('home')
+
+
+class RegisterFormView(FormView):
+    form_class = UserCreationForm
+
+    success_url = "/login/"
+
+    template_name = "lmnad/register.html"
+
+    def form_valid(self, form):
+        form.save()
+
+        return super(RegisterFormView, self).form_valid(form)
+
+class LoginFormView(FormView):
+    form_class = AuthenticationForm
+
+    template_name = "lmnad/login.html"
+
+    success_url = "/"
+
+    def form_valid(self, form):
+        self.user = form.get_user()
+
+        login(self.request, self.user)
+        return super(LoginFormView, self).form_valid(form)
+
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100, label=u'Тема:',
+                              widget = forms.TextInput(attrs = {'class': 'form-control'}))
+    sender = forms.EmailField(label=u'Отправитель:',
+                              widget = forms.TextInput(attrs = {'class': 'form-control'}))
+    message = forms.CharField(label=u'Текст:',
+                              widget=forms.Textarea(attrs={'class': 'form-control'}))
+    copy = forms.BooleanField(required=False, label=u'Отправить копию себе:')
+
+
+def contactView(request):
+    contacts = Page.objects.get(name='contacts')
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            sender = form.cleaned_data['sender']
+            message = form.cleaned_data['message']
+            copy = form.cleaned_data['copy']
+
+            recipient_list = config.FEEDBACK_EMAIL.split(',')
+            if copy:
+                recipient_list.append(sender)
+            try:
+                send_mail(subject, message, 'lmnad@nntu.ru', recipient_list)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found')
+            return render(request, 'lmnad/thanks.html')
+    else:
+        form = ContactForm()
+
+    context = {
+        'contacts': contacts,
+        'form': form
+    }
+
     return render(request, 'lmnad/contacts.html', context)

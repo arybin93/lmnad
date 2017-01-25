@@ -11,5 +11,10 @@ urlpatterns = [
     url(r'^igwresearch/$', views.igwresearch, name='igwresearch'),
     url(r'^amrk/$', views.amrk, name='amrk'),
     url(r'^events/$', views.events, name='events'),
-    url(r'^contacts/$', views.contacts, name='contacts'),
+    url(r'^contacts/$', views.contactView, name='contacts'),
+    url(r'^register/$', views.RegisterFormView.as_view(), name='register'),
+    url(r'^login/$', views.LoginFormView.as_view(), name='login'),
+    url(r'^logout/$', views.logoutView, name='logout'),
+    url(r'^profile/(?P<pk>\d+)/$', views.profile), # , name='profile'
+    url(r'^edit/$', views.EditProfileView, name='edit_profile')
 ]

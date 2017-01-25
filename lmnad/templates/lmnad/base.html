@@ -44,6 +44,16 @@
           <li><a href="{% url 'events' %}">События</a></li>
           <li><a href="{% url 'contacts' %}">Контакты</a></li>
       </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+      {% if user.is_authenticated %}
+          <li><a href="{{ user.account.get_absolute_url }}">{{ user }}</a></li>
+          <li><a href="{% url 'logout' %}">Выйти</a></li>
+      {% else %}
+          <li><a href="{% url 'register' %}">Регистрация</a></li>
+          <li><a href="{% url 'login' %}">Вход</a></li>
+      {% endif %}
+      </ul>
     </div>
   </div>
 </nav>
