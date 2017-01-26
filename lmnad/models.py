@@ -14,6 +14,9 @@ class Account(models.Model):
     def __unicode__(self):
         return unicode(self.user)
 
+    def get_absolute_url(self):
+        return "/profile/%s/" % self.user.username
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'

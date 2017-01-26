@@ -18,7 +18,7 @@
             <th class="row">{{ people.id }}</th>
             <td>
                 {% if people.account %}
-                    <a href="{{ people.get_absolute_url }}">{{ people.fullname }}</a>
+                    <a href="{{ people.account.get_absolute_url }}">{{ people.fullname }}</a>
                 {% else %}
                     {{ people.fullname }}
                 {% endif %}
