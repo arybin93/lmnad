@@ -47,7 +47,7 @@
 
       <ul class="nav navbar-nav navbar-right">
       {% if user.is_authenticated %}
-          <li><a href="{{ user.account.get_absolute_url }}">{{ user }}</a></li>
+          <li><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
           <li><a href="{% url 'logout' %}">Выйти</a></li>
       {% else %}
           <li><a href="{% url 'register' %}">Регистрация</a></li>

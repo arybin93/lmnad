@@ -140,3 +140,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_HOST_USER = 'lmnad@nntu.ru'
 EMAIL_HOST_PASSWORD = '&62dmRJSLkrs'
+
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user': lambda u: "/profile/%s/" % u.username,
+}

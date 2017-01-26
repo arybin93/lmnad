@@ -86,9 +86,9 @@ def contacts(request):
     return render(request, 'lmnad/contacts.html', context)
 
 
-def profile(request, pk):
+def profile(request, username):
     try:
-        user = User.objects.get(pk=pk)
+        user = User.objects.get(username=username)
     except User.DoesNotExist:
         ## 404
         pass
@@ -114,10 +114,22 @@ def EditProfileView(request):
             email = form.cleaned_data['email']
             is_subscribe = form.cleaned_data['is_subscribe']
             text = form.cleaned_data['text']
+            cv_file = form.cleaned_data['cv_file']
+
             current_user.email = email
-            current_user.account.is_subscribe = is_subscribe
-            current_user.account.text = text
-            current_user.account.save()
+            try:
+                account = Account.objects.get(user_id=current_user.id)
+            except Account.DoesNotExist:
+                account = Account.objects.create(is_subscribe=is_subscribe,
+                                                 text=text,
+                                                 cv_file=cv_file,
+                                                 user_id=current_user.id)
+            else:
+                current_user.account.is_subscribe = is_subscribe
+                current_user.account.text = text
+                current_user.account.cv_file = cv_file
+                current_user.account.save()
+
             current_user.save()
 
             context = {
@@ -126,10 +138,20 @@ def EditProfileView(request):
 
             return render(request, 'lmnad/profile.html', context)
     else:
-        form = EditProfileForm(initial={"email": current_user.email,
-                                        "is_subscribe": current_user.account.is_subscribe,
-                                        "text": current_user.account.text,
-                                        "cv_file": current_user.account.cv_file})
+        try:
+            current_user.account
+        except Account.DoesNotExist:
+            init = {}
+        else:
+            is_subscribe = current_user.account.is_subscribe
+            text = current_user.account.text
+            cv_file = current_user.account.cv_file
+            init = {"email": current_user.email,
+                    "is_subscribe": is_subscribe,
+                    "text": text,
+                    "cv_file": cv_file}
+
+        form = EditProfileForm(initial=init)
 
     context = {
         'form': form
