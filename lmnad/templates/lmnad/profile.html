@@ -10,7 +10,9 @@
             <a href="{{ profile.account.cv_file }}">Скачать CV</a>
         {% endif %}
         <br>
-        <a href="{% url 'edit_profile' %}">Редактировать</a>
+        <form action="{% url 'edit_profile' %}">
+            <button type="submit" class="btn btn-primary">Редактировать</button>
+        </form>
     {% else %}
         <div>{{ profile.account.text | safe }}</div>
         {% if profile.account.cv_file %}

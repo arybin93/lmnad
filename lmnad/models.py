@@ -2,7 +2,17 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
+from constance import config
 from django.core.mail import send_mail
+from django.template.loader import get_template
+
+NO = 0
+YES = 1
+
+mail_choice = (
+    (NO, 'Нет'),
+    (YES, 'Да')
+)
 
 # Create your models here.
 class Account(models.Model):
@@ -12,10 +22,18 @@ class Account(models.Model):
     is_subscribe = models.BooleanField(default=True, verbose_name=u'Подписка на email оповещения')
 
     def __unicode__(self):
-        return unicode(self.user)
+        return unicode(self.user.get_full_name())
 
     def get_absolute_url(self):
         return "/profile/%s/" % self.user.username
+
+    def get_name(self):
+        try:
+            person = People.objects.get(account=self)
+        except:
+            return self
+        else:
+            return person.fullname
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -27,7 +45,12 @@ class People(models.Model):
     degree = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Степень')
     rank = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Учёное звание')
     position = models.CharField(max_length=50, verbose_name=u'Должность')
-    account = models.OneToOneField(Account, blank=True, null=True)
+    account = models.OneToOneField(Account, blank=True, null=True, verbose_name=u'Аккаунт сотрудника')
+    science_index = models.TextField(max_length=500, null=True, blank=True, verbose_name=u'Научный индекс')
+    order_by = models.PositiveIntegerField(verbose_name=u'Сортировать', default=0)
+
+    class MPTTMeta:
+        order_insertion_by = ['order_by']
 
     def __unicode__(self):
         return unicode(self.fullname)
@@ -42,6 +65,31 @@ class Protection(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Название работы')
     message = models.TextField(verbose_name=u'Текст')
     date = models.DateField(verbose_name=u'Дата')
+    is_send_email = models.BooleanField(default=NO, choices=mail_choice,
+                                        verbose_name=u'Сделать рассылку')
+
+    def save(self, *args, **kwargs):
+        if self.is_send_email == YES:
+            template_text = get_template('lmnad/send_protection_email.txt')
+            context = {
+                'title': self.title,
+                'author': self.author,
+                'text': self.message,
+                'date': self.date
+            }
+
+            recipient_list = config.LIST_EMAILS.split(',')
+            body_text = template_text.render(context)
+            send_mail(
+                self.title,
+                body_text,
+                from_email='lmnad@nntu.ru',
+                recipient_list=recipient_list,
+                fail_silently=True
+            )
+
+        super(Protection, self).save(*args, **kwargs)
+
 
     def __unicode__(self):
         return unicode(self.title)
@@ -64,11 +112,64 @@ class Page(models.Model):
         verbose_name_plural = 'Страницы'
 
 
+class Grant(models.Model):
+    type = models.CharField(max_length=50, verbose_name=u'Тип')
+    number = models.IntegerField(verbose_name=u'Номер')
+    name = models.CharField(max_length=500, verbose_name=u'Текст')
+    head = models.ForeignKey(Account, related_name='head', verbose_name=u'Руководитель')
+    members = models.ManyToManyField(Account, related_name='members', verbose_name=u'Участники')
+    date_start = models.DateField(verbose_name='Дата начала')
+    date_end = models.DateField(verbose_name='Дата конца')
+    abstract = models.TextField(verbose_name=u'Аннотация')
+    reference = models.CharField(max_length=500, verbose_name=u'Ссылка на грант')
+
+    def get_absolute_url(self):
+        return "%s/" % str(self.number)
+
+    def get_name_head(self):
+        try:
+            person = People.objects.get(account=self.head)
+        except:
+            return self.head.user.get_short_name()
+        else:
+            return person.fullname
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    class Meta:
+        verbose_name = 'Грант'
+        verbose_name_plural = 'Гранты'
+
+
+class Project(models.Model):
+    name = models.CharField(max_length=50, verbose_name=u'Название проекта на английском')
+    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
+    short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
+    text = models.TextField(verbose_name=u'Текст')
+
+    def get_absolute_url(self):
+        return "%s/" % self.name
+
+    def __unicode__(self):
+        return unicode(self.title)
+
+    class Meta:
+        verbose_name = 'Проект'
+        verbose_name_plural = 'Проекты'
+
 
 class Event(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     text = models.TextField(verbose_name=u'Текст')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
+    is_send_email = models.BooleanField(default=NO, choices=mail_choice,
+                                        verbose_name=u'Сделать рассылку')
+
+    def save(self, *args, **kwargs):
+        if self.is_send_email == YES:
+            send_email(self.title, self.text, self.date)
+        super(Event, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return unicode(self.title)
@@ -82,6 +183,13 @@ class Seminar(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     text = models.TextField(verbose_name=u'Текст')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
+    is_send_email = models.BooleanField(default=NO, choices=mail_choice,
+                                        verbose_name=u'Сделать рассылку')
+
+    def save(self, *args, **kwargs):
+        if self.is_send_email == YES:
+            send_email(self.title, self.text, self.date)
+        super(Seminar, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return unicode(self.title)
@@ -107,6 +215,25 @@ class Article(models.Model):
     class Meta:
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
+
+
+def send_email(title, text, date):
+    template_text = get_template('lmnad/send_email.txt')
+    context = {
+        'title': title,
+        'text': text,
+        'date': date
+    }
+
+    recipient_list = config.LIST_EMAILS.split(',')
+    body_text = template_text.render(context)
+    send_mail(
+        title,
+        body_text,
+        from_email='lmnad@nntu.ru',
+        recipient_list=recipient_list,
+        fail_silently=True
+    )
 
 
 # IGWAtlas, need separate app for IGWAtlas

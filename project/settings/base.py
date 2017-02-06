@@ -125,6 +125,8 @@ SUIT_CONFIG = {
                 'seminar',
                 'protection',
                 'people',
+                'grant',
+                'project'
         ]},
         {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
     )
@@ -133,6 +135,7 @@ SUIT_CONFIG = {
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_CONFIG = {
     'FEEDBACK_EMAIL': ('lmnad@nntu.ru', u'email для обратной связи', str),
+    'LIST_EMAILS': ('arybin93@gmail.com', u'Список для рассылки', str)
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

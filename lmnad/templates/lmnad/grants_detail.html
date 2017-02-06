@@ -1,0 +1,15 @@
+{% extends 'lmnad/base.html' %}
+
+{% block content %}
+<h3 class="page-header">{{ grant.name }}</h3>
+    <h4><b>Тип:</b> {{ grant.type }}</h4>
+    <h4><b>Номер:</b> {{ grant.number }}</h4>
+    <h4><b>Руководитель:</b> <a href="{{ grant.head.get_absolute_url }}">{{ grant.get_name_head }}</a></h4>
+    <h4><b>Участники:</b></h4>
+    {% for member in grant.members.all %}
+        <a href="{{ member.get_absolute_url }}">{{ member.get_name }}</a>
+    {% endfor %}
+    <h4>С {{ grant.date_start }} по {{ grant.date_end }}</h4>
+    <hr>
+    {{ grant.abstract | safe }}
+{% endblock %}

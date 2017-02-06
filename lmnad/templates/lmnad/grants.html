@@ -1,0 +1,39 @@
+{% extends 'lmnad/base.html' %}
+
+{% block content %}
+<h3 class="page-header">Реализуемые гранты, программы, научные проекты</h3>
+    <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Номер гранта</th>
+            <th>Тип</th>
+            <th>Название</th>
+            <th>Руководитель</th>
+            <th>Сроки</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for grant in grants %}
+        <tr>
+            <th class="row">{{ grant.number }}</th>
+            <td>
+                {{ grant.type }}
+            </td>
+            <td>
+                {{ grant.name }}
+            </td>
+            <td>
+                <a href="{{ grant.head.get_absolute_url }}">{{ grant.get_name_head }}</a>
+            </td>
+            <td>
+                <p> c {{ grant.date_start }} по {{ grant.date_end }}</p>
+            </td>
+            <td>
+                <a href="{{ grant.get_absolute_url }}">Описание</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

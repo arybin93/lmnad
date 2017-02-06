@@ -9,13 +9,15 @@ from django import forms
 from django.contrib.admin import ModelAdmin
 from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
-
+from mptt.admin import MPTTModelAdmin
+from suit.admin import SortableModelAdmin
 
 class TextFullEditForm(ModelForm):
     class Meta:
         widgets = {
             'message': CKEditorWidget(editor_options={'startupFocus': True}),
-            'text': CKEditorWidget(editor_options={'startupFocus': True})
+            'text': CKEditorWidget(editor_options={'startupFocus': True}),
+            'short_text': CKEditorWidget(editor_options={'startupFocus': True})
         }
 
 
@@ -23,7 +25,9 @@ class TextEditForm(ModelForm):
     class Meta:
         widgets = {
             'text': RedactorWidget(editor_options={'lang': 'en'}),
-            'abstract': RedactorWidget(editor_options={'lang': 'en'})
+            'abstract': RedactorWidget(editor_options={'lang': 'en'}),
+            'science_index': RedactorWidget(editor_options={'lang': 'en'}),
+            'elibrary': RedactorWidget(editor_options={'lang': 'en'})
         }
 
 
@@ -69,15 +73,33 @@ class SeminarAdmin(ModelAdmin):
 admin.site.register(Seminar, SeminarAdmin)
 
 
-class PeopleAdmin(ModelAdmin):
-    list_display = ['fullname', 'degree', 'rank', 'position']
+class PeopleAdmin(SortableModelAdmin):
+    list_display = ['fullname', 'degree', 'rank', 'position', 'order_by']
+    search_fields = ['fullname']
+    form = TextEditForm
+    sortable = 'order_by'
 
 admin.site.register(People, PeopleAdmin)
 
 
 class ArticleAdmin(ModelAdmin):
-    list_display = ['authors', 'title', 'link', 'source', 'date', 'year']
-    search_fields = ['authors', 'title']
+    list_display = ['authors', 'title', 'source', 'year']
+    search_fields = ['authors', 'title', 'year']
     form = TextEditForm
 
 admin.site.register(Article, ArticleAdmin)
+
+
+class GrantAdmin(ModelAdmin):
+    list_display = ['type', 'number', 'name', 'head']
+    search_fields = ['name', 'number', 'head']
+    form = TextEditForm
+
+admin.site.register(Grant, GrantAdmin)
+
+
+class ProjectAdmin(ModelAdmin):
+    list_display = ['title', 'short_text']
+    form = TextFullEditForm
+
+admin.site.register(Project, ProjectAdmin)

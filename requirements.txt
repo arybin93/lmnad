@@ -10,3 +10,4 @@ django-favicon
 Pillow
 django-constance[database]
 django-ckeditor
+django-mptt

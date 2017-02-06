@@ -1,0 +1,6 @@
+{% extends 'lmnad/base.html' %}
+
+{% block content %}
+<h3 class="page-header">{{ project.title }}</h3>
+    {{ project.text | safe }}
+{% endblock %}

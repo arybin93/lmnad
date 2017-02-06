@@ -54,20 +54,38 @@ def protections(request):
     return render(request, 'lmnad/protections.html', context)
 
 
-def igwresearch(request):
-    igwresearch = Page.objects.get(name='igwresearch')
+def grants(request):
+    grants = Grant.objects.all()
+
     context = {
-        'igwresearch': igwresearch
+        'grants': grants
     }
-    return render(request, 'lmnad/igwresearch.html', context)
+    return render(request, 'lmnad/grants.html', context)
 
 
-def amrk(request):
-    amrk = Page.objects.get(name='amrk')
+def grants_detail(request, number):
+    grant = Grant.objects.get(number=int(number))
+
     context = {
-        'amrk': amrk
+        'grant': grant
     }
-    return render(request, 'lmnad/amrk.html', context)
+    return render(request, 'lmnad/grants_detail.html', context)
+
+def projects(request):
+    projects = Project.objects.all()
+    context = {
+        'projects': projects
+    }
+    return render(request, 'lmnad/projects.html', context)
+
+
+def project_detail(request, name):
+    project = Project.objects.get(name=name)
+
+    context = {
+        'project': project
+    }
+    return render(request, 'lmnad/projects_detail.html', context)
 
 
 def events(request):
@@ -105,6 +123,7 @@ class EditProfileForm(forms.Form):
     is_subscribe = forms.BooleanField(label=u'Подписка на рассылку', required=False)
     text = forms.CharField(widget=CKEditorWidget(), required=False, label=u'Текст страницы')
     cv_file = forms.FileField(required=False, label=u'CV файл')
+
 
 def EditProfileView(request):
     current_user = request.user
@@ -160,7 +179,6 @@ def EditProfileView(request):
     return render(request, 'lmnad/edit_profile.html', context)
 
 
-
 def logoutView(request):
     logout(request)
     return redirect('home')
@@ -177,6 +195,7 @@ class RegisterFormView(FormView):
         form.save()
 
         return super(RegisterFormView, self).form_valid(form)
+
 
 class LoginFormView(FormView):
     form_class = AuthenticationForm
