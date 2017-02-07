@@ -7,6 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Application definition
 PREREQ_APPS = [
     'suit',
+    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -115,7 +116,8 @@ SUIT_CONFIG = {
             'label': u'Настройки',
             'models': [
                 {'label': u'Основные настройки', 'url': '/admin/constance/config/'},
-                {'label': u'Редактирование страниц', 'url': 'lmnad.page'}
+                {'label': u'Редактирование страниц', 'url': 'lmnad.page'},
+                {'label': u'Файловый менеджер', 'url': '/admin/filebrowser/browse/'}
             ]
         },
         {'app': 'lmnad', 'label': u'Основные разделы',
@@ -147,3 +149,7 @@ EMAIL_HOST_PASSWORD = '&62dmRJSLkrs'
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/profile/%s/" % u.username,
 }
+
+# file browser
+FILEBROWSER_SUIT_TEMPLATE = True
+FILEBROWSER_DIRECTORY = 'uploads/'

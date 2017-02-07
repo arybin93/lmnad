@@ -2,14 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.forms import ModelForm
 from lmnad.models import *
-from django_markdown.admin import MarkdownModelAdmin
-from django_markdown.widgets import AdminMarkdownWidget
-from django.db.models import TextField
-from django import forms
 from django.contrib.admin import ModelAdmin
 from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
-from mptt.admin import MPTTModelAdmin
 from suit.admin import SortableModelAdmin
 
 class TextFullEditForm(ModelForm):
@@ -97,9 +92,59 @@ class GrantAdmin(ModelAdmin):
 
 admin.site.register(Grant, GrantAdmin)
 
+class Editor(ModelForm):
+    class Meta:
+        widgets = {
+            'short_text': CKEditorWidget(editor_options={'startupFocus': True}),
+            'text': CKEditorWidget()
+        }
 
-class ProjectAdmin(ModelAdmin):
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
+class ProjectAdmin(admin.ModelAdmin):
+    form = Editor
+
+    fieldsets = (
+        (None, {
+            'fields': ('name',)
+        }),
+        (None, {
+            'fields': ('title',)
+        }),
+        (None, {
+            'classes': ('suit-tab suit-tab-media',),
+            'fields': ['image'],
+        }),
+        ('Short text', {
+            'classes': ('full-width',),
+            'fields': ('short_text',)
+        }),
+        ('Text', {
+            'classes': ('full-width',),
+            'fields': ('text',)
+        }),
+    )
     list_display = ['title', 'short_text']
-    form = TextFullEditForm
+
+    suit_form_tabs = (('media', 'Media'),)
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return '<img src="%s" />' % obj.image.url_thumbnail
+        else:
+            return ""
+    thumbnail.allow_tags = True
+
 
 admin.site.register(Project, ProjectAdmin)
+
+
+#class ProjectAdmin(ModelAdmin):
+#    list_display = ['title', 'short_text']
+#    form = TextFullEditForm
+
+#admin.site.register(Project, ProjectAdmin)

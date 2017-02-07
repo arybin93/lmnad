@@ -5,6 +5,7 @@ from django.db import models
 from constance import config
 from django.core.mail import send_mail
 from django.template.loader import get_template
+from filebrowser.fields import FileBrowseField
 
 NO = 0
 YES = 1
@@ -150,6 +151,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
     text = models.TextField(verbose_name=u'Текст')
+    image = FileBrowseField(u'Изображения', max_length=200, blank=True, null=True)
 
     def get_absolute_url(self):
         return "%s/" % self.name

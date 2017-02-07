@@ -11,3 +11,4 @@ Pillow
 django-constance[database]
 django-ckeditor
 django-mptt
+django-media-manager
