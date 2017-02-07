@@ -25,7 +25,7 @@ class Account(models.Model):
         if self.user.get_full_name():
             return unicode(self.user.get_full_name())
         else:
-            return self.user
+            return unicode(self.user)
 
     def get_absolute_url(self):
         return "/profile/%s/" % self.user.username
