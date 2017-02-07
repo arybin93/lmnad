@@ -22,7 +22,10 @@ class Account(models.Model):
     is_subscribe = models.BooleanField(default=True, verbose_name=u'Подписка на email оповещения')
 
     def __unicode__(self):
-        return unicode(self.user.get_full_name())
+        if self.user.get_full_name():
+            return unicode(self.user.get_full_name())
+        else:
+            return self.user
 
     def get_absolute_url(self):
         return "/profile/%s/" % self.user.username
