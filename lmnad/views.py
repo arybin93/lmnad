@@ -7,7 +7,7 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 
 from django import forms
-from ckeditor.widgets import CKEditorWidget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -121,7 +121,7 @@ class EditProfileForm(forms.Form):
     email = forms.EmailField(label='email', max_length=200, required=False,
                              widget=forms.TextInput(attrs = {'class': 'form-control'}))
     is_subscribe = forms.BooleanField(label=u'Подписка на рассылку', required=False)
-    text = forms.CharField(widget=CKEditorWidget(), required=False, label=u'Текст страницы')
+    text = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы')
     cv_file = forms.FileField(required=False, label=u'CV файл')
 
 

@@ -25,20 +25,32 @@ class TextEditForm(ModelForm):
             'elibrary': RedactorWidget(editor_options={'lang': 'en'})
         }
 
+class Editor(ModelForm):
+    class Meta:
+        widgets = {
+            'short_text': CKEditorWidget(editor_options={'startupFocus': True}),
+            'text': CKEditorWidget()
+        }
 
-class AccountInline(admin.StackedInline):
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
+class AccountAdmin(admin.ModelAdmin):
+    form = Editor
     model = Account
-    can_delete = True
-    form = TextEditForm
-    verbose_name_plural = 'accounts'
+    suit_form_tabs = (('media', 'Media'),)
 
+    def thumbnail(self, obj):
+        if obj.image:
+            return '<img src="%s" />' % obj.image.url_thumbnail
+        else:
+            return ""
+    thumbnail.allow_tags = True
 
-class UserAdmin(BaseUserAdmin):
-    inlines = (AccountInline, )
-
-# Re-register UserAdmin
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+admin.site.register(Account, AccountAdmin)
 
 
 class ProtectionAdmin(ModelAdmin):
@@ -92,44 +104,9 @@ class GrantAdmin(ModelAdmin):
 
 admin.site.register(Grant, GrantAdmin)
 
-class Editor(ModelForm):
-    class Meta:
-        widgets = {
-            'short_text': CKEditorWidget(editor_options={'startupFocus': True}),
-            'text': CKEditorWidget()
-        }
-
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
-        }
-
 class ProjectAdmin(admin.ModelAdmin):
     form = Editor
-
-    fieldsets = (
-        (None, {
-            'fields': ('name',)
-        }),
-        (None, {
-            'fields': ('title',)
-        }),
-        (None, {
-            'classes': ('suit-tab suit-tab-media',),
-            'fields': ['image'],
-        }),
-        ('Short text', {
-            'classes': ('full-width',),
-            'fields': ('short_text',)
-        }),
-        ('Text', {
-            'classes': ('full-width',),
-            'fields': ('text',)
-        }),
-    )
     list_display = ['title', 'short_text']
-
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
@@ -139,12 +116,4 @@ class ProjectAdmin(admin.ModelAdmin):
             return ""
     thumbnail.allow_tags = True
 
-
 admin.site.register(Project, ProjectAdmin)
-
-
-#class ProjectAdmin(ModelAdmin):
-#    list_display = ['title', 'short_text']
-#    form = TextFullEditForm
-
-#admin.site.register(Project, ProjectAdmin)

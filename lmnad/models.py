@@ -19,7 +19,7 @@ mail_choice = (
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True, verbose_name=u'Персональная страница')
-    cv_file = models.FileField(upload_to='users/cv/', null=True, blank=True, verbose_name=u'Файл CV')
+    cv_file = models.FileField(upload_to='uploads/users/cv/', null=True, blank=True, verbose_name=u'Файл CV')
     is_subscribe = models.BooleanField(default=True, verbose_name=u'Подписка на email оповещения')
 
     def __unicode__(self):
@@ -40,8 +40,8 @@ class Account(models.Model):
             return person.fullname
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = 'Персональная страница'
+        verbose_name_plural = 'Персональные страницы'
 
 
 class People(models.Model):
@@ -151,7 +151,6 @@ class Project(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
     text = models.TextField(verbose_name=u'Текст')
-    image = FileBrowseField(u'Изображения', max_length=200, blank=True, null=True)
 
     def get_absolute_url(self):
         return "%s/" % self.name
@@ -208,7 +207,7 @@ class Article(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Название')
     authors = models.CharField(max_length=200, verbose_name=u'Авторы')
     abstract = models.TextField(max_length=2000, null=True, blank=True, verbose_name=u'Аннотация')
-    file = models.FileField(upload_to='articles/', null=True, blank=True, verbose_name="Файл с тектом статьи")
+    file = models.FileField(upload_to='uploads/articles/', null=True, blank=True, verbose_name="Файл с тектом статьи")
     link = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Ссылка')
     source = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Журнал, страницы')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')

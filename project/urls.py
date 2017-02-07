@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^admin/$', RedirectView.as_view(url='lmnad/article/')),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('lmnad.urls')),
-    url(r'^', include('favicon.urls'))
+    url(r'^', include('favicon.urls')),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]

@@ -21,7 +21,8 @@ PREREQ_APPS = [
     'django_forms_bootstrap',
     'constance',
     'constance.backends.database',
-    'ckeditor'
+    'ckeditor',
+    'ckeditor_uploader'
 ]
 
 PROJECT_APPS = [
@@ -117,7 +118,8 @@ SUIT_CONFIG = {
             'models': [
                 {'label': u'Основные настройки', 'url': '/admin/constance/config/'},
                 {'label': u'Редактирование страниц', 'url': 'lmnad.page'},
-                {'label': u'Файловый менеджер', 'url': '/admin/filebrowser/browse/'}
+                {'label': u'Файловый менеджер', 'url': '/admin/filebrowser/browse/'},
+                {'label': u'Персональные страницы', 'url': 'lmnad.account'}
             ]
         },
         {'app': 'lmnad', 'label': u'Основные разделы',
@@ -153,3 +155,8 @@ ABSOLUTE_URL_OVERRIDES = {
 # file browser
 FILEBROWSER_SUIT_TEMPLATE = True
 FILEBROWSER_DIRECTORY = 'uploads/'
+
+CKEDITOR_UPLOAD_PATH = "uploads/users/photo"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_RESTRICT_BY_USER = True
+CKEDITOR_BROWSE_SHOW_DIRS = True
