@@ -8,7 +8,7 @@
             <th>Номер гранта</th>
             <th>Тип</th>
             <th>Название</th>
-            <th>Руководитель</th>
+            <th>Руководители</th>
             <th>Сроки</th>
             <th></th>
         </tr>
@@ -16,7 +16,7 @@
     <tbody>
     {% for grant in grants %}
         <tr>
-            <th class="row">{{ grant.number }}</th>
+            <th class="row"><a href="{{ grant.get_absolute_url }}">{{ grant.number }}</a></th>
             <td>
                 {{ grant.type }}
             </td>
@@ -24,13 +24,16 @@
                 {{ grant.name }}
             </td>
             <td>
-                <a href="{{ grant.head.get_absolute_url }}">{{ grant.get_name_head }}</a>
+                {% for head in grant.head.all %}
+                    {% if head.account %}
+                         <a href="{{ head.get_absolute_url }}">{{ head}}</a>;
+                    {% else %}
+                        {{ head }};
+                    {% endif %}
+                {% endfor %}
             </td>
             <td>
-                <p> c {{ grant.date_start }} по {{ grant.date_end }}</p>
-            </td>
-            <td>
-                <a href="{{ grant.get_absolute_url }}">Описание</a>
+                <p> С {{ grant.date_start|date:"M. Y" }} по {{ grant.date_end|date:"M. Y" }} </p>
             </td>
         </tr>
     {% endfor %}

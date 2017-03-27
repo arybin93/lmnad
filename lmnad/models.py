@@ -56,6 +56,10 @@ class People(models.Model):
     class MPTTMeta:
         order_insertion_by = ['order_by']
 
+    def get_absolute_url(self):
+        if self.account:
+            return "/profile/%s/" % self.account.user.username
+
     def __unicode__(self):
         return unicode(self.fullname)
 
@@ -118,14 +122,15 @@ class Page(models.Model):
 
 class Grant(models.Model):
     type = models.CharField(max_length=50, verbose_name=u'Тип')
-    number = models.IntegerField(verbose_name=u'Номер')
+    number = models.CharField(max_length=50, verbose_name=u'Номер')
     name = models.CharField(max_length=500, verbose_name=u'Текст')
-    head = models.ForeignKey(Account, related_name='head', verbose_name=u'Руководитель')
-    members = models.ManyToManyField(Account, related_name='members', verbose_name=u'Участники')
+    head = models.ManyToManyField(People, related_name='head', verbose_name=u'Руководители')
+    members = models.ManyToManyField(People, related_name='members', verbose_name=u'Участники')
     date_start = models.DateField(verbose_name='Дата начала')
     date_end = models.DateField(verbose_name='Дата конца')
-    abstract = models.TextField(verbose_name=u'Аннотация')
-    reference = models.CharField(max_length=500, verbose_name=u'Ссылка на грант')
+    abstract = models.TextField(blank=True, verbose_name=u'Аннотация')
+    reference = models.CharField(max_length=500, blank=True, verbose_name=u'Ссылка на грант')
+    reference_result = models.CharField(max_length=500, blank=True, verbose_name=u'Cсылка на результаты конкурса')
 
     def get_absolute_url(self):
         return "%s/" % str(self.number)

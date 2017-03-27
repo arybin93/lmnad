@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.forms import ModelForm
+from suit.widgets import SuitDateWidget
+
 from lmnad.models import *
 from django.contrib.admin import ModelAdmin
 from suit_ckeditor.widgets import CKEditorWidget
@@ -96,11 +97,21 @@ class ArticleAdmin(ModelAdmin):
 
 admin.site.register(Article, ArticleAdmin)
 
+class GrantForm(ModelForm):
+    class Meta:
+        model = Grant
+        fields = '__all__'
+        widgets = {
+            'date_start': SuitDateWidget(),
+            'date_end': SuitDateWidget(),
+            'text': RedactorWidget(editor_options={'lang': 'en'})
+        }
 
 class GrantAdmin(ModelAdmin):
-    list_display = ['type', 'number', 'name', 'head']
+    form = GrantForm
+    list_display = ['type', 'number', 'name']
     search_fields = ['name', 'number', 'head']
-    form = TextEditForm
+    form = GrantForm
 
 admin.site.register(Grant, GrantAdmin)
 
