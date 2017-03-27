@@ -133,7 +133,7 @@ class Grant(models.Model):
     reference_result = models.CharField(max_length=500, blank=True, verbose_name=u'Cсылка на результаты конкурса')
 
     def get_absolute_url(self):
-        return "%s/" % str(self.number)
+        return "%s/" % self.number
 
     def get_name_head(self):
         try:
