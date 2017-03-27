@@ -160,3 +160,5 @@ CKEDITOR_UPLOAD_PATH = "uploads/users/photo"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_RESTRICT_BY_USER = True
 CKEDITOR_BROWSE_SHOW_DIRS = True
+
+ADMINS = [('Admin', 'arybin93@gmail.com')]
