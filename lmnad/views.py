@@ -64,7 +64,7 @@ def grants(request):
 
 
 def grants_detail(request, number):
-    grant = Grant.objects.get(number=int(number))
+    grant = Grant.objects.get(number=number)
 
     context = {
         'grant': grant
