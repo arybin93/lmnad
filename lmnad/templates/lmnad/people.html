@@ -11,6 +11,7 @@
             <th>Учёное звание</th>
             <th>Должность</th>
             <th>Science Index</th>
+            <th>Время работы</th>
         </tr>
     </thead>
     <tbody>
@@ -44,8 +45,69 @@
                     {{ people.science_index | safe  }}
                 {% endif %}
             </td>
+            <td>
+                {% if people.date_start %}
+                    С {{ people.date_start|date:"M. Y" }}
+                {% endif %}
+            </td>
         </tr>
     {% endfor %}
     </tbody>
   </table>
+
+    {% if peoples_old %}
+        <h3 class="page-header">Бывшие сотрудники лаборатории</h3>
+        <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Фамилия Имя Отчество</th>
+                <th>Cтепень</th>
+                <th>Учёное звание</th>
+                <th>Должность</th>
+                <th>Science Index</th>
+                <th>Время работы</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for people in peoples_old|dictsort:"order_by" %}
+            <tr>
+                <th class="row">{{ people.order_by|add:"+1" }}</th>
+                <td>
+                    {% if people.account %}
+                        <a href="{{ people.account.get_absolute_url }}">{{ people.fullname }}</a>
+                    {% else %}
+                        {{ people.fullname }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if people.degree %}
+                        {{ people.degree }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if people.rank %}
+                        {{ people.rank }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if people.position %}
+                        {{ people.position }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if people.science_index %}
+                        {{ people.science_index | safe  }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if people.date_start and people.date_end %}
+                        {{ people.date_start|date:"M. Y" }} - {{ people.date_end|date:"M. Y" }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

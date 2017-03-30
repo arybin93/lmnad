@@ -7,14 +7,6 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from filebrowser.fields import FileBrowseField
 
-NO = 0
-YES = 1
-
-mail_choice = (
-    (NO, 'Нет'),
-    (YES, 'Да')
-)
-
 # Create your models here.
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -51,6 +43,9 @@ class People(models.Model):
     position = models.CharField(max_length=50, verbose_name=u'Должность')
     account = models.OneToOneField(Account, blank=True, null=True, verbose_name=u'Аккаунт сотрудника')
     science_index = models.TextField(max_length=500, null=True, blank=True, verbose_name=u'Научный индекс')
+    status = models.BooleanField(default=True, verbose_name=u'Работает')
+    date_start = models.DateField(blank=True, null=True, verbose_name=u'Дата начала работы')
+    date_end = models.DateField(blank=True, null=True, verbose_name=u'Дата конца работы')
     order_by = models.PositiveIntegerField(verbose_name=u'Сортировать', default=0)
 
     class MPTTMeta:
@@ -73,11 +68,10 @@ class Protection(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Название работы')
     message = models.TextField(verbose_name=u'Текст')
     date = models.DateField(verbose_name=u'Дата')
-    is_send_email = models.BooleanField(default=NO, choices=mail_choice,
-                                        verbose_name=u'Сделать рассылку')
+    is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
-        if self.is_send_email == YES:
+        if self.is_send_email == True:
             template_text = get_template('lmnad/send_protection_email.txt')
             context = {
                 'title': self.title,
@@ -170,15 +164,18 @@ class Project(models.Model):
 
 class Event(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(verbose_name=u'Текст')
+    text = models.TextField(verbose_name=u'Краткое описание')
+    full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
-    is_send_email = models.BooleanField(default=NO, choices=mail_choice,
-                                        verbose_name=u'Сделать рассылку')
+    is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
-        if self.is_send_email == YES:
+        if self.is_send_email == True:
             send_email(self.title, self.text, self.date)
         super(Event, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return "%s/" % self.pk
 
     def __unicode__(self):
         return unicode(self.title)
@@ -190,15 +187,18 @@ class Event(models.Model):
 
 class Seminar(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(verbose_name=u'Текст')
+    text = models.TextField(verbose_name=u'Краткое описание')
+    full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
-    is_send_email = models.BooleanField(default=NO, choices=mail_choice,
-                                        verbose_name=u'Сделать рассылку')
+    is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
-        if self.is_send_email == YES:
+        if self.is_send_email == True:
             send_email(self.title, self.text, self.date)
         super(Seminar, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return "%s/" % self.pk
 
     def __unicode__(self):
         return unicode(self.title)
@@ -241,7 +241,8 @@ def send_email(title, text, date):
         body_text,
         from_email='lmnad@nntu.ru',
         recipient_list=recipient_list,
-        fail_silently=True
+        fail_silently=True,
+        html_message=body_text
     )
 
 

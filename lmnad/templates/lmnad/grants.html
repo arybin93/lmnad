@@ -10,11 +10,10 @@
             <th>Название</th>
             <th>Руководители</th>
             <th>Сроки</th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-    {% for grant in grants %}
+    {% for grant in grants|dictsortreversed:"date_start" %}
         <tr>
             <th class="row"><a href="{{ grant.get_absolute_url }}">{{ grant.number }}</a></th>
             <td>

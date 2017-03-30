@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.forms import ModelForm
-from suit.widgets import SuitDateWidget
+from suit.widgets import SuitDateWidget, SuitSplitDateTimeWidget
 
 from lmnad.models import *
 from django.contrib.admin import ModelAdmin
@@ -68,23 +68,51 @@ class PageAdmin(ModelAdmin):
 admin.site.register(Page, PageAdmin)
 
 
+class EventForm(ModelForm):
+    class Meta:
+        widgets = {
+            'text': CKEditorWidget(editor_options={'lang': 'en'}),
+            'full_text': CKEditorWidget(editor_options={'lang': 'en'}),
+            'date': SuitSplitDateTimeWidget(),
+        }
+
 class EventAdmin(ModelAdmin):
     list_display = ['title', 'text', 'date']
-    form = TextEditForm
+    form = EventForm
 
 admin.site.register(Event, EventAdmin)
 
+
+class SeminarForm(ModelForm):
+    class Meta:
+        widgets = {
+            'text': CKEditorWidget(editor_options={'lang': 'en'}),
+            'full_text': CKEditorWidget(editor_options={'lang': 'en'}),
+            'date': SuitSplitDateTimeWidget(),
+        }
+
 class SeminarAdmin(ModelAdmin):
     list_display = ['title', 'text', 'date']
-    form = TextEditForm
+    form = SeminarForm
 
 admin.site.register(Seminar, SeminarAdmin)
 
+class PeopleForm(ModelForm):
+    class Meta:
+        model = People
+        fields = '__all__'
+        widgets = {
+            'date_start': SuitDateWidget(),
+            'date_end': SuitDateWidget(),
+            'science_index': RedactorWidget(editor_options={'lang': 'en'})
+        }
 
 class PeopleAdmin(SortableModelAdmin):
-    list_display = ['fullname', 'degree', 'rank', 'position', 'order_by']
+    list_display = ['fullname', 'degree', 'rank', 'position', 'order_by', 'status']
+    list_filter = ['status']
+    list_editable = ('status',)
     search_fields = ['fullname']
-    form = TextEditForm
+    form = PeopleForm
     sortable = 'order_by'
 
 admin.site.register(People, PeopleAdmin)

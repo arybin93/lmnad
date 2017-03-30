@@ -1,0 +1,6 @@
+{% extends 'lmnad/base.html' %}
+
+{% block content %}
+<h3 class="page-header">{{ event.title }}</h3>
+    {{ event.full_text | safe }}
+{% endblock %}

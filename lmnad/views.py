@@ -23,9 +23,11 @@ def home(request):
 
 
 def people(request):
-    peoples = People.objects.all()
+    peoples = People.objects.filter(status=True)
+    peoples_old = People.objects.filter(status=False)
     context = {
-        'peoples': peoples
+        'peoples': peoples,
+        'peoples_old': peoples_old,
     }
     return render(request, 'lmnad/people.html', context)
 
@@ -44,6 +46,14 @@ def seminars(request):
         'seminars': seminars
     }
     return render(request, 'lmnad/seminars.html', context)
+
+def seminar_detail(request, pk):
+    seminar = Seminar.objects.get(pk=pk)
+
+    context = {
+        'seminar': seminar
+    }
+    return render(request, 'lmnad/seminars_details.html', context)
 
 
 def protections(request):
@@ -85,7 +95,7 @@ def project_detail(request, name):
     context = {
         'project': project
     }
-    return render(request, 'lmnad/projects_detail.html', context)
+    return render(request, 'lmnad/project_details.html', context)
 
 
 def events(request):
@@ -94,6 +104,15 @@ def events(request):
         'events': events
     }
     return render(request, 'lmnad/events.html', context)
+
+
+def event_detail(request, pk):
+    event = Event.objects.get(pk=pk)
+
+    context = {
+        'event': event
+    }
+    return render(request, 'lmnad/events_details.html', context)
 
 
 def contacts(request):

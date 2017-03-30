@@ -6,6 +6,10 @@
         <h3>{{ event.title }}</h3>
         <p>
             {{ event.text | safe  }}
+            {% if event.full_text %}
+                <br>
+                <a href="{{ event.get_absolute_url }}"> Отчёт </a>
+            {% endif %}
             <br>
             <small><b>{{ event.date }}</b></small>
         </p>
