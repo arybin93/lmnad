@@ -3,13 +3,13 @@
 {% block content %}
 <h3 class="page-header">События</h3>
     {% for event in events|dictsortreversed:"date" %}
-        <h3>{{ event.title }}</h3>
+        {% if event.full_text %}
+            <h3><a href="{{ event.get_absolute_url }}"> {{ event.title }} </a></h3>
+        {% else %}
+            <h3>{{ event.title }}</h3>
+        {% endif %}
         <p>
             {{ event.text | safe  }}
-            {% if event.full_text %}
-                <br>
-                <a href="{{ event.get_absolute_url }}"> Отчёт </a>
-            {% endif %}
             <br>
             <small><b>{{ event.date }}</b></small>
         </p>

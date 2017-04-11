@@ -3,13 +3,13 @@
 {% block content %}
 <h3 class="page-header">Конференции, научные семинары, выставки</h3>
     {% for seminar in seminars|dictsortreversed:"date" %}
-        <h3>{{ seminar.title }}</h3>
+        {% if seminar.full_text %}
+            <h3><a href="{{ seminar.get_absolute_url }}"> {{ seminar.title }} </a></h3>
+        {% else %}
+            <h3>{{ seminar.title }}</h3>
+        {% endif %}
         <p>
             {{ seminar.text | safe }}
-            {% if seminar.full_text %}
-                <br>
-                <a href="{{ seminar.get_absolute_url }}"> Отчёт </a>
-            {% endif %}
             <br>
             <small><b>{{ seminar.date }}</b></small>
         </p>
