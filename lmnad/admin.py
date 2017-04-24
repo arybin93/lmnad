@@ -30,7 +30,8 @@ class Editor(ModelForm):
     class Meta:
         widgets = {
             'short_text': CKEditorWidget(editor_options={'startupFocus': True}),
-            'text': CKEditorWidget()
+            'text': CKEditorWidget(),
+            'message': CKEditorWidget(editor_options={'startupFocus': True})
         }
 
     class Media:
@@ -40,8 +41,8 @@ class Editor(ModelForm):
         }
 
 class AccountAdmin(admin.ModelAdmin):
-    form = Editor
     model = Account
+    form = Editor
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
@@ -56,14 +57,33 @@ admin.site.register(Account, AccountAdmin)
 
 class ProtectionAdmin(ModelAdmin):
     list_display = ['author', 'title', 'message', 'date']
-    form = TextFullEditForm
+    form = Editor
+    suit_form_tabs = (('media', 'Media'),)
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return '<img src="%s" />' % obj.image.url_thumbnail
+        else:
+            return ""
+
+    thumbnail.allow_tags = True
 
 admin.site.register(Protection, ProtectionAdmin)
 
 
 class PageAdmin(ModelAdmin):
     list_display = ['name', 'title', 'text']
-    form = TextFullEditForm
+    form = Editor
+    suit_form_tabs = (('media', 'Media'),)
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return '<img src="%s" />' % obj.image.url_thumbnail
+        else:
+            return ""
+
+    thumbnail.allow_tags = True
+
 
 admin.site.register(Page, PageAdmin)
 
@@ -76,9 +96,24 @@ class EventForm(ModelForm):
             'date': SuitSplitDateTimeWidget(),
         }
 
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
 class EventAdmin(ModelAdmin):
     list_display = ['title', 'text', 'date']
     form = EventForm
+    suit_form_tabs = (('media', 'Media'),)
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return '<img src="%s" />' % obj.image.url_thumbnail
+        else:
+            return ""
+
+    thumbnail.allow_tags = True
 
 admin.site.register(Event, EventAdmin)
 
@@ -91,9 +126,24 @@ class SeminarForm(ModelForm):
             'date': SuitSplitDateTimeWidget(),
         }
 
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
 class SeminarAdmin(ModelAdmin):
     list_display = ['title', 'text', 'date']
     form = SeminarForm
+    suit_form_tabs = (('media', 'Media'),)
+
+    def thumbnail(self, obj):
+        if obj.image:
+            return '<img src="%s" />' % obj.image.url_thumbnail
+        else:
+            return ""
+
+    thumbnail.allow_tags = True
 
 admin.site.register(Seminar, SeminarAdmin)
 
@@ -132,14 +182,13 @@ class GrantForm(ModelForm):
         widgets = {
             'date_start': SuitDateWidget(),
             'date_end': SuitDateWidget(),
-            'text': RedactorWidget(editor_options={'lang': 'en'})
+            'abstract': RedactorWidget(editor_options={'lang': 'en'})
         }
 
 class GrantAdmin(ModelAdmin):
     form = GrantForm
     list_display = ['type', 'number', 'name']
     search_fields = ['name', 'number', 'head']
-    form = GrantForm
 
 admin.site.register(Grant, GrantAdmin)
 
