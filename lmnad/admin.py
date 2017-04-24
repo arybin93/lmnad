@@ -56,7 +56,7 @@ admin.site.register(Account, AccountAdmin)
 
 
 class ProtectionAdmin(ModelAdmin):
-    list_display = ['author', 'title', 'message', 'date']
+    list_display = ['author', 'title', 'date']
     form = Editor
     suit_form_tabs = (('media', 'Media'),)
 
@@ -72,7 +72,7 @@ admin.site.register(Protection, ProtectionAdmin)
 
 
 class PageAdmin(ModelAdmin):
-    list_display = ['name', 'title', 'text']
+    list_display = ['name', 'title']
     form = Editor
     suit_form_tabs = (('media', 'Media'),)
 
@@ -103,7 +103,7 @@ class EventForm(ModelForm):
         }
 
 class EventAdmin(ModelAdmin):
-    list_display = ['title', 'text', 'date']
+    list_display = ['title', 'date']
     form = EventForm
     suit_form_tabs = (('media', 'Media'),)
 
@@ -133,7 +133,7 @@ class SeminarForm(ModelForm):
         }
 
 class SeminarAdmin(ModelAdmin):
-    list_display = ['title', 'text', 'date']
+    list_display = ['title', 'date']
     form = SeminarForm
     suit_form_tabs = (('media', 'Media'),)
 
@@ -194,7 +194,7 @@ admin.site.register(Grant, GrantAdmin)
 
 class ProjectAdmin(admin.ModelAdmin):
     form = Editor
-    list_display = ['title', 'short_text']
+    list_display = ['title']
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
