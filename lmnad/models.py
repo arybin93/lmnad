@@ -67,7 +67,7 @@ class Protection(models.Model):
     author = models.CharField(max_length=100, verbose_name=u'Автор')
     title = models.CharField(max_length=200, verbose_name=u'Название работы')
     message = models.TextField(verbose_name=u'Текст')
-    date = models.DateField(verbose_name=u'Дата')
+    date = models.DateField(blank=True, verbose_name=u'Дата')
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
@@ -166,7 +166,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     text = models.TextField(verbose_name=u'Краткое описание')
     full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
-    date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
+    date = models.DateTimeField(verbose_name=u'Дата и время')
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
@@ -189,7 +189,7 @@ class Seminar(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     text = models.TextField(verbose_name=u'Краткое описание')
     full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
-    date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
+    date = models.DateTimeField(verbose_name=u'Дата и время')
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):

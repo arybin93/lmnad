@@ -8,30 +8,11 @@ from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
 from suit.admin import SortableModelAdmin
 
-class TextFullEditForm(ModelForm):
+
+class AccountForm(ModelForm):
     class Meta:
         widgets = {
-            'message': CKEditorWidget(editor_options={'startupFocus': True}),
-            'text': CKEditorWidget(editor_options={'startupFocus': True}),
-            'short_text': CKEditorWidget(editor_options={'startupFocus': True})
-        }
-
-
-class TextEditForm(ModelForm):
-    class Meta:
-        widgets = {
-            'text': RedactorWidget(editor_options={'lang': 'en'}),
-            'abstract': RedactorWidget(editor_options={'lang': 'en'}),
-            'science_index': RedactorWidget(editor_options={'lang': 'en'}),
-            'elibrary': RedactorWidget(editor_options={'lang': 'en'})
-        }
-
-class Editor(ModelForm):
-    class Meta:
-        widgets = {
-            'short_text': CKEditorWidget(editor_options={'startupFocus': True}),
             'text': CKEditorWidget(),
-            'message': CKEditorWidget(editor_options={'startupFocus': True})
         }
 
     class Media:
@@ -42,7 +23,7 @@ class Editor(ModelForm):
 
 class AccountAdmin(admin.ModelAdmin):
     model = Account
-    form = Editor
+    form = AccountForm
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
@@ -55,9 +36,23 @@ class AccountAdmin(admin.ModelAdmin):
 admin.site.register(Account, AccountAdmin)
 
 
+class ProtectionForm(ModelForm):
+    class Meta:
+        widgets = {
+            'date': SuitDateWidget,
+            'message': CKEditorWidget(editor_options={'startupFocus': True})
+        }
+
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
+
 class ProtectionAdmin(ModelAdmin):
     list_display = ['author', 'title', 'date']
-    form = Editor
+    form = ProtectionForm
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
@@ -71,9 +66,21 @@ class ProtectionAdmin(ModelAdmin):
 admin.site.register(Protection, ProtectionAdmin)
 
 
+class PageForm(ModelForm):
+    class Meta:
+        widgets = {
+            'text': CKEditorWidget(),
+        }
+
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
 class PageAdmin(ModelAdmin):
     list_display = ['name', 'title']
-    form = Editor
+    form = PageForm
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
@@ -168,10 +175,16 @@ class PeopleAdmin(SortableModelAdmin):
 admin.site.register(People, PeopleAdmin)
 
 
+class ArticleForm(ModelForm):
+    class Meta:
+        widgets = {
+            'abstract': RedactorWidget(editor_options={'lang': 'en'})
+        }
+
 class ArticleAdmin(ModelAdmin):
     list_display = ['authors', 'title', 'source', 'year']
     search_fields = ['authors', 'title', 'year']
-    form = TextEditForm
+    form = ArticleForm
 
 admin.site.register(Article, ArticleAdmin)
 
@@ -192,8 +205,21 @@ class GrantAdmin(ModelAdmin):
 
 admin.site.register(Grant, GrantAdmin)
 
+class ProjectForm(ModelForm):
+    class Meta:
+        widgets = {
+            'text': CKEditorWidget(),
+            'short_text': CKEditorWidget()
+        }
+
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',)
+        }
+
 class ProjectAdmin(admin.ModelAdmin):
-    form = Editor
+    form = ProjectForm
     list_display = ['title']
     suit_form_tabs = (('media', 'Media'),)
 
