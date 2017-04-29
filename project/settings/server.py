@@ -1,4 +1,5 @@
 from .base import *
+import os
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'e^gzvyq8(f!5kg5o*(&a3!j(#0ky)80&8bd+_7i!i^7*3lbbno'
@@ -21,5 +22,11 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+
+LOCALE_PATHS = (
+    os.path.join(PROJECT_PATH, '../locale'),
+)
 
 
