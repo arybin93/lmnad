@@ -45,7 +45,7 @@ msgid "Grants"
 msgstr "Гранты"
 
 #: .\lmnad\templates\lmnad\base.html:40 .\lmnad\templates\lmnad\projects.html:5
-msgid "Products"
+msgid "Projects"
 msgstr "Проекты"
 
 #: .\lmnad\templates\lmnad\base.html:41 .\lmnad\templates\lmnad\seminars.html:5
