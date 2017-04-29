@@ -1,7 +1,8 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Инструменты, программные продукты, результаты интеллектуальной деятельности</h3>
+<h3 class="page-header">{% trans "Products" %}</h3>
     {% for project in projects %}
         <h3><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h3>
         <p>

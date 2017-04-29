@@ -1,17 +1,18 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-    <h3 class="page-header">Сотрудники лаборатории</h3>
+    <h3 class="page-header">{% trans "Present" %}</h3>
   <table class="table table-hover">
     <thead>
         <tr>
             <th>#</th>
-            <th>Фамилия Имя Отчество</th>
-            <th>Cтепень</th>
-            <th>Учёное звание</th>
-            <th>Должность</th>
+            <th>{% trans "Full Name" %}</th>
+            <th>{% trans "Degree" %}</th>
+            <th>{% trans "Academic rank" %}</th>
+            <th>{% trans "Position" %}</th>
             <th>Science Index</th>
-            <th>Время работы</th>
+            <th>{% trans "Experience" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -56,17 +57,17 @@
   </table>
 
     {% if peoples_old %}
-        <h3 class="page-header">Бывшие сотрудники лаборатории</h3>
+        <h3 class="page-header">{% trans "Past" %}</h3>
         <table class="table table-hover">
         <thead>
             <tr>
                 <th>#</th>
-                <th>Фамилия Имя Отчество</th>
-                <th>Cтепень</th>
-                <th>Учёное звание</th>
-                <th>Должность</th>
+                <th>{% trans "Full Name" %}</th>
+                <th>{% trans "Degree" %}</th>
+                <th>{% trans "Academic rank" %}</th>
+                <th>{% trans "Position" %}</th>
                 <th>Science Index</th>
-                <th>Время работы</th>
+                <th>{% trans "Experience" %}</th>
             </tr>
         </thead>
         <tbody>

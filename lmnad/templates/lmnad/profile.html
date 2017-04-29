@@ -1,22 +1,23 @@
 {% extends 'lmnad/base.html' %}
 {% load bootstrap_tags %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Персональная страница:</h3>
+<h3 class="page-header">{% trans "Profile" %}:</h3>
 
     {% if user.is_authenticated and user.id == profile.id %}
         <div>{{ profile.account.text | safe }}</div>
         {% if profile.account.cv_file %}
-            <a href="{{ profile.account.cv_file }}">Скачать CV</a>
+            <a href="{{ profile.account.cv_file }}">{% trans "Download CV" %}</a>
         {% endif %}
         <br>
         <form action="{% url 'edit_profile' %}">
-            <button type="submit" class="btn btn-primary">Редактировать</button>
+            <button type="submit" class="btn btn-primary">{% trans "Edit" %}</button>
         </form>
     {% else %}
         <div>{{ profile.account.text | safe }}</div>
         {% if profile.account.cv_file %}
-            <a href="{{ profile.account.cv_file }}">Скачать CV</a>
+            <a href="{{ profile.account.cv_file }}">{% trans "Download CV" %}</a>
         {% endif %}
     {% endif %}
 

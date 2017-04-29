@@ -1,7 +1,8 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Конференции, научные семинары, выставки</h3>
+<h3 class="page-header">{% trans "Seminars" %}</h3>
     {% for seminar in seminars|dictsortreversed:"date" %}
         {% if seminar.full_text %}
             <h3><a href="{{ seminar.get_absolute_url }}"> {{ seminar.title }} </a></h3>
@@ -15,6 +16,6 @@
         </p>
         <hr>
     {% empty %}
-        <p>Нет ближайших семинаров</p>
+        <p>{% trans "No seminars" %}</p>
     {% endfor %}
 {% endblock %}

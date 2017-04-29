@@ -1,7 +1,8 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Защиты квалификационных работ</h3>
+<h3 class="page-header"> {% trans "Protection of qualification works" %} </h3>
     {% for protection in protections|dictsortreversed:"date" %}
         <h4>{{ protection.author }}</h4>
         <h3>{{ protection.title }}</h3>
@@ -12,6 +13,6 @@
         </p>
         <hr>
     {% empty %}
-        <p>Нет ближайших защит</p>
+        <p>{% trans "No protection" %}</p>
     {% endfor %}
 {% endblock %}
