@@ -1,11 +1,12 @@
 {% extends 'lmnad/base.html' %}
 {% load bootstrap_tags %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Вход</h3>
+<h3 class="page-header">{% trans "Log in" %}</h3>
     <form action="" method="post">
       {% csrf_token %}
       {{ form|as_bootstrap }}
-      <button type="submit" class="btn btn-primary">Вход</button>
+      <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
     </form>
 {% endblock %}

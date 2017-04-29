@@ -92,7 +92,6 @@ class Protection(models.Model):
 
         super(Protection, self).save(*args, **kwargs)
 
-
     def __unicode__(self):
         return unicode(self.title)
 
@@ -146,7 +145,8 @@ class Grant(models.Model):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=50, verbose_name=u'Название проекта на английском')
+    name = models.CharField(max_length=50, verbose_name=u'Название проекта на английском',
+                            help_text=u'Используется для перехода на страницу')
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
     text = models.TextField(verbose_name=u'Текст')

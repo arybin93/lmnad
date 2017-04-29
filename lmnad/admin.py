@@ -8,20 +8,27 @@ from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
 from suit.admin import SortableModelAdmin
 
+from modeltranslation.admin import TranslationAdmin
 
 class AccountForm(ModelForm):
     class Meta:
         widgets = {
-            'text': CKEditorWidget(),
+            'text_ru': CKEditorWidget(),
+            'text_en': CKEditorWidget(),
         }
 
     class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
         css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
-class AccountAdmin(admin.ModelAdmin):
+class AccountAdmin(TranslationAdmin):
     model = Account
     form = AccountForm
     suit_form_tabs = (('media', 'Media'),)
@@ -40,17 +47,23 @@ class ProtectionForm(ModelForm):
     class Meta:
         widgets = {
             'date': SuitDateWidget,
-            'message': CKEditorWidget(editor_options={'startupFocus': True})
+            'message_ru': CKEditorWidget(editor_options={'startupFocus': True}),
+            'message_en': CKEditorWidget(editor_options={'startupFocus': True})
         }
 
     class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
         css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
 
-class ProtectionAdmin(ModelAdmin):
+class ProtectionAdmin(TranslationAdmin):
     list_display = ['author', 'title', 'date']
     form = ProtectionForm
     suit_form_tabs = (('media', 'Media'),)
@@ -69,16 +82,22 @@ admin.site.register(Protection, ProtectionAdmin)
 class PageForm(ModelForm):
     class Meta:
         widgets = {
-            'text': CKEditorWidget(),
+            'text_ru': CKEditorWidget(),
+            'text_en': CKEditorWidget(),
         }
 
     class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
         css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
-class PageAdmin(ModelAdmin):
+class PageAdmin(TranslationAdmin):
     list_display = ['name', 'title']
     form = PageForm
     suit_form_tabs = (('media', 'Media'),)
@@ -98,18 +117,25 @@ admin.site.register(Page, PageAdmin)
 class EventForm(ModelForm):
     class Meta:
         widgets = {
-            'text': CKEditorWidget(editor_options={'lang': 'en'}),
-            'full_text': CKEditorWidget(editor_options={'lang': 'en'}),
+            'text_ru': CKEditorWidget(editor_options={'lang': 'en'}),
+            'full_text_ru': CKEditorWidget(editor_options={'lang': 'en'}),
+            'text_en': CKEditorWidget(editor_options={'lang': 'en'}),
+            'full_text_en': CKEditorWidget(editor_options={'lang': 'en'}),
             'date': SuitSplitDateTimeWidget(),
         }
 
     class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
         css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
-class EventAdmin(ModelAdmin):
+class EventAdmin(TranslationAdmin):
     list_display = ['title', 'date']
     form = EventForm
     suit_form_tabs = (('media', 'Media'),)
@@ -128,18 +154,25 @@ admin.site.register(Event, EventAdmin)
 class SeminarForm(ModelForm):
     class Meta:
         widgets = {
-            'text': CKEditorWidget(editor_options={'lang': 'en'}),
-            'full_text': CKEditorWidget(editor_options={'lang': 'en'}),
+            'text_ru': CKEditorWidget(editor_options={'lang': 'en'}),
+            'full_text_ru': CKEditorWidget(editor_options={'lang': 'en'}),
+            'text_en': CKEditorWidget(editor_options={'lang': 'en'}),
+            'full_text_en': CKEditorWidget(editor_options={'lang': 'en'}),
             'date': SuitSplitDateTimeWidget(),
         }
 
     class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
         css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
-class SeminarAdmin(ModelAdmin):
+class SeminarAdmin(TranslationAdmin):
     list_display = ['title', 'date']
     form = SeminarForm
     suit_form_tabs = (('media', 'Media'),)
@@ -164,7 +197,15 @@ class PeopleForm(ModelForm):
             'science_index': RedactorWidget(editor_options={'lang': 'en'})
         }
 
-class PeopleAdmin(SortableModelAdmin):
+    class Media:
+        js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',)
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
+
+class PeopleAdmin(TranslationAdmin, SortableModelAdmin):
     list_display = ['fullname', 'degree', 'rank', 'position', 'order_by', 'status']
     list_filter = ['status']
     list_editable = ('status',)
@@ -178,10 +219,20 @@ admin.site.register(People, PeopleAdmin)
 class ArticleForm(ModelForm):
     class Meta:
         widgets = {
-            'abstract': RedactorWidget(editor_options={'lang': 'en'})
+            'abstract_ru': RedactorWidget(editor_options={'lang': 'en'}),
+            'abstract_en': RedactorWidget(editor_options={'lang': 'en'})
         }
 
-class ArticleAdmin(ModelAdmin):
+    class Media:
+        js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
+
+class ArticleAdmin(TranslationAdmin):
     list_display = ['authors', 'title', 'source', 'year']
     search_fields = ['authors', 'title', 'year']
     form = ArticleForm
@@ -195,10 +246,22 @@ class GrantForm(ModelForm):
         widgets = {
             'date_start': SuitDateWidget(),
             'date_end': SuitDateWidget(),
-            'abstract': RedactorWidget(editor_options={'lang': 'en'})
+            'abstract_ru': RedactorWidget(editor_options={'lang': 'en'}),
+            'abstract_en': RedactorWidget(editor_options={'lang': 'en'})
         }
 
-class GrantAdmin(ModelAdmin):
+    class Media:
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
+        css = {
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
+
+class GrantAdmin(TranslationAdmin):
     form = GrantForm
     list_display = ['type', 'number', 'name']
     search_fields = ['name', 'number', 'head']
@@ -208,17 +271,24 @@ admin.site.register(Grant, GrantAdmin)
 class ProjectForm(ModelForm):
     class Meta:
         widgets = {
-            'text': CKEditorWidget(),
-            'short_text': CKEditorWidget()
+            'text_ru': CKEditorWidget(),
+            'short_text_ru': CKEditorWidget(),
+            'text_en': CKEditorWidget(),
+            'short_text_en': CKEditorWidget(),
         }
 
     class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js')
+        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
+              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
         css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',)
+            'all': ('filebrowser/css/suit-filebrowser.css',),
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(TranslationAdmin):
     form = ProjectForm
     list_display = ['title']
     suit_form_tabs = (('media', 'Media'),)

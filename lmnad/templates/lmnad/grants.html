@@ -1,15 +1,16 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Реализуемые гранты, программы, научные проекты</h3>
+<h3 class="page-header">{% trans "Grants, Projects" %}</h3>
     <table class="table table-hover">
     <thead>
         <tr>
-            <th>Номер гранта</th>
-            <th>Тип</th>
-            <th>Название</th>
-            <th>Руководители</th>
-            <th>Сроки</th>
+            <th> {% trans "Number" %} </th>
+            <th> {% trans "Type" %} </th>
+            <th> {% trans "Name" %} </th>
+            <th> {% trans "Superviser" %} </th>
+            <th> {% trans "Dates" %} </th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +33,7 @@
                 {% endfor %}
             </td>
             <td>
-                <p> С {{ grant.date_start|date:"M. Y" }} по {{ grant.date_end|date:"M. Y" }} </p>
+                <p> {{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }} </p>
             </td>
         </tr>
     {% endfor %}

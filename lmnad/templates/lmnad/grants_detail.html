@@ -1,10 +1,11 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <h3 class="page-header">{{ grant.name }}</h3>
-    <h5><b>Тип:</b> {{ grant.type }}</h5>
-    <h5><b>Номер:</b> {{ grant.number }}</h5>
-    <h5><b>Руководители:</b></h5>
+    <h5><b> {% trans "Type" %}: </b> {{ grant.type }}</h5>
+    <h5><b> {% trans "Number" %}: </b> {{ grant.number }}</h5>
+    <h5><b> {% trans "Supervisers" %}: </b></h5>
         {% for head in grant.head.all %}
             {% if head.account %}
                 <a href="{{ head.get_absolute_url }}">{{ head}}</a><br>
@@ -12,7 +13,7 @@
                {{ head }}<br>
             {% endif %}
         {% endfor %}
-    <h5><b>Участники:</b></h5>
+    <h5><b> {% trans "Participants" %}:</b></h5>
         {% for member in grant.members.all %}
             {% if member.account %}
                 <a href="{{ member.get_absolute_url }}">{{ member }}</a><br>
@@ -20,14 +21,14 @@
                {{ member }}<br>
             {% endif %}
         {% endfor %}
-    <h5>С {{ grant.date_start|date:"M. Y" }} по {{ grant.date_end|date:"M. Y" }}</h5>
+    <h5>{{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }}</h5>
 
     {% if grant.reference %}
-        <a href="{{ grant.reference }}">Ссылка на грант</a><br>
+        <a href="{{ grant.reference }}">{% trans "Link" %}</a><br>
     {% endif %}
 
     {% if grant.reference_result %}
-        <a href="{{ grant.reference_result  }}"> Ссылка на результаты конкурса </a><br>
+        <a href="{{ grant.reference_result  }}"> {% trans "Link to results" %} </a><br>
     {% endif %}
 
     {% if grant.abstract %}

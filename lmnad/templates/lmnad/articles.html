@@ -1,13 +1,14 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">Cписок публикаций</h3>
+<h3 class="page-header"> {% trans "Publications" %} </h3>
     {% for article in articles|dictsortreversed:"year"%}
         <h3>{{ article.title }}</h3>
         <h4>{{ article.authors }}</h4>
         <p>
             {{ article.source }}
-            <a href="{{ article.link }}">Download</a>
+            <a href="{{ article.link }}"> {% trans "Download" %} </a>
             <br>
             <small><b>{{ article.year }}</b></small>
         </p>
