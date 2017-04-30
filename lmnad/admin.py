@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
-from django.forms import ModelForm
+from django.forms import ModelForm, forms
+from django_select2.forms import Select2MultipleWidget
 from suit.widgets import SuitDateWidget, SuitSplitDateTimeWidget
+from django import forms
 
 from lmnad.models import *
+from igwatlas.models import Record, Source
 from django.contrib.admin import ModelAdmin
 from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget

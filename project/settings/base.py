@@ -23,11 +23,13 @@ PREREQ_APPS = [
     'constance',
     'constance.backends.database',
     'ckeditor',
-    'ckeditor_uploader'
+    'ckeditor_uploader',
+    'geoposition'
 ]
 
 PROJECT_APPS = [
-   'lmnad'
+   'lmnad',
+   'igwatlas'
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -138,6 +140,10 @@ SUIT_CONFIG = {
                 'grant',
                 'project'
         ]},
+        {'app': 'igwatlas', 'label': u'IGWAtlas', 'models':[
+            'record',
+            'source'
+        ]},
         {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
     )
 }
@@ -170,3 +176,5 @@ CKEDITOR_UPLOAD_PATH = "uploads/users/photo"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_RESTRICT_BY_USER = True
 CKEDITOR_BROWSE_SHOW_DIRS = True
+
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCLumlxQ35v472UxtM0RupR3cXkxm4nW0I'

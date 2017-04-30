@@ -244,39 +244,3 @@ def send_email(title, text, date):
         fail_silently=True,
         html_message=body_text
     )
-
-
-# IGWAtlas, need separate app for IGWAtlas
-'''
-class Record(models.Model):
-    id = models.IntegerField(primary_key=True)
-    longitude = models.TextField(db_column='Longitude')
-    latitude = models.TextField(db_column='Latitude')
-    date = models.DateField(db_column='Date', blank=True, null=True)
-    types = models.TextField(db_column='Type')
-    filenamefrom = models.TextField(db_column='FileNameFrom')
-    pagefrom = models.TextField(db_column='PageFrom')
-    picfilename = models.TextField(db_column='PicFileName')
-
-    class Meta:
-        db_table = 'records'
-
-
-class Source(models.Model):
-    id = models.IntegerField(primary_key=True)
-    source = models.TextField(db_column='Source')
-    sourceshort = models.TextField(db_column='SourceShort')
-
-    class Meta:
-        db_table = 'sources'
-
-
-class Relation(models.Model):
-    id = models.IntegerField(primary_key=True)
-    recid = models.ForeignKey(Record, db_column='RecID', on_delete=models.CASCADE)
-    sourceid = models.ForeignKey(Source, db_column='SourceID', on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'relation'
-'''
-
