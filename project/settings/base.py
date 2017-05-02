@@ -24,7 +24,8 @@ PREREQ_APPS = [
     'constance.backends.database',
     'ckeditor',
     'ckeditor_uploader',
-    'geoposition'
+    'geoposition',
+    'django_select2'
 ]
 
 PROJECT_APPS = [

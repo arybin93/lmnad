@@ -15,4 +15,5 @@ urlpatterns += i18n_patterns(
     url(r'^', include('lmnad.urls')),
     url(r'^', include('favicon.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^select2/', include('django_select2.urls')),
 )
