@@ -143,7 +143,8 @@ SUIT_CONFIG = {
         ]},
         {'app': 'igwatlas', 'label': u'IGWAtlas', 'models':[
             'record',
-            'source'
+            'source',
+            'file'
         ]},
         {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
     )
