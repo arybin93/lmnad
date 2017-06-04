@@ -87,7 +87,7 @@ class RecordTypeFilter(admin.SimpleListFilter):
 class RecordAdmin(admin.ModelAdmin):
     list_display = ['id', 'image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop']
     form = RecordForm
-    search_fields = ['position']
+    search_fields = ['position', 'image', 'source__source_short', 'source__source']
     list_filter = [RecordTypeFilter, ('date', RowDateRangeFilter)]
 
     def get_types(self, obj):
