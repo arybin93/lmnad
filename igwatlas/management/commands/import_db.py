@@ -69,6 +69,7 @@ class Command(BaseCommand):
                         record.position = Geoposition(lat, lon)
                         record.types = str(record_types)
                         record.page = pages
+                        file_name_img = file_name_img.replace("tiff", "jpg")
                         record.image = 'uploads/igwatlas/images/' + file_name_img
                         record.file = file_source
                         record.save()
