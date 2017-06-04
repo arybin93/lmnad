@@ -12,7 +12,6 @@ class Command(BaseCommand):
             is_save = True
 
             conn = sqlite3.connect('igwdata.db')
-            # , detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES
             conn.text_factory = str
             cursor = conn.execute("SELECT * FROM records;")
 
@@ -44,17 +43,16 @@ class Command(BaseCommand):
                     elif el_type == 'T':
                         record_types.append(Record.TABLE)
 
-                # prepare datetime object
-                print date
-
                 if is_save:
                     # save file
                     try:
                         file_source = File.objects.get(path=file_name_source)
                     except File.DoesNotExist:
-                        file_source = File.objects.create(path=file_name_source)
+                        file_source = File.objects.create(path=file_name_source,
+                                                          file=file_name_source)
                     else:
                         file_source.path = file_name_source
+                        file_source.file = 'uploads/igwatlas/sources/' + file_name_source
                         file_source.save()
                     # save record
                     try:
@@ -71,7 +69,7 @@ class Command(BaseCommand):
                         record.position = Geoposition(lat, lon)
                         record.types = str(record_types)
                         record.page = pages
-                        record.image = file_name_img
+                        record.image = 'uploads/igwatlas/images/' + file_name_img
                         record.file = file_source
                         record.save()
 
@@ -104,6 +102,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS('Successfully import db'))
         except sqlite3.Error, e:
             print "Error %s:" % e.args[0]
+            if conn:
+                conn.close()
         finally:
             if conn:
                 conn.close()

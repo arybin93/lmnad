@@ -6,9 +6,10 @@ from geoposition.fields import GeopositionField
 import re
 
 class File(models.Model):
-    path = models.CharField(max_length=255, blank=True, verbose_name=u'Название файла, путь',
+    path = models.CharField(max_length=500, blank=True, verbose_name=u'Название файла, путь',
                             help_text=u'uploads/igwatlas/sources/')
-    file = models.FileField(upload_to='uploads/igwatlas/sources', blank=True, null=True, verbose_name=u'Файл')
+    file = models.FileField(upload_to='uploads/igwatlas/sources', max_length=500,
+                            blank=True, null=True, verbose_name=u'Файл')
 
     class Meta:
         verbose_name = u'Файл'
