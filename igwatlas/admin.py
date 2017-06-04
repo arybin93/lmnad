@@ -1,14 +1,35 @@
 # -*- coding: utf-8 -*-
+import os
+
 from django.contrib import admin
 
-# Register your models here.
 from django.forms import ModelForm, forms
 from django import forms
 from django_select2.forms import Select2MultipleWidget, Select2Widget
 from suit.widgets import SuitSplitDateTimeWidget
 from daterange_filter.filter import DateRangeFilter
-
 from igwatlas.models import Record, Source, File
+from django.utils.safestring import mark_safe
+from django.conf import settings
+
+# widgets
+class AdminImageWidget(forms.ClearableFileInput):
+    """
+    A ImageField Widget for admin that shows a thumbnail.
+    """
+
+    def __init__(self, attrs={}):
+        super(AdminImageWidget, self).__init__(attrs)
+
+    def render(self, name, value, attrs=None):
+        output = []
+        if value and hasattr(value, "url"):
+            output.append(('<a target="_blank" href="%s">'
+                           '<img src="%s" style="height: 50px;" /></a><br/> '
+                           % (value.url, value.url)))
+        output.append(super(AdminImageWidget, self).render(name, value, attrs))
+        return mark_safe(u''.join(output))
+
 
 class RecordForm(ModelForm):
     types = forms.MultipleChoiceField(widget=Select2MultipleWidget, choices=Record.TYPES,
@@ -21,7 +42,8 @@ class RecordForm(ModelForm):
             'date_start': SuitSplitDateTimeWidget(),
             'date_stop': SuitSplitDateTimeWidget(),
             'source': Select2MultipleWidget,
-            'file': Select2Widget
+            'file': Select2Widget,
+            'image': AdminImageWidget
         }
 
 # filters
@@ -63,7 +85,7 @@ class RecordTypeFilter(admin.SimpleListFilter):
 
 # IGWAtlas
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'position', 'get_types', 'date', 'date_start', 'date_stop']
+    list_display = ['id', 'image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop']
     form = RecordForm
     search_fields = ['position']
     list_filter = [RecordTypeFilter, ('date', RowDateRangeFilter)]
@@ -71,6 +93,15 @@ class RecordAdmin(admin.ModelAdmin):
     def get_types(self, obj):
         return obj.get_text_types()
     get_types.short_description = u'Типы наблюдений'
+
+    def image_field(self, obj):
+        if obj.image and os.path.isfile(obj.image.path):
+            img = u'<img src="{0}/{1}" style="max-height: 100px;"/>'.format(settings.MEDIA_URL, obj.image)
+            return img
+        else:
+            return obj.image
+    image_field.short_description = u'Изображение'
+    image_field.allow_tags = True
 
 admin.site.register(Record, RecordAdmin)
 
