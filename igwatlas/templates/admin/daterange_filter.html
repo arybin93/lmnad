@@ -1,0 +1,27 @@
+{% load i18n admin_static %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/widgets.css" %}" />
+<style>
+    .calendarbox, .clockbox {
+        /* Make sure the calendar widget popover displays in front of the sidebar */
+        z-index: 1100;
+        margin-left: -251px;
+    }
+    .datetimeshortcuts a{
+        /* Make text for "Today" a bit smaller so it appears on one line. */
+        font-size: 8pt;
+    }
+    .daterangefilter input{
+        width: 10%;
+    }
+    .datetitle {
+        font-size: 10pt;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-weight: bold;
+    }
+</style>
+
+<form method="GET" action="">
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+    {{ spec.form.media }}
+    {{ spec.form }}
+</form>

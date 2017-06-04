@@ -25,7 +25,8 @@ PREREQ_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'geoposition',
-    'django_select2'
+    'django_select2',
+    'daterange_filter',
 ]
 
 PROJECT_APPS = [

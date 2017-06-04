@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 
 from django.db import models
 from geoposition.fields import GeopositionField
+import re
 
 class File(models.Model):
-    path = models.FilePathField(path='uploads/igwatlas/sources', blank=True, null=True, verbose_name=u'Путь к файлу')
+    path = models.CharField(max_length=255, blank=True, verbose_name=u'Название файла, путь',
+                            help_text=u'uploads/igwatlas/sources/')
     file = models.FileField(upload_to='uploads/igwatlas/sources', blank=True, null=True, verbose_name=u'Файл')
 
     class Meta:
@@ -74,8 +76,12 @@ class Record(models.Model):
 
     def get_text_types(self):
         text = ''
-        types = self.types.strip('[').strip(']')
-        types_list = types.split(',')
+        # numbers
+        reg_number = re.compile(r'(\d+)')
+        types_list = []
+        for r in reg_number.findall(self.types):
+            types_list.append(r)
+
         type_dict = self.get_types()
 
         for type in types_list:
