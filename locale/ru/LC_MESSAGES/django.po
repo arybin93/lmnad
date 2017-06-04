@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-29 01:18+0300\n"
+"POT-Creation-Date: 2017-06-04 17:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,97 +22,97 @@ msgstr ""
 
 #: .\lmnad\templates\lmnad\articles.html:5
 msgid "Publications"
-msgstr "Публикации"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\articles.html:11
 msgid "Download"
-msgstr "Скачать"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:36
 msgid "Home"
-msgstr "Главная"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:37
 msgid "People"
-msgstr "Сотрудники"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:38
 msgid "Publication"
-msgstr "Публикации"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:39
 msgid "Grants"
-msgstr "Гранты"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:40 .\lmnad\templates\lmnad\projects.html:5
 msgid "Projects"
-msgstr "Проекты"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:41 .\lmnad\templates\lmnad\seminars.html:5
 msgid "Seminars"
-msgstr "Семинары"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:42
 msgid "Protections"
-msgstr "Защиты"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:43 .\lmnad\templates\lmnad\events.html:5
 msgid "Events"
-msgstr "События"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\base.html:44 .\lmnad\templates\lmnad\contacts.html:6
 msgid "Contacts"
-msgstr "Контакты"
+msgstr ""
 
-#: .\lmnad\templates\lmnad\base.html:50
+#: .\lmnad\templates\lmnad\base.html:72
 msgid "Log out"
-msgstr "Выйти"
+msgstr ""
 
-#: .\lmnad\templates\lmnad\base.html:52
+#: .\lmnad\templates\lmnad\base.html:74
 #: .\lmnad\templates\lmnad\register.html:10
 msgid "Sign up"
-msgstr "Зарегистрироваться"
+msgstr ""
 
-#: .\lmnad\templates\lmnad\base.html:53 .\lmnad\templates\lmnad\login.html:6
+#: .\lmnad\templates\lmnad\base.html:75 .\lmnad\templates\lmnad\login.html:6
 #: .\lmnad\templates\lmnad\login.html:10
 msgid "Log in"
-msgstr "Войти"
+msgstr ""
 
-#: .\lmnad\templates\lmnad\base.html:66
+#: .\lmnad\templates\lmnad\base.html:88
 msgid ""
 "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R."
 "E. Alekseev  © 2016"
-msgstr "Лаборатория моделирования природных и техногенных катастроф НГТУ им. Р.Е. Алексеева © 2016"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\contacts.html:12
 msgid "Feedback Form:"
-msgstr "Обратная связь:"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\edit_profile.html:6
 msgid "Edit profile"
-msgstr "Редактировать профиль"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\edit_profile.html:21
 msgid "Save"
-msgstr "Сохранить"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\events.html:19
 msgid "No events"
-msgstr "Нет событий"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants.html:5
 msgid "Grants, Projects"
-msgstr "Реализуемые гранты, программы, научные проекты"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants.html:9
 #: .\lmnad\templates\lmnad\grants_detail.html:7
 msgid "Number"
-msgstr "Номер"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants.html:10
 #: .\lmnad\templates\lmnad\grants_detail.html:6
 msgid "Type"
-msgstr "Тип"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants.html:11
 msgid "Name"
@@ -120,94 +120,94 @@ msgstr ""
 
 #: .\lmnad\templates\lmnad\grants.html:12
 msgid "Superviser"
-msgstr "Руководители"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants.html:13
 msgid "Dates"
-msgstr "Сроки"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants_detail.html:8
 msgid "Supervisers"
-msgstr "Руководители"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants_detail.html:16
 msgid "Participants"
-msgstr "Участники"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants_detail.html:27
 msgid "Link"
-msgstr "Ссылка на грант"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\grants_detail.html:31
 msgid "Link to results"
-msgstr "Ссылка на результаты"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:5
 msgid "Present"
-msgstr "Сотрудники"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:10
 #: .\lmnad\templates\lmnad\people.html:65
 msgid "Full Name"
-msgstr "ФИО"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:11
 #: .\lmnad\templates\lmnad\people.html:66
 msgid "Degree"
-msgstr "Степень"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:12
 #: .\lmnad\templates\lmnad\people.html:67
 msgid "Academic rank"
-msgstr "Учёная степень"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:13
 #: .\lmnad\templates\lmnad\people.html:68
 msgid "Position"
-msgstr "Должность"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:15
 #: .\lmnad\templates\lmnad\people.html:70
 msgid "Experience"
-msgstr "Время работы"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\people.html:60
 msgid "Past"
-msgstr "Бывшие сотрудники"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\profile.html:6
 msgid "Profile"
-msgstr "Персональная страница"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\profile.html:11
 #: .\lmnad\templates\lmnad\profile.html:20
 msgid "Download CV"
-msgstr "Скачать CV"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\profile.html:15
 msgid "Edit"
-msgstr "Редактировать"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\protections.html:5
 msgid "Protection of qualification works"
-msgstr "Защиты квалификационных работ"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\protections.html:16
 msgid "No protection"
-msgstr "Нет защит"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\register.html:6
 msgid "Registration"
-msgstr "Регистрация"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\seminars.html:19
 msgid "No seminars"
-msgstr "Нет семинаров"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\thanks.html:6
 msgid "Thank you"
-msgstr "Спасибо"
+msgstr ""
 
 #: .\lmnad\templates\lmnad\thanks.html:7
 msgid "Your letter has been sent"
-msgstr "Ваше письмо отправлено"
+msgstr ""
