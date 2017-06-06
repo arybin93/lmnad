@@ -16,6 +16,7 @@ PREREQ_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_swagger',
     'suit_redactor',
     'suit_ckeditor',
     'favicon',
@@ -181,3 +182,12 @@ CKEDITOR_RESTRICT_BY_USER = True
 CKEDITOR_BROWSE_SHOW_DIRS = True
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCLumlxQ35v472UxtM0RupR3cXkxm4nW0I'
+
+
+REST_FRAMEWORK = {
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}

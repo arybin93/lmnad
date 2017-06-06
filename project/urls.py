@@ -6,6 +6,7 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^', include('igwatlas.urls')),
 ]
 
 urlpatterns += i18n_patterns(
@@ -15,5 +16,5 @@ urlpatterns += i18n_patterns(
     url(r'^', include('lmnad.urls')),
     url(r'^', include('favicon.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    url(r'^select2/', include('django_select2.urls')),
+    url(r'^select2/', include('django_select2.urls'))
 )
