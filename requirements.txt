@@ -1,6 +1,7 @@
 Django>=1.9,<1.10
 djangorestframework
 djangorestframework-filters
+django-rest-swagger==0.3.10
 MySQL-python
 django-suit==0.2.23
 django-suit-redactor
