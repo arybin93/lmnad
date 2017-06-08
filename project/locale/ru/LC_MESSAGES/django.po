@@ -79,10 +79,8 @@ msgid "Log in"
 msgstr "Войти"
 
 #: .\lmnad\templates\lmnad\base.html:66
-msgid ""
-"Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R."
-"E. Alekseev  © 2016"
-msgstr "Лаборатория моделирования природных и техногенных катастроф НГТУ им. Р.Е. Алексеева © 2016"
+msgid "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R.E. Alekseev  © 2017"
+msgstr "Лаборатория моделирования природных и техногенных катастроф НГТУ им. Р.Е. Алексеева © 2017"
 
 #: .\lmnad\templates\lmnad\contacts.html:12
 msgid "Feedback Form:"

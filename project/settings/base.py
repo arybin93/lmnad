@@ -155,7 +155,8 @@ SUIT_CONFIG = {
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_CONFIG = {
     'FEEDBACK_EMAIL': ('lmnad@nntu.ru', u'email для обратной связи', str),
-    'LIST_EMAILS': ('arybin93@gmail.com', u'Список для рассылки', str)
+    'LIST_EMAILS': ('arybin93@gmail.com', u'Список для рассылки', str),
+    'API_KEY_IGWATLAS': ('d837d31970deb03ee35c416c5a66be1bba9f56d3', u'Ключ для доступа к API IGWAtlas', str)
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -189,5 +190,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
 }

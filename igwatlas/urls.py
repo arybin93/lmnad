@@ -1,16 +1,12 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from igwatlas.views import RecordViewSet, SourceViewSet, FileViewSet
-from rest_framework_swagger.views import get_swagger_view
-
-schema_view = get_swagger_view(title='IGWAtlas API')
+from igwatlas.views import igwatlas, RecordsViewSet
 
 router = routers.DefaultRouter()
-router.register(r'records', RecordViewSet)
-router.register(r'sources', SourceViewSet)
-router.register(r'files', FileViewSet)
+router.register(r'records', RecordsViewSet, base_name='records')
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
-    url(r'^docs$', schema_view)
+    url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^igwatlas/$', igwatlas),
 ]

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-04 17:09+0300\n"
+"POT-Creation-Date: 2017-06-09 01:17+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,7 +81,7 @@ msgstr ""
 #: .\lmnad\templates\lmnad\base.html:88
 msgid ""
 "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R."
-"E. Alekseev  © 2016"
+"E. Alekseev  © 2017"
 msgstr ""
 
 #: .\lmnad\templates\lmnad\contacts.html:12
