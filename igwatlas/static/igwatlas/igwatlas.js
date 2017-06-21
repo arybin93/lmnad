@@ -24,7 +24,7 @@ function init () {
      myMap.geoObjects.add(objectManager);
 
      $.ajax({
-        url: "http://lmnad.nntu.ru/api/v1/records/get_records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
+        url: "http://localhost:8000/api/v1/records/get_records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
     }).done(function(data) {
         console.log(data);
         objectManager.add(data);

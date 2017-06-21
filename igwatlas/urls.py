@@ -8,5 +8,5 @@ router.register(r'records', RecordsViewSet, base_name='records')
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
     url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^igwatlas/$', igwatlas),
+    url(r'^igwatlas/$', igwatlas, name='igwatlas'),
 ]

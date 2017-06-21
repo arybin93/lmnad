@@ -30,53 +30,53 @@
             <a class="navbar-left" href="{% url 'home' %}">
                 <img class="logo" src="{% static 'lmnad/logo.png' %}" alt="LMNAD">
             </a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+              <li><a href="{% url 'home' %}"> {% trans "Home" %} </a></li>
+              <li><a href="{% url 'people' %}"> {% trans "People" %} </a></li>
+              <li><a href="{% url 'articles' %}"> {% trans "Publication" %} </a></li>
+              <li><a href="{% url 'grants' %}"> {% trans "Grants" %} </a></li>
+              <li><a href="{% url 'projects' %}"> {% trans "Projects" %} </a></li>
+              <li><a href="{% url 'seminars' %}"> {% trans "Seminars" %} </a></li>
+              <li><a href="{% url 'protections' %}"> {% trans "Protections" %} </a></li>
+              <li><a href="{% url 'events' %}"> {% trans "Events" %} </a></li>
+              <li><a href="{% url 'contacts' %}"> {% trans "Contacts" %} </a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <li>
+                  <a>
+                  <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+                    <ul class="nav navbar-nav navbar-right language menu">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <li>
+                                <button type="submit"
+                                        name="language"
+                                        value="{{ language.code }}"
+                                        class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
+                                    {{ language.name_local }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                  </form>
+                  </a>
+              </li>
+          {% if user.is_authenticated %}
+              <li><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
+              <li><a href="{% url 'logout' %}">{% trans "Log out" %}</a></li>
+          {% else %}
+              <li><a href="{% url 'register' %}">{% trans "Sign up" %}</a></li>
+              <li><a href="{% url 'login' %}">{% trans "Log in" %}</a></li>
+          {% endif %}
+          </ul>
+        </div>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-          <li><a href="{% url 'home' %}"> {% trans "Home" %} </a></li>
-          <li><a href="{% url 'people' %}"> {% trans "People" %} </a></li>
-          <li><a href="{% url 'articles' %}"> {% trans "Publication" %} </a></li>
-          <li><a href="{% url 'grants' %}"> {% trans "Grants" %} </a></li>
-          <li><a href="{% url 'projects' %}"> {% trans "Projects" %} </a></li>
-          <li><a href="{% url 'seminars' %}"> {% trans "Seminars" %} </a></li>
-          <li><a href="{% url 'protections' %}"> {% trans "Protections" %} </a></li>
-          <li><a href="{% url 'events' %}"> {% trans "Events" %} </a></li>
-          <li><a href="{% url 'contacts' %}"> {% trans "Contacts" %} </a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-          <li>
-              <a>
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
-                <ul class="nav navbar-nav navbar-right language menu">
-                    {% get_current_language as LANGUAGE_CODE %}
-                    {% get_available_languages as LANGUAGES %}
-                    {% get_language_info_list for LANGUAGES as languages %}
-                    {% for language in languages %}
-                        <li>
-                            <button type="submit"
-                                    name="language"
-                                    value="{{ language.code }}"
-                                    class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
-                                {{ language.name_local }}
-                            </button>
-                        </li>
-                    {% endfor %}
-                </ul>
-              </form>
-              </a>
-          </li>
-      {% if user.is_authenticated %}
-          <li><a href="{{ user.get_absolute_url }}">{{ user }}</a></li>
-          <li><a href="{% url 'logout' %}">{% trans "Log out" %}</a></li>
-      {% else %}
-          <li><a href="{% url 'register' %}">{% trans "Sign up" %}</a></li>
-          <li><a href="{% url 'login' %}">{% trans "Log in" %}</a></li>
-      {% endif %}
-      </ul>
-    </div>
-  </div>
 </nav>
 
 <div class="container">
