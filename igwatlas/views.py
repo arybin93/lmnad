@@ -86,8 +86,22 @@ class RecordsViewSet(viewsets.ViewSet):
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
-
 def igwatlas(request):
     """ IGW Atlas main page """
     context = {}
     return render(request, 'igwatlas/igwatlas.html', context)
+
+def yandex_map(request):
+    """ IGW Atlas yandex map page and search """
+    context = {}
+    return render(request, 'igwatlas/map.html', context)
+
+def source(request):
+    """ IGW Atlas table of source page """
+    context = {}
+    return render(request, 'igwatlas/sources.html', context)
+
+def about(request):
+    """ IGW Atlas - about project page """
+    context = {}
+    return render(request, 'igwatlas/about.html', context)
