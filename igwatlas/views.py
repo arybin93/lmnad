@@ -86,6 +86,10 @@ class RecordsViewSet(viewsets.ViewSet):
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
+class SourceViewSet(viewsets.ModelViewSet):
+    queryset = Source.objects.all()
+    serializer_class = SourceSerializer
+
 def igwatlas(request):
     """ IGW Atlas main page """
     context = {}
@@ -105,3 +109,5 @@ def about(request):
     """ IGW Atlas - about project page """
     context = {}
     return render(request, 'igwatlas/about.html', context)
+
+
