@@ -3,24 +3,14 @@
 {% load i18n %}
 
 {% block content %}
-    <!-- search form-->
-    <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <form id='search' class="form-search">
-                        <select multiple="multiple">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                        <input type="text" class="input-medium search-query">
-                        <button type="submit" class="btn">Search</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    <div id="map"></div>
+     <div class="container" style="margin-top:70px">
+         <div class="row">
+             Search form
+         </div>
+         <br>
+         <div class="row">
+             <div id="map"></div>
+         </div>
+         <br>
+     </div>
 {% endblock %}
