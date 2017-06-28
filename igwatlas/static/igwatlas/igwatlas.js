@@ -5,11 +5,25 @@ var myMap;
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
 
+$(document).ready(function(){
+    $('.datepicker').datepicker();
+
+    $(".js-example-basic-multiple").select2({
+        placeholder: "Select types"
+    });
+
+    $("#search_btn").click(function(event) {
+        console.log('search');
+        // request to server with params
+        event.preventDefault();
+    })
+});
+
 function init () {
      myMap = new ymaps.Map(
         'map',
         {
-            center: [55.76, 37.64],
+            center: [53.97, 148.50],
             zoom: 5,
             type: 'yandex#satellite',
             controls: ['zoomControl', 'fullscreenControl']
