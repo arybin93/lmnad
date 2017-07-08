@@ -5,20 +5,6 @@ var myMap;
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
 
-$(document).ready(function(){
-    $('.datepicker').datepicker();
-
-    $(".js-example-basic-multiple").select2({
-        placeholder: "Select types"
-    });
-
-    $("#search_btn").click(function(event) {
-        console.log('search');
-        // request to server with params
-        event.preventDefault();
-    })
-});
-
 function init () {
      myMap = new ymaps.Map(
         'map',
@@ -38,9 +24,61 @@ function init () {
      myMap.geoObjects.add(objectManager);
 
      $.ajax({
-        url: "http://localhost:8000/api/v1/records/get_records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
+        url: "http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
     }).done(function(data) {
-        console.log(data);
         objectManager.add(data);
+    });
+
+
+     // search form
+     $('.datepicker').datepicker();
+
+    var types_multi_select = $(".types_multiple").select2({
+        placeholder: "Select types"
+    });
+    var source_value = $('#id_label_sources');
+
+    $("#search_btn").click(function(event) {
+
+        var types_array = types_multi_select.val();
+
+        var types = '';
+        for(var i = 0; i < types_array.length; i++) {
+            if (types_array.length == 1) {
+                types = types_array[i]
+            } else {
+                types += types_array[i] + ',';
+            }
+        }
+
+        // send request with params
+        $.ajax({
+            url: "http://localhost:8000/api/v1/records/?api_key=",
+            type: 'get',
+            data: {
+                api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
+                types: types,
+                date_from: $('#date_from').val(),
+                date_to: $('#date_to').val(),
+                source_text: source_value.val()
+            }
+        }).done(function(data) {
+            console.log('done');
+            myMap.geoObjects.removeAll();
+            objectManager.removeAll();
+            console.log(data);
+            myMap.geoObjects.add(objectManager);
+            objectManager.add(data);
+        });
+
+        event.preventDefault();
+    });
+
+    $("#search_cancel").click(function(event) {
+        // close and clear, and get all records
+        //$('#date_from').clean();
+        //$('#date_to').clean();
+        //source_value.clean();
+        //types_multi_select.clean();
     });
 }

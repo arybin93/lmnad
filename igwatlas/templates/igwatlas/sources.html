@@ -10,13 +10,15 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Reference</th>
+                        <th>Short</th>
+                        <th>Full</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for source in sources %}
                       <tr>
-                        <td>{{ source.source_short }}</td>
+                          <td>{{ source.source_short }}</td>
+                          <td>{{ source.source }}</td>
                       </tr>
                     {% endfor %}
                 </tbody>

@@ -7,6 +7,7 @@ import os
 # Core Django imports
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
+from django.db.models import Q
 from django.shortcuts import render
 
 # Third-party app imports
@@ -25,10 +26,9 @@ class RecordsViewSet(viewsets.ViewSet):
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
 
-    @list_route(methods=['get'])
-    def get_records(self, request):
+    def list(self, request):
         """
-        Get records objects for Yandex map
+        List of records objects for Yandex map
         ---
         parameters_strategy: merge
         parameters:
@@ -38,10 +38,52 @@ class RecordsViewSet(viewsets.ViewSet):
               description: api key access to API
               paramType: query
               type: string
+            - name: types
+              required: false
+              defaultValue: 0,1,2
+              description: types of observations
+              paramType: query
+              type: string
+            - name: date_from
+              required: false
+              defaultValue: 1987-12-24
+              description: get records from date
+              paramType: query
+              type: string
+            - name: date_to
+              required: false
+              defaultValue: 2017-12-24
+              description: get records to date
+              paramType: query
+              type: string
+            - name: source_text
+              required: false
+              defaultValue: Christopher R. Jackson, 2004
+              description: get records by source
+              paramType: query
+              type: string
         """
         api_key = request.GET.get('api_key', None)
+        types = request.GET.get('types', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        source_text = request.GET.get('source_text', None)
+
         if api_key and api_key == config.API_KEY_IGWATLAS:
             records = self.queryset
+
+            if types:
+                records = records.filter(types__icontains=types)
+
+            if date_from and date_to:
+                records = records.filter(Q(date__gte=date_from) & Q(date__lte=date_to))
+            elif date_from:
+                records = records.filter(date__gte=date_from)
+            elif date_to:
+                records = records.filter(date__lte=date_to)
+
+            if source_text:
+                records = records.filter(source__source__icontains=source_text)
 
             result_object = {
                 'type': 'FeatureCollection',
@@ -167,18 +209,6 @@ def source(request):
         'sources': sources
     }
     return render(request, 'igwatlas/sources.html', context)
-
-
-
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
-
-    return render(request, 'core/user_list.html', { 'users': users })
-
 
 def about(request):
     context = {}
