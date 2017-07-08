@@ -5,7 +5,25 @@
 {% block content %}
     <div class="container" style="margin-top:50px">
         <div class="row">
-            <h3 class="page-header"> {% trans "About" %} </h3>
+            <h3 class="page-header"> {{ igwatlas_about.title }} </h3>
+            <p class="text">
+                 {{ igwatlas_about.text | safe  }}
+            </p>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+                <div class="thumbnail">
+                    <a href="{% static 'igwatlas/Patent.jpg' %}" target="_blank">
+                        <img class="img-responsive center-block" src="{% static 'igwatlas/Patent.jpg' %}"
+                             alt="{% trans "Certificate of state registration" %}" style="width:100%;">
+                        <div class="caption" style="text-align: center;">
+                            <p>{% trans "Certificate of state registration" %}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+            </div>
         </div>
     </div>
 {% endblock %}
