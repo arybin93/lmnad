@@ -7,7 +7,11 @@
         <div class="row">
             <h3 class="page-header"> {{ igwatlas_about.title }} </h3>
             <p class="text">
-                 {{ igwatlas_about.text | safe  }}
+                 {% if error %}
+                     {{ error }}
+                 {% else %}
+                    {{ igwatlas_about.text | safe  }}
+                 {% endif %}
             </p>
             <div class="col-md-4">
             </div>

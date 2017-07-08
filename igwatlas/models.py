@@ -99,3 +99,32 @@ class Record(models.Model):
                 i[0]: i[1]
             })
         return types
+
+
+class PageData(models.Model):
+    MAP_TEXT = 0
+    GRAPHIC_TEXT = 1
+    SATELLITE_TEXT = 2
+    RECORD_TEXT = 3
+    TABLE_TEXT = 4
+    ABOUT_TEXT = 5
+
+    TYPES = (
+        (MAP_TEXT, u'Текст о типе: карта'),
+        (GRAPHIC_TEXT, u'Текст о типе: график'),
+        (SATELLITE_TEXT, u'Текст о типе: спутник'),
+        (RECORD_TEXT, u'Текст о типе: запись'),
+        (TABLE_TEXT, u'Текст о типе: таблица'),
+        (ABOUT_TEXT, u'Текст о проекте'),
+    )
+
+    type = models.PositiveIntegerField(default=MAP_TEXT, choices=TYPES, unique=True, verbose_name=u'Тип данных, страницы')
+    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
+    text = models.TextField(verbose_name=u'Текст')
+
+    def __unicode__(self):
+        return unicode(self.title)
+
+    class Meta:
+        verbose_name = 'Данные для страниц'
+        verbose_name_plural = 'Данные для страниц'

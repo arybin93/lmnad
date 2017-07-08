@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import os
 
 # Core Django imports
+from django.db.models import Max, Min
 from django.shortcuts import render
 
 # Third-party app imports
@@ -14,7 +15,7 @@ from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, File
+from igwatlas.models import Record, Source, File, PageData
 from api_serializers import RecordSerializer, FileSerializer, SourceSerializer
 from django.conf import settings
 
@@ -93,6 +94,53 @@ class SourceViewSet(viewsets.ModelViewSet):
 def igwatlas(request):
     """ IGW Atlas main page """
     context = {}
+
+    try:
+        page_data_map = PageData.objects.get(type=PageData.MAP_TEXT)
+    except PageData.DoesNotExist:
+        pass
+    else:
+        context['page_data_map'] = page_data_map
+
+    try:
+        page_data_graphic = PageData.objects.get(type=PageData.GRAPHIC_TEXT)
+    except PageData.DoesNotExist:
+        pass
+    else:
+        context['page_data_graphic'] = page_data_graphic
+
+    try:
+        page_data_satellite = PageData.objects.get(type=PageData.SATELLITE_TEXT)
+    except PageData.DoesNotExist:
+        pass
+    else:
+        context['page_data_satellite'] = page_data_satellite
+
+    try:
+        page_data_table = PageData.objects.get(type=PageData.TABLE_TEXT)
+    except PageData.DoesNotExist:
+        pass
+    else:
+        context['page_data_table'] = page_data_table
+
+    try:
+        page_data_record = PageData.objects.get(type=PageData.RECORD_TEXT)
+    except PageData.DoesNotExist:
+        pass
+    else:
+        context['page_data_record'] = page_data_record
+
+    sources_count = Source.objects.all().count()
+    observation_count = Record.objects.all().count()
+
+    min_date = Record.objects.all().aggregate(Min('date'))
+    max_date = Record.objects.all().aggregate(Max('date'))
+
+    context['min_date'] = min_date['date__min']
+    context['max_date'] = max_date['date__max']
+    context['count_observation'] = observation_count
+    context['count_sources'] = sources_count
+
     return render(request, 'igwatlas/igwatlas.html', context)
 
 def yandex_map(request):
@@ -106,8 +154,13 @@ def source(request):
     return render(request, 'igwatlas/sources.html', context)
 
 def about(request):
-    """ IGW Atlas - about project page """
     context = {}
+
+    try:
+        igwatlas_about = PageData.objects.get(type=PageData.ABOUT_TEXT)
+    except PageData.DoesNotExist:
+        context['error'] = u'Создайте данные для страницы'
+    else:
+        context['igwatlas_about'] = igwatlas_about
+
     return render(request, 'igwatlas/about.html', context)
-
-

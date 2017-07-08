@@ -268,12 +268,3 @@ def contactView(request):
     }
 
     return render(request, 'lmnad/contacts.html', context)
-
-
-### igwatlas view:
-def igwatlas_about(request):
-    igwatlas_about = Page.objects.get(name='igwatlas_about')
-    context = {
-        'igwatlas_about': igwatlas_about
-    }
-    return render(request, 'igwatlas/about.html', context)
