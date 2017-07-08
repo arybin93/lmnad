@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import os
 
 # Core Django imports
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
 from django.shortcuts import render
 
@@ -150,8 +151,34 @@ def yandex_map(request):
 
 def source(request):
     """ IGW Atlas table of source page """
-    context = {}
+
+    sources_list = Source.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(sources_list, 15)
+
+    try:
+        sources = paginator.page(page)
+    except PageNotAnInteger:
+        sources = paginator.page(1)
+    except EmptyPage:
+        sources = paginator.page(paginator.num_pages)
+
+    context = {
+        'sources': sources
+    }
     return render(request, 'igwatlas/sources.html', context)
+
+
+
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+
+    return render(request, 'core/user_list.html', { 'users': users })
+
 
 def about(request):
     context = {}
