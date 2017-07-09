@@ -8,9 +8,10 @@ from django import forms
 from django_select2.forms import Select2MultipleWidget, Select2Widget
 from suit.widgets import SuitSplitDateTimeWidget
 from daterange_filter.filter import DateRangeFilter
-from igwatlas.models import Record, Source, File
+from igwatlas.models import Record, Source, File, PageData
 from django.utils.safestring import mark_safe
 from django.conf import settings
+from suit_redactor.widgets import RedactorWidget
 
 # widgets
 class AdminImageWidget(forms.ClearableFileInput):
@@ -125,3 +126,16 @@ class FileAdmin(admin.ModelAdmin):
     search_fields = ['path', 'file']
 
 admin.site.register(File, FileAdmin)
+
+
+class PageDataForm(ModelForm):
+    class Meta:
+        widgets = {
+            'text': RedactorWidget()
+        }
+
+class PageDataAdmin(admin.ModelAdmin):
+    list_display = ['type', 'title']
+    form = PageDataForm
+
+admin.site.register(PageData, PageDataAdmin)

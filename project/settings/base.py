@@ -143,10 +143,11 @@ SUIT_CONFIG = {
                 'grant',
                 'project'
         ]},
-        {'app': 'igwatlas', 'label': u'IGWAtlas', 'models':[
+        {'app': 'igwatlas', 'label': u'IGWAtlas', 'models': [
             'record',
             'source',
-            'file'
+            'file',
+            'pageData'
         ]},
         {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
     )

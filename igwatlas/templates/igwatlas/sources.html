@@ -1,0 +1,50 @@
+{% extends 'igwatlas/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+    <div class="container" style="margin-top:50px">
+        <div class="row">
+            <h3 class="page-header"> {% trans "Sources" %} </h3>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Short</th>
+                        <th>Full</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for source in sources %}
+                      <tr>
+                          <td>{{ source.source_short }}</td>
+                          <td>{{ source.source }}</td>
+                      </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if sources.has_other_pages %}
+              <ul class="pagination">
+                {% if sources.has_previous %}
+                  <li><a href="?page={{ sources.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in sources.paginator.page_range %}
+                  {% if sources.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if sources.has_next %}
+                  <li><a href="?page={{ sources.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+              </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

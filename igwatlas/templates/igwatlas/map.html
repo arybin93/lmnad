@@ -1,0 +1,83 @@
+{% extends 'igwatlas/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+     <div class="container" style="margin-top:70px">
+         <div class="row">
+             <div class="col-sm-12">
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#search" style="width:20%">
+                        {% trans "Search" %}
+                    </button>
+                </div>
+            </div>
+
+             <!-- Modal -->
+             <div id="search" class="modal fade" role="dialog">
+                 <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> {% trans "Search" %}</h4>
+                      </div>
+                      <div class="modal-body">
+                        <form class="form">
+                            <div class="form-group">
+                                <label for="id_label_types">
+                                    Select types
+                                    <select class="types_multiple" id="id_label_types" multiple="multiple" style="width: 100%">
+                                        <option value="0">{% trans "Map" %}</option>
+                                        <option value="1">{% trans "Graphic" %}</option>
+                                        <option value="2">{% trans "Satellite" %}</option>
+                                        <option value="3">{% trans "Record" %}</option>
+                                        <option value="4">{% trans "Table" %}</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_from">
+                                    {% trans "Select date from" %}
+                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" style="width: 35%;">
+                                        <input id="date_from" type="text" class="form-control">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_to">
+                                    {% trans "Select date to" %}
+                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" style="width: 35%;">
+                                        <input id="date_to" type="text" class="form-control">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_label_sources">
+                                    {% trans "Source" %}
+                                    <input type="text" class="form-control" id="id_label_sources" placeholder="{% trans "Source" %} ">
+                                </label>
+                            </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button id='search_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close and clear" %}</button>
+                          <button id='search_btn' type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Search" %}</button>
+                      </div>
+                    </div>
+                 </div>
+             </div>
+         </div>
+         <br>
+         <div class="row">
+             <div id="map"></div>
+         </div>
+         <br>
+     </div>
+{% endblock %}
