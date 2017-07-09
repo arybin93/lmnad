@@ -25,16 +25,16 @@ function init () {
 
      $.ajax({
         url: "http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
-    }).done(function(data) {
+     }).done(function(data) {
         objectManager.add(data);
-    });
-
+     });
 
      // search form
      $('.datepicker').datepicker();
 
     var types_multi_select = $(".types_multiple").select2({
-        placeholder: "Select types"
+        placeholder: "Select types",
+        allowClear: true
     });
     var source_value = $('#id_label_sources');
 
@@ -75,10 +75,27 @@ function init () {
     });
 
     $("#search_cancel").click(function(event) {
+        console.log('reset');
         // close and clear, and get all records
-        //$('#date_from').clean();
-        //$('#date_to').clean();
-        //source_value.clean();
-        //types_multi_select.clean();
+        $('#date_from').val('');
+        $('#date_to').val('');
+        types_multi_select.val([]);
+        $(".types_multiple").select2({
+            placeholder: "Select types",
+            allowClear: true
+        });
+        source_value.val('');
+        reset_request()
     });
+
+    function reset_request() {
+        $.ajax({
+            url: "http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
+        }).done(function(data) {
+            myMap.geoObjects.removeAll();
+            objectManager.removeAll();
+            myMap.geoObjects.add(objectManager);
+            objectManager.add(data);
+        });
+    }
 }
