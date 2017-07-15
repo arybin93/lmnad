@@ -40,9 +40,10 @@ def articles(request):
     page = request.GET.get('page', 1)
 
     if query:
-        if isinstance(query, int):
-            article_list = Article.objects.filter(year=query)
-        else:
+        try:
+            year = int(query)
+            article_list = Article.objects.filter(year=year)
+        except ValueError:
             article_list = Article.objects.filter(Q(title__icontains=query) | Q(authors__icontains=query) |
                                                   Q(abstract__icontains=query))
     else:

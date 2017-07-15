@@ -13,6 +13,7 @@ from django.utils.safestring import mark_safe
 from django.conf import settings
 from suit_redactor.widgets import RedactorWidget
 from modeltranslation.admin import TranslationAdmin
+from suit_ckeditor.widgets import CKEditorWidget
 
 # widgets
 class AdminImageWidget(forms.ClearableFileInput):
@@ -132,9 +133,10 @@ admin.site.register(File, FileAdmin)
 class PageDataForm(ModelForm):
     class Meta:
         widgets = {
-            'text_ru': RedactorWidget(),
-            'text_en': RedactorWidget()
+            'text_ru': CKEditorWidget(editor_options={'lang': 'en'}),
+            'text_en': CKEditorWidget(editor_options={'lang': 'en'})
         }
+
     class Media:
         js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
               'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
