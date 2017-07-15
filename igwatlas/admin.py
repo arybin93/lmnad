@@ -132,7 +132,8 @@ admin.site.register(File, FileAdmin)
 class PageDataForm(ModelForm):
     class Meta:
         widgets = {
-            'text': RedactorWidget()
+            'text_ru': RedactorWidget(),
+            'text_en': RedactorWidget()
         }
     class Media:
         js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
