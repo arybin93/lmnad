@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-29 01:18+0300\n"
+"POT-Creation-Date: 2017-07-15 14:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,133 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\igwatlas\templates\igwatlas\about.html:22
+#: .\igwatlas\templates\igwatlas\about.html:24
+msgid "Certificate of state registration"
+msgstr "Свидетельство о государственной регистрации базы данных"
+
+#: .\igwatlas\templates\igwatlas\base.html:57
+#: .\igwatlas\templates\igwatlas\map.html:31
+msgid "Map"
+msgstr "Карта наблюдений"
+
+#: .\igwatlas\templates\igwatlas\base.html:58
+#: .\igwatlas\templates\igwatlas\igwatlas.html:17
+#: .\igwatlas\templates\igwatlas\sources.html:8
+msgid "Sources"
+msgstr "Источники"
+
+#: .\igwatlas\templates\igwatlas\base.html:59
+msgid "About"
+msgstr "О проекте"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:8
+msgid "IGWAtlas"
+msgstr "IGWAtlas"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:9
+msgid "Online database of observation and research of Internal Gravity Waves"
+msgstr "База данных наблюдений и исследований внутренних гравитационных волн"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:10
+msgid "Map of observations"
+msgstr "Карта наблюдений"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:18
+msgid "Database contains"
+msgstr "База данных содержит"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:18
+msgid "sources"
+msgstr "источников"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:19
+msgid "All data have references to sources"
+msgstr "Все данные содержат ссылки на источники"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:20
+msgid "View details »"
+msgstr "Детали"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:23
+msgid "World Ocean"
+msgstr "Мировой океан"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:24
+msgid "IGWAtlas contains observations of "
+msgstr "IGWAtlas содержит наблюдения "
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:24
+msgid "IGW"
+msgstr "ВГВ"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:24
+msgid " for all World Ocean "
+msgstr " для всего Мирового океана"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:27
+msgid "Observations"
+msgstr "Наблюдения"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:28
+msgid "number of observation in database"
+msgstr "число наблюдений в базе данных"
+
+#: .\igwatlas\templates\igwatlas\igwatlas.html:29
+msgid "Years in DB: "
+msgstr "Года:"
+
+#: .\igwatlas\templates\igwatlas\map.html:11
+#: .\igwatlas\templates\igwatlas\map.html:23
+#: .\igwatlas\templates\igwatlas\map.html:71
+msgid "Search"
+msgstr "Поиск"
+
+#: .\igwatlas\templates\igwatlas\map.html:29
+msgid "Select types"
+msgstr "Выберите тип"
+
+#: .\igwatlas\templates\igwatlas\map.html:32
+msgid "Graphic"
+msgstr "График"
+
+#: .\igwatlas\templates\igwatlas\map.html:33
+msgid "Satellite"
+msgstr "Снимок со спутника"
+
+#: .\igwatlas\templates\igwatlas\map.html:34
+msgid "Record"
+msgstr "Запись с устройств"
+
+#: .\igwatlas\templates\igwatlas\map.html:35
+msgid "Table"
+msgstr "Таблица"
+
+#: .\igwatlas\templates\igwatlas\map.html:41
+msgid "Select date from"
+msgstr "Выберите дату от"
+
+#: .\igwatlas\templates\igwatlas\map.html:52
+msgid "Select date to"
+msgstr "Выберите дату до"
+
+#: .\igwatlas\templates\igwatlas\map.html:63
+#: .\igwatlas\templates\igwatlas\map.html:64
+msgid "Source"
+msgstr "Источник"
+
+#: .\igwatlas\templates\igwatlas\map.html:70
+msgid "Close and clear"
+msgstr "Закрыть и сбросить"
+
+#: .\igwatlas\templates\igwatlas\sources.html:13
+msgid "Short description"
+msgstr "Краткое описание"
+
+#: .\igwatlas\templates\igwatlas\sources.html:14
+msgid "Full description"
+msgstr "Полное описание"
 
 #: .\lmnad\templates\lmnad\articles.html:5
 msgid "Publications"
@@ -64,23 +191,27 @@ msgstr "События"
 msgid "Contacts"
 msgstr "Контакты"
 
-#: .\lmnad\templates\lmnad\base.html:50
+#: .\lmnad\templates\lmnad\base.html:77
 msgid "Log out"
 msgstr "Выйти"
 
-#: .\lmnad\templates\lmnad\base.html:52
+#: .\lmnad\templates\lmnad\base.html:79
 #: .\lmnad\templates\lmnad\register.html:10
 msgid "Sign up"
 msgstr "Зарегистрироваться"
 
-#: .\lmnad\templates\lmnad\base.html:53 .\lmnad\templates\lmnad\login.html:6
+#: .\lmnad\templates\lmnad\base.html:80 .\lmnad\templates\lmnad\login.html:6
 #: .\lmnad\templates\lmnad\login.html:10
 msgid "Log in"
 msgstr "Войти"
 
-#: .\lmnad\templates\lmnad\base.html:66
-msgid "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R.E. Alekseev  © 2017"
-msgstr "Лаборатория моделирования природных и техногенных катастроф НГТУ им. Р.Е. Алексеева © 2017"
+#: .\lmnad\templates\lmnad\base.html:93
+msgid ""
+"Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R."
+"E. Alekseev  © 2017"
+msgstr ""
+"Лаборатория моделирования природных и техногенных катастроф НГТУ им. Р.Е. "
+"Алексеева © 2017"
 
 #: .\lmnad\templates\lmnad\contacts.html:12
 msgid "Feedback Form:"
@@ -209,3 +340,8 @@ msgstr "Спасибо"
 #: .\lmnad\templates\lmnad\thanks.html:7
 msgid "Your letter has been sent"
 msgstr "Ваше письмо отправлено"
+
+#, fuzzy
+#~| msgid "Full Name"
+#~ msgid "Full"
+#~ msgstr "ФИО"

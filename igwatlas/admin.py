@@ -12,6 +12,7 @@ from igwatlas.models import Record, Source, File, PageData
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from suit_redactor.widgets import RedactorWidget
+from modeltranslation.admin import TranslationAdmin
 
 # widgets
 class AdminImageWidget(forms.ClearableFileInput):
@@ -133,8 +134,16 @@ class PageDataForm(ModelForm):
         widgets = {
             'text': RedactorWidget()
         }
+    class Media:
+        js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+              'modeltranslation/js/tabbed_translation_fields.js',
+              )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
 
-class PageDataAdmin(admin.ModelAdmin):
+class PageDataAdmin(TranslationAdmin):
     list_display = ['type', 'title']
     form = PageDataForm
 

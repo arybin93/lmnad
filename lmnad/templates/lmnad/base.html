@@ -56,10 +56,15 @@
                         {% for language in languages %}
                             <li>
                                 <button type="submit"
-                                        name="language"
-                                        value="{{ language.code }}"
-                                        class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
-                                    {{ language.name_local }}
+                                    name="language"
+                                    style="border: none; padding: 5; background: none;"
+                                    value="{{ language.code }}"
+                                    class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
+                                    {% if language.code == 'ru' %}
+                                        <img src="{% static 'lmnad/flag_ru.png' %}" title="Russian">
+                                    {% else %}
+                                        <img src="{% static 'lmnad/flag_en.png' %}" title="English">
+                                    {% endif %}
                                 </button>
                             </li>
                         {% endfor %}
