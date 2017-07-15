@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from django.core.paginator import PageNotAnInteger, Paginator, EmptyPage
+from django.db.models import Q
+
 from lmnad.models import *
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
@@ -33,10 +36,31 @@ def people(request):
 
 
 def articles(request):
-    articles = Article.objects.all()
+    query = request.GET.get('query', None)
+    page = request.GET.get('page', 1)
+
+    if query:
+        if isinstance(query, int):
+            article_list = Article.objects.filter(year=query)
+        else:
+            article_list = Article.objects.filter(Q(title__icontains=query) | Q(authors__icontains=query) |
+                                                  Q(abstract__icontains=query))
+    else:
+        article_list = Article.objects.all()
+
+    paginator = Paginator(article_list, 15)
+
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+
     context = {
         'articles': articles
     }
+
     return render(request, 'lmnad/articles.html', context)
 
 

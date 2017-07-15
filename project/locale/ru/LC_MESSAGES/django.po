@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-15 14:28+0300\n"
+"POT-Creation-Date: 2017-07-15 15:21+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -99,6 +99,8 @@ msgstr "Года:"
 #: .\igwatlas\templates\igwatlas\map.html:11
 #: .\igwatlas\templates\igwatlas\map.html:23
 #: .\igwatlas\templates\igwatlas\map.html:71
+#: .\igwatlas\templates\igwatlas\sources.html:16
+#: .\lmnad\templates\lmnad\articles.html:15
 msgid "Search"
 msgstr "Поиск"
 
@@ -139,19 +141,24 @@ msgstr "Источник"
 msgid "Close and clear"
 msgstr "Закрыть и сбросить"
 
-#: .\igwatlas\templates\igwatlas\sources.html:13
+#: .\igwatlas\templates\igwatlas\sources.html:14
+#: .\lmnad\templates\lmnad\articles.html:13
+msgid "Enter query"
+msgstr "Введите запрос"
+
+#: .\igwatlas\templates\igwatlas\sources.html:25
 msgid "Short description"
 msgstr "Краткое описание"
 
-#: .\igwatlas\templates\igwatlas\sources.html:14
+#: .\igwatlas\templates\igwatlas\sources.html:26
 msgid "Full description"
 msgstr "Полное описание"
 
-#: .\lmnad\templates\lmnad\articles.html:5
+#: .\lmnad\templates\lmnad\articles.html:6
 msgid "Publications"
 msgstr "Публикации"
 
-#: .\lmnad\templates\lmnad\articles.html:11
+#: .\lmnad\templates\lmnad\articles.html:26
 msgid "Download"
 msgstr "Скачать"
 

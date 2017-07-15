@@ -134,6 +134,49 @@ class SourceViewSet(viewsets.ModelViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
 
+    def list(self, request):
+        """
+        List of records objects for Yandex map
+        ---
+        parameters_strategy: merge
+        parameters:
+            - name: api_key
+              required: true
+              defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+              description: api key access to API
+              paramType: query
+              type: string
+            - name: query
+              required: false
+              defaultValue: Christopher R. Jackson, 2004
+              description: get records by source
+              paramType: query
+              type: string
+        """
+        api_key = request.GET.get('api_key', None)
+        query = request.GET.get('query', None)
+
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+
+            if query:
+                sources_list = Source.objects.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
+            else:
+                sources_list = Source.objects.all()
+
+            page = request.GET.get('page', 1)
+            paginator = Paginator(sources_list, 15)
+
+            try:
+                sources = paginator.page(page)
+            except PageNotAnInteger:
+                sources = paginator.page(1)
+            except EmptyPage:
+                sources = paginator.page(paginator.num_pages)
+
+            return Response(sources)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
 def igwatlas(request):
     """ IGW Atlas main page """
     context = {}
@@ -193,9 +236,14 @@ def yandex_map(request):
 
 def source(request):
     """ IGW Atlas table of source page """
-
-    sources_list = Source.objects.all()
+    query = request.GET.get('query', None)
     page = request.GET.get('page', 1)
+
+    if query:
+        sources_list = Source.objects.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
+    else:
+        sources_list = Source.objects.all()
+
     paginator = Paginator(sources_list, 15)
 
     try:
