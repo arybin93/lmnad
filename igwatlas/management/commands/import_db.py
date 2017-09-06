@@ -3,6 +3,7 @@ from igwatlas.models import *
 import sqlite3
 from geoposition import Geoposition
 
+
 class Command(BaseCommand):
     help = 'Import Data base from SQLite DB'
 
