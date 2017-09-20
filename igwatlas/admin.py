@@ -92,6 +92,7 @@ class RecordAdmin(admin.ModelAdmin):
     form = RecordForm
     search_fields = ['position', 'image', 'source__source_short', 'source__source']
     list_filter = [RecordTypeFilter, ('date', RowDateRangeFilter)]
+    list_display_links = ['position', 'image_field']
 
     def get_types(self, obj):
         return obj.get_text_types()

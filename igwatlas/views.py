@@ -70,7 +70,7 @@ class RecordsViewSet(viewsets.ViewSet):
         source_text = request.GET.get('source_text', None)
 
         if api_key and api_key == config.API_KEY_IGWATLAS:
-            records = self.queryset
+            records = Record.objects.all()
 
             if types:
                 records = records.filter(types__icontains=types)
@@ -130,6 +130,7 @@ class RecordsViewSet(viewsets.ViewSet):
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
+
 class SourceViewSet(viewsets.ModelViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
@@ -176,6 +177,7 @@ class SourceViewSet(viewsets.ModelViewSet):
             return Response(sources)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
 
 def igwatlas(request):
     """ IGW Atlas main page """
@@ -229,10 +231,12 @@ def igwatlas(request):
 
     return render(request, 'igwatlas/igwatlas.html', context)
 
+
 def yandex_map(request):
     """ IGW Atlas yandex map page and search """
     context = {}
     return render(request, 'igwatlas/map.html', context)
+
 
 def source(request):
     """ IGW Atlas table of source page """
@@ -257,6 +261,7 @@ def source(request):
         'sources': sources
     }
     return render(request, 'igwatlas/sources.html', context)
+
 
 def about(request):
     context = {}
