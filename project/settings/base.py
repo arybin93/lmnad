@@ -175,18 +175,24 @@ ABSOLUTE_URL_OVERRIDES = {
 }
 
 # file browser
-FILEBROWSER_SUIT_TEMPLATE = True
-FILEBROWSER_DIRECTORY = 'uploads/'
-#FILEBROWSER_MAX_UPLOAD_SIZE = 104857600
 
-'''
 FILEBROWSER_EXTENSIONS = {
     'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff'],
     'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.zip'],
     'Video': ['.mov', '.wmv', '.mpeg', '.mpg', '.avi', '.rm'],
     'Audio': ['.mp3', '.mp4', '.wav', '.aiff', '.midi', '.m4p']
 }
-'''
+
+FILEBROWSER_SELECT_FORMATS = {
+    'file': ['Image', 'Document', 'Video', 'Audio'],
+    'image': ['Image'],
+    'document': ['Document'],
+    'media': ['Video', 'Audio'],
+}
+
+FILEBROWSER_SUIT_TEMPLATE = True
+FILEBROWSER_DIRECTORY = 'uploads/'
+FILEBROWSER_MAX_UPLOAD_SIZE = 104857600
 
 CKEDITOR_UPLOAD_PATH = "uploads/users/photo"
 CKEDITOR_IMAGE_BACKEND = "pillow"
