@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^login/$', views.LoginFormView.as_view(), name='login'),
     url(r'^logout/$', views.logoutView, name='logout'),
     url(r'^profile/(?P<username>.*)?/$', views.profile),
-    url(r'^edit/$', views.EditProfileView, name='edit_profile')
+    url(r'^edit/$', views.EditProfileView, name='edit_profile'),
+    url(r'^pages/(?P<name>.*)?$', views.pages, name='pages')
 ]

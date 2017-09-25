@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.paginator import PageNotAnInteger, Paginator, EmptyPage
 from django.db.models import Q
+from django.views.decorators.http import require_http_methods
 
 from lmnad.models import *
 from django.views.generic.edit import FormView
@@ -16,6 +17,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
+
 
 def home(request):
     home = Page.objects.get(name='home')
@@ -72,6 +74,7 @@ def seminars(request):
     }
     return render(request, 'lmnad/seminars.html', context)
 
+
 def seminar_detail(request, pk):
     seminar = Seminar.objects.get(pk=pk)
 
@@ -105,6 +108,7 @@ def grants_detail(request, number):
         'grant': grant
     }
     return render(request, 'lmnad/grants_detail.html', context)
+
 
 def projects(request):
     projects = Project.objects.all()
@@ -293,3 +297,15 @@ def contactView(request):
     }
 
     return render(request, 'lmnad/contacts.html', context)
+
+
+@require_http_methods(['GET'])
+def pages(request, **kwargs):
+    name = kwargs['name']
+
+    project = Page.objects.get(name=name)
+
+    context = {
+        'project': project
+    }
+    return render(request, 'lmnad/project_details.html', context)
