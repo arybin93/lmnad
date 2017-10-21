@@ -99,7 +99,8 @@ class RecordsViewSet(viewsets.ViewSet):
                 for source in record.source.all():
                     short_text_source += source.source_short + ';'
                     full_text_source += source.source + ';'
-                    link_text_source += source.link + ';'
+                    if source.link:
+                        link_text_source += source.link + ';'
 
                 date = ''
                 if record.date:
