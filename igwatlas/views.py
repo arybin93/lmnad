@@ -95,11 +95,11 @@ class RecordsViewSet(viewsets.ViewSet):
 
                 short_text_source = ''
                 full_text_source = ''
-                link = ''
+                link_text_source = ''
                 for source in record.source.all():
                     short_text_source += source.source_short + ';'
                     full_text_source += source.source + ';'
-                    link += source.link + ';'
+                    link_text_source += source.link + ';'
 
                 date = ''
                 if record.date:
@@ -122,7 +122,7 @@ class RecordsViewSet(viewsets.ViewSet):
                         'hintContent': short_text_source + str(record.position),
                         'balloonContentHeader': record.get_text_types(),
                         'balloonContentBody': full_text_source + "<br>" + img + "<br>" + str(record.position),
-                        'balloonContentFooter': link + ' ' + date,
+                        'balloonContentFooter': link_text_source + ' ' + date,
                         'clusterCaption': record.get_text_types()
                     }
                 }
