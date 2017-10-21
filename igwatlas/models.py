@@ -5,6 +5,7 @@ from django.db import models
 from geoposition.fields import GeopositionField
 import re
 
+
 class File(models.Model):
     path = models.CharField(max_length=500, blank=True, verbose_name=u'Название файла, путь',
                             help_text=u'uploads/igwatlas/sources/')
@@ -21,6 +22,7 @@ class File(models.Model):
         else:
             return unicode(self.file)
 
+
 # IGWAtlas
 class Source(models.Model):
     source_short = models.CharField(max_length=255, verbose_name=u'Краткое описание')
@@ -36,6 +38,7 @@ class Source(models.Model):
 
     def __unicode__(self):
         return unicode(self.source_short)
+
 
 class Record(models.Model):
     MAP = 0
