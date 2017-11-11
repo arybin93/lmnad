@@ -5,6 +5,7 @@ from django.contrib import admin
 
 from django.forms import ModelForm, forms
 from django import forms
+from django.utils.html import format_html_join
 from django_select2.forms import Select2MultipleWidget, Select2Widget
 from suit.widgets import SuitSplitDateTimeWidget
 from daterange_filter.filter import DateRangeFilter
@@ -91,7 +92,7 @@ class RecordTypeFilter(admin.SimpleListFilter):
 
 # IGWAtlas
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop']
+    list_display = ['id', 'image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source']
     form = RecordForm
     search_fields = ['position', 'image', 'source__source_short', 'source__source']
     list_filter = [RecordTypeFilter, ('date', RowDateRangeFilter)]
@@ -100,6 +101,14 @@ class RecordAdmin(admin.ModelAdmin):
     def get_types(self, obj):
         return obj.get_text_types()
     get_types.short_description = u'Типы наблюдений'
+
+    def get_source(self, obj):
+        sources = format_html_join(
+            '', u"""{}<br>""",
+            ((source_obj.source,) for source_obj in obj.source.all())
+        )
+        return sources
+    get_source.short_description = u'Источники'
 
     def image_field(self, obj):
         if obj.image and os.path.isfile(obj.image.path):
