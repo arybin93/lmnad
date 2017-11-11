@@ -15,6 +15,7 @@ from suit_redactor.widgets import RedactorWidget
 from modeltranslation.admin import TranslationAdmin
 from suit_ckeditor.widgets import CKEditorWidget
 
+
 # widgets
 class AdminImageWidget(forms.ClearableFileInput):
     """
@@ -48,6 +49,7 @@ class RecordForm(ModelForm):
             'file': Select2Widget,
             'image': AdminImageWidget
         }
+
 
 # filters
 class RowDateRangeFilter(DateRangeFilter):
@@ -86,9 +88,10 @@ class RecordTypeFilter(admin.SimpleListFilter):
 
         return queryset
 
+
 # IGWAtlas
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop']
+    list_display = ['id', 'image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop']
     form = RecordForm
     search_fields = ['position', 'image', 'source__source_short', 'source__source']
     list_filter = [RecordTypeFilter, ('date', RowDateRangeFilter)]
@@ -109,6 +112,7 @@ class RecordAdmin(admin.ModelAdmin):
 
 admin.site.register(Record, RecordAdmin)
 
+
 class SourceForm(ModelForm):
     class Meta:
         model = Source
@@ -117,12 +121,14 @@ class SourceForm(ModelForm):
             'files': Select2MultipleWidget,
         }
 
+
 class SourceAdmin(admin.ModelAdmin):
     list_display = ['source_short', 'link']
     search_fields = ['source_short', 'source']
     form = SourceForm
 
 admin.site.register(Source, SourceAdmin)
+
 
 class FileAdmin(admin.ModelAdmin):
     list_display = ['path', 'file']
@@ -146,6 +152,7 @@ class PageDataForm(ModelForm):
         css = {
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
+
 
 class PageDataAdmin(TranslationAdmin):
     list_display = ['type', 'title']
