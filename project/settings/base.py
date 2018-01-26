@@ -6,8 +6,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
 PREREQ_APPS = [
-    'modeltranslation',
     'suit',
+    'modeltranslation',
     'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -178,7 +178,6 @@ ABSOLUTE_URL_OVERRIDES = {
 FILEBROWSER_SUIT_TEMPLATE = True
 FILEBROWSER_DIRECTORY = 'uploads/'
 FILEBROWSER_MAX_UPLOAD_SIZE = 104857600
-#FILEBROWSER_DEFAULT_PERMISSIONS = 0o777
 
 CKEDITOR_UPLOAD_PATH = "uploads/users/photo"
 CKEDITOR_IMAGE_BACKEND = "pillow"

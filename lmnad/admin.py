@@ -14,6 +14,7 @@ from suit.admin import SortableModelAdmin
 
 from modeltranslation.admin import TranslationAdmin
 
+
 class AccountForm(ModelForm):
     class Meta:
         widgets = {
@@ -31,6 +32,7 @@ class AccountForm(ModelForm):
             'all': ('filebrowser/css/suit-filebrowser.css',),
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
+
 
 class AccountAdmin(TranslationAdmin):
     model = Account
@@ -101,6 +103,7 @@ class PageForm(ModelForm):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
+
 class PageAdmin(TranslationAdmin):
     list_display = ['name', 'title']
     form = PageForm
@@ -139,6 +142,7 @@ class EventForm(ModelForm):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
+
 class EventAdmin(TranslationAdmin):
     list_display = ['title', 'date']
     form = EventForm
@@ -176,6 +180,7 @@ class SeminarForm(ModelForm):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
+
 class SeminarAdmin(TranslationAdmin):
     list_display = ['title', 'date']
     form = SeminarForm
@@ -190,6 +195,7 @@ class SeminarAdmin(TranslationAdmin):
     thumbnail.allow_tags = True
 
 admin.site.register(Seminar, SeminarAdmin)
+
 
 class PeopleForm(ModelForm):
     class Meta:
@@ -208,6 +214,7 @@ class PeopleForm(ModelForm):
         css = {
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
+
 
 class PeopleAdmin(TranslationAdmin, SortableModelAdmin):
     list_display = ['fullname', 'degree', 'rank', 'position', 'order_by', 'status']
@@ -236,12 +243,14 @@ class ArticleForm(ModelForm):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
+
 class ArticleAdmin(TranslationAdmin):
     list_display = ['authors', 'title', 'source', 'year']
     search_fields = ['authors', 'title', 'year']
     form = ArticleForm
 
 admin.site.register(Article, ArticleAdmin)
+
 
 class GrantForm(ModelForm):
     class Meta:
@@ -265,12 +274,14 @@ class GrantForm(ModelForm):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
+
 class GrantAdmin(TranslationAdmin):
     form = GrantForm
     list_display = ['type', 'number', 'name']
     search_fields = ['name', 'number', 'head']
 
 admin.site.register(Grant, GrantAdmin)
+
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -291,6 +302,7 @@ class ProjectForm(ModelForm):
             'all': ('filebrowser/css/suit-filebrowser.css',),
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
+
 
 class ProjectAdmin(TranslationAdmin):
     form = ProjectForm
