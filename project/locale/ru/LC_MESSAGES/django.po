@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-15 15:21+0300\n"
+"POT-Creation-Date: 2018-04-05 14:29+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,16 +27,19 @@ msgstr "Свидетельство о государственной регис�
 
 #: .\igwatlas\templates\igwatlas\base.html:57
 #: .\igwatlas\templates\igwatlas\map.html:31
+#: .\igwcoeffs\templates\igwcoeffs\base.html:34
 msgid "Map"
 msgstr "Карта наблюдений"
 
 #: .\igwatlas\templates\igwatlas\base.html:58
 #: .\igwatlas\templates\igwatlas\igwatlas.html:17
 #: .\igwatlas\templates\igwatlas\sources.html:8
+#: .\igwcoeffs\templates\igwcoeffs\base.html:35
 msgid "Sources"
 msgstr "Источники"
 
 #: .\igwatlas\templates\igwatlas\base.html:59
+#: .\igwcoeffs\templates\igwcoeffs\base.html:36
 msgid "About"
 msgstr "О проекте"
 
@@ -153,6 +156,14 @@ msgstr "Краткое описание"
 #: .\igwatlas\templates\igwatlas\sources.html:26
 msgid "Full description"
 msgstr "Полное описание"
+
+#: .\igwcoeffs\templates\igwcoeffs\base.html:47
+msgid "Back to LMNAD"
+msgstr "На LMNAD"
+
+#: .\igwcoeffs\templates\igwcoeffs\base.html:48
+msgid "Back to top"
+msgstr "Наверх"
 
 #: .\lmnad\templates\lmnad\articles.html:6
 msgid "Publications"

@@ -32,7 +32,8 @@ PREREQ_APPS = [
 
 PROJECT_APPS = [
    'lmnad',
-   'igwatlas'
+   'igwatlas',
+   'igwcoeffs'
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS

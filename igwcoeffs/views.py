@@ -1,3 +1,15 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def igwcoeffs(request):
+    """ IGW Coeffs calculator, main page """
+    context = {}
+
+    return render(request, 'igwcoeffs/igwcoeffs.html', context)
+
+
+def igwcoeffs_about(request):
+    """ IGW Coeffs calculator, about page"""
+    context = {}
+
+    return render(request, 'igwcoeffs/about.html', context)

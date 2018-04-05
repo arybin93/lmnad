@@ -14,6 +14,7 @@ urlpatterns += i18n_patterns(
     url(r'^admin/', admin.site.urls),
     url(r'^', include('lmnad.urls')),
     url(r'^', include('igwatlas.urls')),
+    url(r'^', include('igwcoeffs.urls')),
     url(r'^', include('favicon.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^select2/', include('django_select2.urls'))
