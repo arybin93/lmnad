@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from filebrowser.fields import FileBrowseField
 
-# Create your models here.
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True, verbose_name=u'Персональная страница')
