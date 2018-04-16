@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IGW Coefficients</title>
+    <title>Experimental basin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="yandex-verification" content="814cc814a6791f9c" />
 
@@ -25,11 +25,41 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'tank' %}">Experiments</a>
+                <a class="navbar-brand" href="{% url 'tank_exp' %}">{% trans 'Experimental basin' %}</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'about_tank' %}"> {% trans "About" %} </a></li>
+                    <li><a href="{% url 'tank_exp' %}"> {% trans "Experiments" %} </a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li>
+                      <a>
+                      <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+                        <ul class="nav navbar-nav navbar-right language menu">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <li>
+                                    <button type="submit"
+                                        name="language"
+                                        style="border: none; padding: 5px; background: none;"
+                                        value="{{ language.code }}"
+                                        class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
+                                        {% if language.code == 'ru' %}
+                                            <img src="{% static 'lmnad/flag_ru.png' %}" title="Russian">
+                                        {% else %}
+                                            <img src="{% static 'lmnad/flag_en.png' %}" title="English">
+                                        {% endif %}
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                      </form>
+                      </a>
+                  </li>
                 </ul>
             </div>
         </div>

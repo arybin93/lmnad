@@ -1,0 +1,8 @@
+{% extends 'tank/base.html' %}
+
+{% block content %}
+    <div class="container" style="margin-top:60px">
+        <h3 class="page-header">{{ experiment.name }}</h3>
+        {{ experiment.description | safe }}
+    </div>
+{% endblock %}

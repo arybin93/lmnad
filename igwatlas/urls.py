@@ -1,9 +1,10 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from igwatlas.views import igwatlas, yandex_map, source, about, RecordsViewSet
+from igwatlas.views import igwatlas, yandex_map, source, about, RecordsViewSet, SourceViewSet
 
 router = routers.DefaultRouter()
 router.register(r'records', RecordsViewSet, base_name='records')
+router.register(r'sources', SourceViewSet, base_name='sources')
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),

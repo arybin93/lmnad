@@ -28,6 +28,9 @@ class Experiment(TimeStampedModel):
     def __unicode__(self):
         return unicode(self.name)
 
+    def get_absolute_url(self):
+        return "/tank_exp/%s/" % self.id
+
 
 class Movie(TimeStampedModel):
     src = models.FileField(upload_to='uploads/tank/movies', verbose_name=u'Запись', help_text=u'Видео, гифка')

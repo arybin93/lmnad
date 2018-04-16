@@ -58,6 +58,36 @@
                     <li><a href="{% url 'source' %}"> {% trans "Sources" %} </a></li>
                     <li><a href="{% url 'about' %}"> {% trans "About" %} </a></li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li>
+                      <a>
+                      <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+                        <ul class="nav navbar-nav navbar-right language menu">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <li>
+                                    <button type="submit"
+                                        name="language"
+                                        style="border: none; padding: 5; background: none;"
+                                        value="{{ language.code }}"
+                                        class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
+                                        {% if language.code == 'ru' %}
+                                            <img src="{% static 'lmnad/flag_ru.png' %}" title="Russian">
+                                        {% else %}
+                                            <img src="{% static 'lmnad/flag_en.png' %}" title="English">
+                                        {% endif %}
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                      </form>
+                      </a>
+                  </li>
+                </ul>
             </div>
         </div>
     </nav>
