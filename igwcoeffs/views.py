@@ -6,7 +6,7 @@ def igwcoeffs(request):
     """ IGW Coeffs calculator, main page """
     context = {}
 
-    return render(request, 'igwcoeffs/igwcoeffs.html', context)
+    return render(request, 'igwcoeffs/tank.html', context)
 
 
 def igwcoeffs_about(request):
