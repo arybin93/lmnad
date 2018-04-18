@@ -10,7 +10,7 @@
             {% if experiment.images.all %}
                 <h4 class="page-header">{% trans 'Images' %} </h4>
                 {% for image in experiment.images.all %}
-                    <a href="{{ image.file.url }}" rel="shadowbox[Vacation]">{{ image.file.name }}</a>
+                    <a href="{{ image.file.url }}" rel="shadowbox[Vacation]">{{ image.file|getfilename }}</a>
                 {% endfor %}
                 <hr>
             {% endif %}
@@ -21,6 +21,7 @@
                 {% endfor %}
                 <hr>
             {% endif %}
+            <!--
             {% if experiment.data.all %}
                 <h4 class="page-header">{% trans 'Files' %} </h4>
                 <ul>
@@ -28,9 +29,10 @@
                     {{ d.file.filename }}
                     <li><a href="{{ d.file.url }}">{{ d.file|getfilename }}</a></li>
                 {% endfor %}
-                <hr>
                 </ul>
+                <hr>
             {% endif %}
+            -->
         </div>
     </div>
 {% endblock %}
