@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+from django.contrib import messages
 from django.core.paginator import PageNotAnInteger, Paginator, EmptyPage
 from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 
 from lmnad.models import *
 from django.views.generic.edit import FormView
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth import logout
 
 from django import forms
@@ -173,7 +174,7 @@ class EditProfileForm(forms.Form):
     cv_file = forms.FileField(required=False, label=u'CV файл')
 
 
-def EditProfileView(request):
+def edit_profile(request):
     current_user = request.user
     if request.method == 'POST':
         form = EditProfileForm(request.POST)
@@ -227,7 +228,7 @@ def EditProfileView(request):
     return render(request, 'lmnad/edit_profile.html', context)
 
 
-def logoutView(request):
+def logout_view(request):
     logout(request)
     return redirect('home')
 
@@ -269,8 +270,8 @@ class ContactForm(forms.Form):
     copy = forms.BooleanField(required=False, label=u'Отправить копию себе:')
 
 
-def contactView(request):
-    contacts = Page.objects.get(name='contacts')
+def contacts(request):
+    contacts_page = Page.objects.get(name='contacts')
 
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -292,11 +293,67 @@ def contactView(request):
         form = ContactForm()
 
     context = {
-        'contacts': contacts,
+        'contacts': contacts_page,
         'form': form
     }
 
     return render(request, 'lmnad/contacts.html', context)
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'lmnad/change_password.html', {
+        'form': form
+    })
+
+
+class ResetPasswordForm(forms.Form):
+    email = forms.EmailField(max_length=100, label=u'Email')
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                messages.error(request, 'Please correct the error below.')
+            else:
+                new_password = User.objects.make_random_password()
+                user.set_password(new_password)
+                user.save()
+
+                subject = u'LMNAD, временный пароль'
+                message = u'Ваш временный пароль для входа: ' + new_password
+                try:
+                    send_mail(subject, message, 'lmnad@nntu.ru', [email])
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found')
+
+                messages.success(request, 'Your new password send to ' + user.email)
+            return redirect('reset_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, 'lmnad/reset_password.html', {
+        'form': form
+    })
 
 
 @require_http_methods(['GET'])

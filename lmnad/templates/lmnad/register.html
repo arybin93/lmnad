@@ -2,11 +2,24 @@
 {% load bootstrap_tags %}
 {% load i18n %}
 
+
 {% block content %}
-<h3 class="page-header">{% trans "Registration" %}</h3>
-    <form action="" method="post">
-      {% csrf_token %}
-      {{ form|as_bootstrap }}
-      <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
-    </form>
+    <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            <h3 class="page-header">{% trans "Registration" %}</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form|as_bootstrap }}
+                <button style='width:100%' type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
+            </form>
+            <br>
+            <div class="card-footer text-muted text-center">
+                 {% trans 'Have account?' %} <a href="{% url 'login' %}"> {% trans "Log in" %} </a>
+            </div>
+        </div>
+        <div class="col-sm-4">
+        </div>
+    </div>
 {% endblock %}

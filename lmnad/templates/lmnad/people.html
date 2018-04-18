@@ -8,10 +8,8 @@
         <tr>
             <th>#</th>
             <th>{% trans "Full Name" %}</th>
-            <th>{% trans "Degree" %}</th>
-            <th>{% trans "Academic rank" %}</th>
-            <th>{% trans "Position" %}</th>
-            <th>Science Index</th>
+            <th>{% trans "Degree" %}, {% trans 'Academic rank' %}, {% trans 'Position' %} </th>
+            <th>{% trans 'Science Index' %}</th>
             <th>{% trans "Experience" %}</th>
         </tr>
     </thead>
@@ -28,15 +26,11 @@
             </td>
             <td>
                 {% if people.degree %}
-                    {{ people.degree }}
+                    {{ people.degree }},
                 {% endif %}
-            </td>
-            <td>
                 {% if people.rank %}
-                    {{ people.rank }}
+                    {{ people.rank }},
                 {% endif %}
-            </td>
-            <td>
                 {% if people.position %}
                     {{ people.position }}
                 {% endif %}
@@ -63,17 +57,15 @@
             <tr>
                 <th>#</th>
                 <th>{% trans "Full Name" %}</th>
-                <th>{% trans "Degree" %}</th>
-                <th>{% trans "Academic rank" %}</th>
-                <th>{% trans "Position" %}</th>
-                <th>Science Index</th>
+                <th>{% trans "Degree" %}, {% trans 'Academic rank' %}, {% trans 'Position' %} </th>
+                <th>{% trans 'Science Index' %}</th>
                 <th>{% trans "Experience" %}</th>
             </tr>
         </thead>
         <tbody>
         {% for people in peoples_old|dictsort:"order_by" %}
             <tr>
-                <th class="row">{{ people.order_by|add:"+1" }}</th>
+                <td class="row">{{ people.order_by|add:"+1" }}</td>
                 <td>
                     {% if people.account %}
                         <a href="{{ people.account.get_absolute_url }}">{{ people.fullname }}</a>
@@ -83,15 +75,11 @@
                 </td>
                 <td>
                     {% if people.degree %}
-                        {{ people.degree }}
+                        {{ people.degree }},
                     {% endif %}
-                </td>
-                <td>
                     {% if people.rank %}
-                        {{ people.rank }}
+                        {{ people.rank }},
                     {% endif %}
-                </td>
-                <td>
                     {% if people.position %}
                         {{ people.position }}
                     {% endif %}

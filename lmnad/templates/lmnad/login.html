@@ -3,10 +3,27 @@
 {% load i18n %}
 
 {% block content %}
-<h3 class="page-header">{% trans "Log in" %}</h3>
-    <form action="" method="post">
-      {% csrf_token %}
-      {{ form|as_bootstrap }}
-      <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
-    </form>
+    <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+            <h3 class="page-header">{% trans "Log in" %}</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form|as_bootstrap  }}
+                <button style='width:100%' type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
+            </form>
+            <br>
+            <div class="card-footer text-muted text-center">
+                 <a href="{% url 'register' %}">{% trans "Sign up" %} </a>
+            </div>
+            <div class="text-center py-2">
+            <small>
+                <a href="{% url 'reset_password' %}" class="text-muted">{% trans 'Forgot your password?' %} </a>
+            </small>
+            </div>
+        </div>
+        <div class="col-sm-4">
+        </div>
+    </div>
 {% endblock %}
