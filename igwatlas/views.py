@@ -21,6 +21,8 @@ from igwatlas.models import Record, Source, File, PageData
 from api_serializers import RecordSerializer, FileSerializer, SourceSerializer
 from django.conf import settings
 
+from lmnad.models import Project
+
 
 class RecordsViewSet(viewsets.ViewSet):
     queryset = Record.objects.all()
@@ -231,13 +233,16 @@ def igwatlas(request):
     context['max_date'] = max_date['date__max']
     context['count_observation'] = observation_count
     context['count_sources'] = sources_count
+    context['project'] = Project.objects.get(name='igwatlas_online')
 
     return render(request, 'igwatlas/igwatlas.html', context)
 
 
 def yandex_map(request):
     """ IGW Atlas yandex map page and search """
-    context = {}
+    context = {
+        'project': Project.objects.get(name='igwatlas_online')
+    }
     return render(request, 'igwatlas/map.html', context)
 
 
@@ -261,7 +266,8 @@ def source(request):
         sources = paginator.page(paginator.num_pages)
 
     context = {
-        'sources': sources
+        'sources': sources,
+        'project': Project.objects.get(name='igwatlas_online')
     }
     return render(request, 'igwatlas/sources.html', context)
 
@@ -275,5 +281,6 @@ def about(request):
         context['error'] = u'Создайте данные для страницы'
     else:
         context['igwatlas_about'] = igwatlas_about
+        context['project'] = Project.objects.get(name='igwatlas_online')
 
     return render(request, 'igwatlas/about.html', context)

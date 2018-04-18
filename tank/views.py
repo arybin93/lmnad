@@ -3,6 +3,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render
 
+from lmnad.models import Project
 from tank.models import Experiment
 
 
@@ -26,7 +27,8 @@ def tank(request):
         experiments = paginator.page(paginator.num_pages)
 
     context = {
-        'experiments': experiments
+        'experiments': experiments,
+        'project': Project.objects.get(name='wave_tank')
     }
     return render(request, 'tank/experiments.html', context)
 
@@ -35,6 +37,7 @@ def tank_exp_detail(request, pk):
     experiment = Experiment.objects.get(pk=pk)
 
     context = {
-        'experiment': experiment
+        'experiment': experiment,
+        'project': Project.objects.get(name='wave_tank')
     }
     return render(request, 'tank/experiment_details.html', context)

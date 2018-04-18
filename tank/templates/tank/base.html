@@ -151,8 +151,22 @@
         </div>
     </nav>
 
-    {% block content %}
-    {% endblock %}
+    {% if not user.is_authenticated and project.is_only_user %}
+        <div class="container">
+            <div class="row">
+                <h4>{% trans 'Access denied' %}</h4>
+                <hr>
+                <p> {% trans 'Create new user:' %}
+                    <a href="{% url 'register' %}">{% trans "Sign up" %}</a>
+                    {% trans 'or' %}
+                    <a href="{% url 'login' %}">{% trans "Log in" %}</a>
+                </p>
+            </div>
+        </div>
+    {% else %}
+        {% block content %}
+        {% endblock %}
+    {% endif %}
 
     <!-- FOOTER -->
     <footer class="container-fluid text-center">

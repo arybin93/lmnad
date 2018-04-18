@@ -151,6 +151,7 @@ class Project(models.Model):
     short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
     text = models.TextField(verbose_name=u'Текст')
     link = models.CharField(max_length=100, blank=True, verbose_name=u'Ссылка на проект')
+    is_only_user = models.BooleanField(default=False, verbose_name=u'Доступно зарегистрированным пользователям')
 
     def get_absolute_url(self):
         return "%s/" % self.name

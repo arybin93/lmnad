@@ -24,10 +24,12 @@
                         <h4 class="modal-title"> {% trans "Search" %}</h4>
                       </div>
                       <div class="modal-body">
-                        <form class="form">
+                        <form class="form-horizontal" role="form">
                             <div class="form-group">
-                                <label for="id_label_types">
+                                <label for="id_label_types" class="col-sm-2 control-label">
                                     {% trans 'Select types' %}
+                                </label>
+                                <div class="col-sm-10">
                                     <select class="types_multiple" id="id_label_types" multiple="multiple" style="width: 100%">
                                         <option value="0">{% trans "Map" %}</option>
                                         <option value="1">{% trans "Graphic" %}</option>
@@ -35,35 +37,41 @@
                                         <option value="3">{% trans "Record" %}</option>
                                         <option value="4">{% trans "Table" %}</option>
                                     </select>
-                                </label>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="date_from">
+                                <label for="date_from" class="col-sm-2 control-label">
                                     {% trans "Select date from" %}
-                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" style="width: 35%;">
+                                </label>
+                                <div class="col-sm-10">
+                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
                                         <input id="date_from" type="text" class="form-control">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
-                                </label>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="date_to">
+                                <label for="date_to" class="col-sm-2 control-label">
                                     {% trans "Select date to" %}
-                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" style="width: 35%;">
-                                        <input id="date_to" type="text" class="form-control">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
                                 </label>
+                                <div class="col-sm-10">
+                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                                            <input id="date_to" type="text" class="form-control">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="id_label_sources">
+                                <label for="id_label_sources" class="col-sm-2 control-label">
                                     {% trans "Source" %}
-                                    <input type="text" class="form-control" id="id_label_sources" placeholder="{% trans "Source" %} ">
                                 </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="id_label_sources" placeholder="{% trans "Source" %} ">
+                                </div>
                             </div>
                         </form>
                       </div>

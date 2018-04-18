@@ -308,7 +308,7 @@ class ProjectForm(ModelForm):
 class ProjectAdmin(TranslationAdmin):
     form = ProjectForm
     list_display = ['title']
-    fields = ['title', 'short_text', 'text', 'link']
+    fields = ['name', 'title', 'short_text', 'text', 'link', 'is_only_user']
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
