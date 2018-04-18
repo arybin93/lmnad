@@ -17,7 +17,10 @@
             {% if experiment.movies.all %}
                 <h4 class="page-header">{% trans 'Movies' %} </h4>
                 {% for movie in experiment.movies.all %}
-                    <a href="{{ movie.file.url }}">{{ movie.file.name }}</a>
+                    <video width="400" controls>
+                        <source src="{{ movie.file.url }}" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
                 {% endfor %}
                 <hr>
             {% endif %}
