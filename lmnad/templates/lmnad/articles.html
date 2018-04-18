@@ -18,7 +18,7 @@
          <br>
      </div>
     <div class="row">
-        {% for article in articles|dictsortreversed:"year"%}
+        {% for article in articles %}
             <h3>{{ article.title }}</h3>
             <h4>{{ article.authors }}</h4>
             <p>
@@ -50,7 +50,6 @@
                   <li class="disabled"><span>&raquo;</span></li>
                 {% endif %}
               </ul>
-            {% endif %}
-
+        {% endif %}
     </div>
 {% endblock %}

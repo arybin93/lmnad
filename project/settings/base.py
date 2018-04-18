@@ -149,6 +149,9 @@ SUIT_CONFIG = {
         {'app': 'tank', 'label': u'Эксперименты', 'models': [
             'experiment',
         ]},
+        {'app': 'igwcoeffs', 'label': u'IGW Калькулятор', 'models': [
+            'calculation',
+        ]},
         {'app': 'igwatlas', 'label': u'IGWAtlas', 'models': [
             'record',
             'source',

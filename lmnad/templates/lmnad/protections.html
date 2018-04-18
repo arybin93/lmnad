@@ -2,17 +2,41 @@
 {% load i18n %}
 
 {% block content %}
-<h3 class="page-header"> {% trans "Protection of qualification works" %} </h3>
-    {% for protection in protections|dictsortreversed:"date" %}
-        <h4>{{ protection.author }}</h4>
-        <h3>{{ protection.title }}</h3>
-        <p>
-            {{ protection.message | safe}}
-            <br>
-            <small><b>{{ protection.date }}</b></small>
-        </p>
-        <hr>
-    {% empty %}
-        <p>{% trans "No protection" %}</p>
-    {% endfor %}
+    <h3 class="page-header"> {% trans "Protection of qualification works" %} </h3>
+    <div class="row">
+        {% for protection in protections %}
+            <h4>{{ protection.author }}</h4>
+            <h3>{{ protection.title }}</h3>
+            <p>
+                {{ protection.message | safe}}
+                <br>
+                <small><b>{{ protection.date }}</b></small>
+            </p>
+            <hr>
+        {% empty %}
+            <p>{% trans "No protection" %}</p>
+        {% endfor %}
+
+        {% if protections.has_other_pages %}
+              <ul class="pagination">
+                {% if protections.has_previous %}
+                  <li><a href="?page={{ protections.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in protections.paginator.page_range %}
+                  {% if protections.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if protections.has_next %}
+                  <li><a href="?page={{ protections.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+              </ul>
+        {% endif %}
+    </div>
 {% endblock %}

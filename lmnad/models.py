@@ -71,7 +71,7 @@ class Protection(models.Model):
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
-        if self.is_send_email == True:
+        if self.is_send_email:
             template_text = get_template('lmnad/send_protection_email.txt')
             context = {
                 'title': self.title,
@@ -150,6 +150,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
     short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
     text = models.TextField(verbose_name=u'Текст')
+    link = models.CharField(max_length=100, blank=True, verbose_name=u'Ссылка на проект')
 
     def get_absolute_url(self):
         return "%s/" % self.name
@@ -170,7 +171,7 @@ class Event(models.Model):
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
-        if self.is_send_email == True:
+        if self.is_send_email:
             send_email(self.title, self.text, self.date)
         super(Event, self).save(*args, **kwargs)
 
@@ -193,7 +194,7 @@ class Seminar(models.Model):
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
 
     def save(self, *args, **kwargs):
-        if self.is_send_email == True:
+        if self.is_send_email:
             send_email(self.title, self.text, self.date)
         super(Seminar, self).save(*args, **kwargs)
 

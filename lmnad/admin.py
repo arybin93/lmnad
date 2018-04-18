@@ -183,6 +183,7 @@ class SeminarForm(ModelForm):
 
 class SeminarAdmin(TranslationAdmin):
     list_display = ['title', 'date']
+    fields = ['title', 'text', 'date', 'is_send_email']
     form = SeminarForm
     suit_form_tabs = (('media', 'Media'),)
 
@@ -307,6 +308,7 @@ class ProjectForm(ModelForm):
 class ProjectAdmin(TranslationAdmin):
     form = ProjectForm
     list_display = ['title']
+    fields = ['title', 'short_text', 'text', 'link']
     suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):

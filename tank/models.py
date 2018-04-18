@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+
 from django.db import models
 
 
@@ -33,7 +35,7 @@ class Experiment(TimeStampedModel):
 
 
 class Movie(TimeStampedModel):
-    src = models.FileField(upload_to='uploads/tank/movies', verbose_name=u'Запись', help_text=u'Видео, гифка')
+    file = models.FileField(upload_to='uploads/tank/movies', verbose_name=u'Запись', help_text=u'Видео, гифка')
     experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='movies')
 
     class Meta:
@@ -41,12 +43,12 @@ class Movie(TimeStampedModel):
         verbose_name_plural = u'Видео'
 
     def __unicode__(self):
-        return unicode(self.src)
+        return unicode(self.file)
 
 
 class Images(TimeStampedModel):
     """ Store restaurant images """
-    src = models.ImageField(upload_to='uploads/tank/images', max_length=255, verbose_name=u'Фото')
+    file = models.ImageField(upload_to='uploads/tank/images', max_length=255, verbose_name=u'Фото')
     experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='images')
 
     class Meta:
@@ -54,11 +56,14 @@ class Images(TimeStampedModel):
         verbose_name_plural = u'Фото'
 
     def __unicode__(self):
-        return unicode(self.src)
+        return unicode(self.file)
+
+    def filename(self):
+        return os.path.basename(self.file.name)
 
 
 class Data(TimeStampedModel):
-    src = models.FileField(upload_to='uploads/tank/data', verbose_name=u'Данные')
+    file = models.FileField(upload_to='uploads/tank/data', verbose_name=u'Данные')
     experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='data')
 
     class Meta:
@@ -66,4 +71,9 @@ class Data(TimeStampedModel):
         verbose_name_plural = u'Данные'
 
     def __unicode__(self):
-        return unicode(self.src)
+        return unicode(self.file)
+
+    @classmethod
+    def name(self):
+        print self.file.name.split('/')[-1]
+        return self.file.name.split('/')[-1]

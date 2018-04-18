@@ -52,7 +52,8 @@ def articles(request):
     else:
         article_list = Article.objects.all()
 
-    paginator = Paginator(article_list, 15)
+    article_list = article_list.order_by('-year')
+    paginator = Paginator(article_list, 5)
 
     try:
         articles = paginator.page(page)
@@ -69,10 +70,21 @@ def articles(request):
 
 
 def seminars(request):
-    seminars = Seminar.objects.all()
+    seminars_list = Seminar.objects.all().order_by('-date')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(seminars_list, 5)
+    try:
+        seminars_page = paginator.page(page)
+    except PageNotAnInteger:
+        seminars_page = paginator.page(1)
+    except EmptyPage:
+        seminars_page = paginator.page(paginator.num_pages)
+
     context = {
-        'seminars': seminars
+        'seminars': seminars_page
     }
+
     return render(request, 'lmnad/seminars.html', context)
 
 
@@ -86,10 +98,21 @@ def seminar_detail(request, pk):
 
 
 def protections(request):
-    protections = Protection.objects.all()
+    protections_list = Protection.objects.all().order_by('-date')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(protections_list, 5)
+    try:
+        protections_page = paginator.page(page)
+    except PageNotAnInteger:
+        protections_page = paginator.page(1)
+    except EmptyPage:
+        protections_page = paginator.page(paginator.num_pages)
+
     context = {
-        'protections': protections
+        'protections': protections_page
     }
+
     return render(request, 'lmnad/protections.html', context)
 
 
@@ -129,9 +152,19 @@ def project_detail(request, name):
 
 
 def events(request):
-    events = Event.objects.all()
+    events_list = Event.objects.all().order_by('-date')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(events_list, 5)
+    try:
+        events_page = paginator.page(page)
+    except PageNotAnInteger:
+        events_page = paginator.page(1)
+    except EmptyPage:
+        events_page = paginator.page(paginator.num_pages)
+
     context = {
-        'events': events
+        'events': events_page
     }
     return render(request, 'lmnad/events.html', context)
 
