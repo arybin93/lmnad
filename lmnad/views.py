@@ -364,7 +364,7 @@ def reset_password(request):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
-                messages.error(request, 'Please correct the error below.')
+                messages.error(request, 'Email don`t found')
             else:
                 new_password = User.objects.make_random_password()
                 user.set_password(new_password)
