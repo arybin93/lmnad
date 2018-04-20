@@ -3,36 +3,73 @@
 
 {% block content %}
 <h3 class="page-header">{{ grant.name }}</h3>
-    <h5><b> {% trans "Type" %}: </b> {{ grant.type }}</h5>
-    <h5><b> {% trans "Number" %}: </b> {{ grant.number }}</h5>
-    <h5><b> {% trans "Supervisers" %}: </b></h5>
-        {% for head in grant.head.all %}
-            {% if head.account %}
-                <a href="{{ head.get_absolute_url }}">{{ head}}</a><br>
-            {% else %}
-               {{ head }}<br>
-            {% endif %}
-        {% endfor %}
-    <h5><b> {% trans "Participants" %}:</b></h5>
+
+    <table class="table table-hover">
+    <tbody>
+        <tr>
+            <th><b>{% trans "Type" %}</b></th>
+            <th>{{ grant.type }}</th>
+        </tr>
+        <tr>
+            <th><b>{% trans "Number" %}</b></th>
+            <th>{{ grant.number }}</th>
+        </tr>
+        <tr>
+            <th><b>{% trans "Dates" %}</b></th>
+            <th>{{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }}</th>
+        </tr>
+        <tr>
+            <th><b>{% trans "Supervisers" %}</b></th>
+            <th>
+                {% for head in grant.head.all %}
+                    {% if head.account %}
+                        <a href="{{ head.get_absolute_url }}">{{ head}}</a><br>
+                    {% else %}
+                        {{ head }}<br>
+                    {% endif %}
+                {% endfor %}
+            </th>
+        </tr>
+        {% if grant.reference %}
+        <tr>
+            <th><b>{% trans "Link" %}</b></th>
+            <th><a href="{{ grant.reference }}">{% trans "Link" %}</a><br></th>
+        </tr>
+        {% endif %}
+        {% if grant.reference_result %}
+        <tr>
+            <th><b>{% trans "Link to results" %}</b></th>
+            <th><a href="{{ grant.reference_result }}">{% trans "Link to results" %}</a><br></th>
+        </tr>
+        {% endif %}
+
+    </tbody>
+    </table>
+    <table class="table table-hover">
+        <tbody>
+        <tr>
+            <th class="text-center"><b>{% trans "Participants" %}:</b></th>
+        </tr>
         {% for member in grant.members.all %}
-            {% if member.account %}
-                <a href="{{ member.get_absolute_url }}">{{ member }}</a><br>
-            {% else %}
-               {{ member }}<br>
-            {% endif %}
+            <tr>
+                <th class="text-center">
+                    {% if member.account %}
+                        <a href="{{ member.get_absolute_url }}">{{ member }}</a>
+                    {% else %}
+                       {{ member }}
+                    {% endif %}
+                </th>
+            </tr>
         {% endfor %}
-    <h5>{{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }}</h5>
-
-    {% if grant.reference %}
-        <a href="{{ grant.reference }}">{% trans "Link" %}</a><br>
-    {% endif %}
-
-    {% if grant.reference_result %}
-        <a href="{{ grant.reference_result  }}"> {% trans "Link to results" %} </a><br>
-    {% endif %}
-
+        </tbody>
+    </table>
     {% if grant.abstract %}
-         <hr>
-         {{ grant.abstract | safe }}
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                {{ grant.abstract | safe }}
+            </tr>
+        </tbody>
+    </table>
     {% endif %}
 {% endblock %}
