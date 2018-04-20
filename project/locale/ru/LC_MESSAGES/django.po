@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-20 09:43+0300\n"
+"POT-Creation-Date: 2018-04-20 10:00+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -389,10 +389,8 @@ msgid "Edit"
 msgstr "Редактировать"
 
 #: .\lmnad\templates\lmnad\project_details.html:8
-#, fuzzy
-#| msgid "Grants, Projects"
 msgid "Go to project"
-msgstr "Реализуемые гранты, программы, научные проекты"
+msgstr "Ссылка на проект"
 
 #: .\lmnad\templates\lmnad\protections.html:5
 msgid "Protection of qualification works"
