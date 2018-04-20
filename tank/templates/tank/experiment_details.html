@@ -10,7 +10,9 @@
             {% if experiment.images.all %}
                 <h4 class="page-header">{% trans 'Images' %} </h4>
                 {% for image in experiment.images.all %}
-                    <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">{{ image.file|getfilename }}</a>
+                    <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                        <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="42" height="42">
+                    </a>
                 {% endfor %}
                 <hr>
             {% endif %}
