@@ -4,19 +4,29 @@
 
 {% block content %}
     <div class="container">
-        <h3 class="page-header">{{ experiment.name }}</h3>
         <div class="row">
-            {{ experiment.description| safe }}
+            <h3 class="page-header">{{ experiment.name }}</h3>
+            <div class="col-md-6">
             {% if experiment.images.all %}
-                <h4 class="page-header">{% trans 'Images' %} </h4>
+                <h4>{% trans 'Images' %}: </h4>
+                <ul>
                 {% for image in experiment.images.all %}
-                    <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
-                        <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="42" height="42">
-                    </a>
+                    <li>
+                        <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                            <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="400">
+                        </a>
+                    </li>
                 {% endfor %}
+                </ul>
                 <hr>
             {% endif %}
-            {% if experiment.movies.all %}
+            </div>
+            <div class="col-md-6">
+            {{ experiment.description| safe }}
+            </div>
+        </div>
+        <div class="row">
+             {% if experiment.movies.all %}
                 <h4 class="page-header">{% trans 'Movies' %} </h4>
                 {% for movie in experiment.movies.all %}
                     <video width="400" controls>

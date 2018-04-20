@@ -437,7 +437,7 @@ msgstr "Время работы"
 
 #: .\tank\templates\tank\experiment_details.html:11
 msgid "Images"
-msgstr "Изображения"
+msgstr "Схема эксперимента"
 
 #: .\tank\templates\tank\experiment_details.html:18
 msgid "Movies"
