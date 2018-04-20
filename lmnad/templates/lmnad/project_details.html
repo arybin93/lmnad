@@ -1,6 +1,10 @@
 {% extends 'lmnad/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h3 class="page-header">{{ project.title }}</h3>
+    <h3 class="page-header">{{ project.title }}</h3>
     {{ project.text | safe }}
+    {% if project.link %}
+        <a href="{{ project.link }}"> {% trans 'Go to project' %} </a>
+    {% endif %}
 {% endblock %}

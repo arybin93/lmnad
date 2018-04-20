@@ -1,8 +1,41 @@
 {% extends 'tank/base.html' %}
+{% load i18n %}
+{% load filename %}
 
 {% block content %}
-    <div class="container" style="margin-top:60px">
+    <div class="container">
         <h3 class="page-header">{{ experiment.name }}</h3>
-        {{ experiment.description | safe }}
+        <div class="row">
+            {{ experiment.description| safe }}
+            {% if experiment.images.all %}
+                <h4 class="page-header">{% trans 'Images' %} </h4>
+                {% for image in experiment.images.all %}
+                    <a href="{{ image.file.url }}" rel="shadowbox[Vacation]">{{ image.file|getfilename }}</a>
+                {% endfor %}
+                <hr>
+            {% endif %}
+            {% if experiment.movies.all %}
+                <h4 class="page-header">{% trans 'Movies' %} </h4>
+                {% for movie in experiment.movies.all %}
+                    <video width="400" controls>
+                        <source src="{{ movie.file.url }}" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+                {% endfor %}
+                <hr>
+            {% endif %}
+            <!--
+            {% if experiment.data.all %}
+                <h4 class="page-header">{% trans 'Files' %} </h4>
+                <ul>
+                {% for d in experiment.data.all %}
+                    {{ d.file.filename }}
+                    <li><a href="{{ d.file.url }}">{{ d.file|getfilename }}</a></li>
+                {% endfor %}
+                </ul>
+                <hr>
+            {% endif %}
+            -->
+        </div>
     </div>
 {% endblock %}

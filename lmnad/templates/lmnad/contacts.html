@@ -4,25 +4,20 @@
 
 {% block content %}
 <h3 class="page-header">{% trans "Contacts" %}</h3>
-    <h4>
-        {{ contacts.text | safe  }}
-    </h4>
-
+    <div class="row">
+        <div class="col-sm-4">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-primary" value="{% trans 'Send' %}"/>
+            </form>
+        </div>
+        <div class="col-sm-4">
+            {{ contacts.text | safe  }}
+        </div>
+        <div class="col-sm-4">
+        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A455e31b097d6a50db0cee013a20e43484279ba3d221f8b6eeb6c4b8258f10979&amp;width=320&amp;height=300&amp;lang=en_FR&amp;scroll=true"></script>
+        </div>
+    </div>
     <br>
-    <h4> {% trans "Feedback Form:" %} </h4>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.media }}
-        {{ form.non_field_errors }}
-        {% for field in form.visible_fields %}
-            <div class="control-group {{ field.html_name }} {% if field.errors %}error{% endif %}">
-                <label class="control-label">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
-                <div>
-                    {{ field }}
-                    {% if field.errors %}<span class="help-inline">{{ field.errors.as_text }}</span>{% endif %}
-                </div>
-            </div>
-        {% endfor %}
-        <input type="submit" class="btn btn-primary" value="Отправить"/>
-</form>
 {% endblock %}

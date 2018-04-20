@@ -2,20 +2,44 @@
 {% load i18n %}
 
 {% block content %}
-<h3 class="page-header">{% trans "Seminars" %}</h3>
-    {% for seminar in seminars|dictsortreversed:"date" %}
-        {% if seminar.full_text %}
-            <h3><a href="{{ seminar.get_absolute_url }}"> {{ seminar.title }} </a></h3>
-        {% else %}
-            <h3>{{ seminar.title }}</h3>
+    <h3 class="page-header">{% trans "Seminars" %}</h3>
+    <div class="row">
+        {% for seminar in seminars %}
+            {% if seminar.full_text %}
+                <h3><a href="{{ seminar.get_absolute_url }}"> {{ seminar.title }} </a></h3>
+            {% else %}
+                <h3>{{ seminar.title }}</h3>
+            {% endif %}
+            <p>
+                {{ seminar.text | safe }}
+                <br>
+                <small><b>{{ seminar.date }}</b></small>
+            </p>
+            <hr>
+        {% empty %}
+            <p>{% trans "No seminars" %}</p>
+        {% endfor %}
+
+        {% if seminars.has_other_pages %}
+              <ul class="pagination">
+                {% if seminars.has_previous %}
+                  <li><a href="?page={{ seminars.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in seminars.paginator.page_range %}
+                  {% if seminars.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if seminars.has_next %}
+                  <li><a href="?page={{ seminars.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+              </ul>
         {% endif %}
-        <p>
-            {{ seminar.text | safe }}
-            <br>
-            <small><b>{{ seminar.date }}</b></small>
-        </p>
-        <hr>
-    {% empty %}
-        <p>{% trans "No seminars" %}</p>
-    {% endfor %}
+    </div>
 {% endblock %}

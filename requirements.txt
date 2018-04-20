@@ -17,3 +17,4 @@ django-modeltranslation
 django-geoposition
 Django-Select2
 django-daterange-filter
+pytz
