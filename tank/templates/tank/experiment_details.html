@@ -38,9 +38,9 @@
                 {% endfor %}
                 <hr>
             {% endif %}
-            {% if experiment.images.all %}
+            {% if images %}
                 <h4>{% trans 'Images' %}: </h4>
-                {% for image in experiment.images.all %}
+                {% for image in images %}
                     {% if not image.is_schema %}
                             <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
                                 <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="100">
@@ -50,7 +50,7 @@
                 <hr>
             {% endif %}
             <!--
-            {% if images %}
+            {% if experiment.data.all %}
                 <h4 class="page-header">{% trans 'Files' %} </h4>
                 <ul>
                 {% for d in experiment.data.all %}
