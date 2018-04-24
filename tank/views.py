@@ -38,6 +38,7 @@ def tank_exp_detail(request, pk):
 
     context = {
         'experiment': experiment,
-        'project': Project.objects.get(name='wave_tank')
+        'project': Project.objects.get(name='wave_tank'),
+        'images': experiment.images.filter(is_schema=False)
     }
     return render(request, 'tank/experiment_details.html', context)
