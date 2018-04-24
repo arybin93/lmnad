@@ -57,30 +57,11 @@
             font-size: 13px;
             padding: 10px;
         }
-
-        .jumbotron {
-            background-image: url("{% static 'igwatlas/WestCentralAfrica_f7.png' %}");
-            background-color: #17234E;
-            margin-bottom: 0;
-            min-height: 50%;
-            background-repeat: no-repeat;
-            background-position: center;
-            -webkit-background-size: cover;
-            background-size: cover;
-            color: #ffffff;
-        }
-
-        #map {
-            width:100%;
-            height:600px
-        }
     </style>
 
     <!-- scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//api-maps.yandex.ru/2.1/?lang=en_RU" type="text/javascript"></script>
-    <script src="{% static 'igwatlas/igwatlas.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/js/bootstrap-datepicker.js"></script>
 </head>
@@ -88,7 +69,6 @@
     {% get_current_language as LANGUAGE_CODE %}
     {% get_available_languages as LANGUAGES %}
     {% get_language_info_list for LANGUAGES as languages %}
-
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-20 16:18+0300\n"
+"POT-Creation-Date: 2018-04-24 14:57+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,69 +25,69 @@ msgstr ""
 msgid "Certificate of state registration"
 msgstr "Свидетельство о государственной регистрации базы данных"
 
-#: .\igwatlas\templates\igwatlas\base.html:113
+#: .\igwatlas\templates\igwatlas\base.html:117
 #: .\igwatlas\templates\igwatlas\map.html:34
 msgid "Map"
 msgstr "Карта наблюдений"
 
-#: .\igwatlas\templates\igwatlas\base.html:114
+#: .\igwatlas\templates\igwatlas\base.html:118
 #: .\igwatlas\templates\igwatlas\igwatlas.html:17
 #: .\igwatlas\templates\igwatlas\sources.html:8
 msgid "Sources"
 msgstr "Источники"
 
-#: .\igwatlas\templates\igwatlas\base.html:115
+#: .\igwatlas\templates\igwatlas\base.html:119
 #: .\igwcoeffs\templates\igwcoeffs\base.html:32
 msgid "About"
 msgstr "О проекте"
 
-#: .\igwatlas\templates\igwatlas\base.html:152
-#: .\lmnad\templates\lmnad\base.html:98 .\tank\templates\tank\base.html:138
+#: .\igwatlas\templates\igwatlas\base.html:156
+#: .\lmnad\templates\lmnad\base.html:97 .\tank\templates\tank\base.html:142
 msgid "My account"
 msgstr "Профиль"
 
-#: .\igwatlas\templates\igwatlas\base.html:153
-#: .\lmnad\templates\lmnad\base.html:99
+#: .\igwatlas\templates\igwatlas\base.html:157
+#: .\lmnad\templates\lmnad\base.html:98
 #: .\lmnad\templates\lmnad\change_password.html:10
 #: .\lmnad\templates\lmnad\change_password.html:22
-#: .\tank\templates\tank\base.html:139
+#: .\tank\templates\tank\base.html:143
 msgid "Change password"
 msgstr "Сменить пароль"
 
-#: .\igwatlas\templates\igwatlas\base.html:155
-#: .\lmnad\templates\lmnad\base.html:101 .\tank\templates\tank\base.html:141
+#: .\igwatlas\templates\igwatlas\base.html:159
+#: .\lmnad\templates\lmnad\base.html:100 .\tank\templates\tank\base.html:145
 msgid "Log out"
 msgstr "Выйти"
 
-#: .\igwatlas\templates\igwatlas\base.html:159
-#: .\igwatlas\templates\igwatlas\base.html:173
-#: .\lmnad\templates\lmnad\base.html:105 .\lmnad\templates\lmnad\login.html:18
-#: .\lmnad\templates\lmnad\register.html:15 .\tank\templates\tank\base.html:145
-#: .\tank\templates\tank\base.html:159
+#: .\igwatlas\templates\igwatlas\base.html:163
+#: .\igwatlas\templates\igwatlas\base.html:177
+#: .\lmnad\templates\lmnad\base.html:104 .\lmnad\templates\lmnad\login.html:18
+#: .\lmnad\templates\lmnad\register.html:15 .\tank\templates\tank\base.html:149
+#: .\tank\templates\tank\base.html:163
 msgid "Sign up"
 msgstr "Зарегистрироваться"
 
-#: .\igwatlas\templates\igwatlas\base.html:160
-#: .\igwatlas\templates\igwatlas\base.html:175
-#: .\lmnad\templates\lmnad\base.html:106 .\lmnad\templates\lmnad\login.html:10
+#: .\igwatlas\templates\igwatlas\base.html:164
+#: .\igwatlas\templates\igwatlas\base.html:179
+#: .\lmnad\templates\lmnad\base.html:105 .\lmnad\templates\lmnad\login.html:10
 #: .\lmnad\templates\lmnad\login.html:14
-#: .\lmnad\templates\lmnad\register.html:19 .\tank\templates\tank\base.html:146
-#: .\tank\templates\tank\base.html:161
+#: .\lmnad\templates\lmnad\register.html:19 .\tank\templates\tank\base.html:150
+#: .\tank\templates\tank\base.html:165
 msgid "Log in"
 msgstr "Войти"
 
-#: .\igwatlas\templates\igwatlas\base.html:170
-#: .\tank\templates\tank\base.html:156
+#: .\igwatlas\templates\igwatlas\base.html:174
+#: .\tank\templates\tank\base.html:160
 msgid "Access denied"
 msgstr "Доступ запрещён"
 
-#: .\igwatlas\templates\igwatlas\base.html:172
-#: .\tank\templates\tank\base.html:158
+#: .\igwatlas\templates\igwatlas\base.html:176
+#: .\tank\templates\tank\base.html:162
 msgid "Create new user:"
 msgstr "Создать нового пользователя"
 
-#: .\igwatlas\templates\igwatlas\base.html:174
-#: .\tank\templates\tank\base.html:160
+#: .\igwatlas\templates\igwatlas\base.html:178
+#: .\tank\templates\tank\base.html:164
 msgid "or"
 msgstr "или"
 
@@ -223,47 +223,47 @@ msgstr "Публикации"
 msgid "Download"
 msgstr "Скачать"
 
-#: .\lmnad\templates\lmnad\base.html:45
+#: .\lmnad\templates\lmnad\base.html:44
 msgid "Home"
 msgstr "Главная"
 
-#: .\lmnad\templates\lmnad\base.html:46
+#: .\lmnad\templates\lmnad\base.html:45
 msgid "People"
 msgstr "Сотрудники"
 
-#: .\lmnad\templates\lmnad\base.html:47
+#: .\lmnad\templates\lmnad\base.html:46
 msgid "Publication"
 msgstr "Публикации"
 
-#: .\lmnad\templates\lmnad\base.html:48
+#: .\lmnad\templates\lmnad\base.html:47
 msgid "Grants"
 msgstr "Гранты"
 
-#: .\lmnad\templates\lmnad\base.html:49 .\lmnad\templates\lmnad\projects.html:5
+#: .\lmnad\templates\lmnad\base.html:48 .\lmnad\templates\lmnad\projects.html:5
 msgid "Projects"
 msgstr "Проекты"
 
-#: .\lmnad\templates\lmnad\base.html:52
+#: .\lmnad\templates\lmnad\base.html:51
 msgid "News"
 msgstr "Новости"
 
-#: .\lmnad\templates\lmnad\base.html:56 .\lmnad\templates\lmnad\seminars.html:5
+#: .\lmnad\templates\lmnad\base.html:55 .\lmnad\templates\lmnad\seminars.html:5
 msgid "Seminars"
 msgstr "Семинары"
 
-#: .\lmnad\templates\lmnad\base.html:57
+#: .\lmnad\templates\lmnad\base.html:56
 msgid "Protections"
 msgstr "Защиты"
 
-#: .\lmnad\templates\lmnad\base.html:58 .\lmnad\templates\lmnad\events.html:5
+#: .\lmnad\templates\lmnad\base.html:57 .\lmnad\templates\lmnad\events.html:5
 msgid "Events"
 msgstr "События"
 
-#: .\lmnad\templates\lmnad\base.html:61 .\lmnad\templates\lmnad\contacts.html:6
+#: .\lmnad\templates\lmnad\base.html:60 .\lmnad\templates\lmnad\contacts.html:6
 msgid "Contacts"
 msgstr "Контакты"
 
-#: .\lmnad\templates\lmnad\base.html:119
+#: .\lmnad\templates\lmnad\base.html:118
 #, fuzzy
 #| msgid ""
 #| "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. "
@@ -338,7 +338,7 @@ msgstr "Участники"
 
 #: .\lmnad\templates\lmnad\login.html:22
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Забыли свой пароль?"
 
 #: .\lmnad\templates\lmnad\people.html:5
 msgid "Present"
@@ -428,19 +428,23 @@ msgstr "Спасибо"
 msgid "Your letter has been sent"
 msgstr "Ваше письмо отправлено"
 
-#: .\tank\templates\tank\base.html:98
+#: .\tank\templates\tank\base.html:102
 msgid "Experimental basin"
 msgstr "Эксперименты"
 
 #: .\tank\templates\tank\experiment_details.html:11
-msgid "Images"
-msgstr "Схема эксперимента"
+msgid "Schema"
+msgstr "Схема"
 
-#: .\tank\templates\tank\experiment_details.html:30
+#: .\tank\templates\tank\experiment_details.html:32
 msgid "Movies"
 msgstr "Видео"
 
-#: .\tank\templates\tank\experiment_details.html:41
+#: .\tank\templates\tank\experiment_details.html:42
+msgid "Images"
+msgstr "Изображения"
+
+#: .\tank\templates\tank\experiment_details.html:54
 msgid "Files"
 msgstr "Файлы"
 

@@ -49,6 +49,7 @@ class Movie(TimeStampedModel):
 class Images(TimeStampedModel):
     """ Store restaurant images """
     file = models.ImageField(upload_to='uploads/tank/images', max_length=255, verbose_name=u'Фото')
+    is_schema = models.BooleanField(default=False, verbose_name=u'Cхема эксперимента', help_text=u'Да, нет')
     experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='images')
 
     class Meta:

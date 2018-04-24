@@ -24,7 +24,6 @@
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 {% get_language_info_list for LANGUAGES as languages %}
-
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -73,21 +72,21 @@
                 <ul class="dropdown-menu lang">
                     <form action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
-                        {% for language in languages %}
-                            <li>
-                                <button type="submit"
-                                    name="language"
-                                    style="border: none; padding: 5px; background: none;"
-                                    value="{{ language.code }}"
-                                    class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
-                                    {% if language.code == 'ru' %}
-                                        <img src="{% static 'lmnad/flag_ru.png' %}" title="Russian">
-                                    {% else %}
-                                        <img src="{% static 'lmnad/flag_en.png' %}" title="English">
-                                    {% endif %}
-                                </button>
-                            </li>
-                        {% endfor %}
+                    {% for language in languages %}
+                        <li>
+                            <button type="submit"
+                                name="language"
+                                style="border: none; padding: 5px; background: none;"
+                                value="{{ language.code }}"
+                                class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
+                                {% if language.code == 'ru' %}
+                                    <img src="{% static 'lmnad/flag_ru.png' %}" title="Russian">
+                                {% else %}
+                                    <img src="{% static 'lmnad/flag_en.png' %}" title="English">
+                                {% endif %}
+                            </button>
+                        </li>
+                    {% endfor %}
                     </form>
                 </ul>
               </li>

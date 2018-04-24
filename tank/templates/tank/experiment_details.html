@@ -8,14 +8,16 @@
             <h3 class="page-header">{{ experiment.name }}</h3>
             <div class="col-md-6">
             {% if experiment.images.all %}
-                <h4>{% trans 'Images' %}: </h4>
+                <h4>{% trans 'Schema' %}: </h4>
                 <ul>
                 {% for image in experiment.images.all %}
-                    <li>
-                        <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
-                            <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="400">
-                        </a>
-                    </li>
+                    {% if image.is_schema %}
+                        <li>
+                            <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                                <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="400">
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
                 </ul>
                 <hr>
@@ -33,6 +35,17 @@
                         <source src="{{ movie.file.url }}" type="video/mp4">
                         Your browser does not support HTML5 video.
                     </video>
+                {% endfor %}
+                <hr>
+            {% endif %}
+            {% if experiment.images.all %}
+                <h4>{% trans 'Images' %}: </h4>
+                {% for image in experiment.images.all %}
+                    {% if not image.is_schema %}
+                            <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                                <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="100">
+                            </a>
+                    {% endif %}
                 {% endfor %}
                 <hr>
             {% endif %}
