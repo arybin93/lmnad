@@ -8,7 +8,7 @@
             <h3 class="page-header">{{ experiment.name }}</h3>
             <div class="col-md-6">
             {% if experiment.images.all %}
-                <h4>{% trans 'Schema' %}: </h4>
+                <h4>{% trans 'Scheme of experiment' %}: </h4>
                 <ul>
                 {% for image in experiment.images.all %}
                     {% if image.is_schema %}
