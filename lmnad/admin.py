@@ -290,7 +290,7 @@ class ProjectForm(ModelForm):
             'text_ru': CKEditorWidget(),
             'short_text_ru': CKEditorWidget(),
             'text_en': CKEditorWidget(),
-            'short_text_en': CKEditorWidget(),
+            'short_text_en': CKEditorWidget()
         }
 
     class Media:
