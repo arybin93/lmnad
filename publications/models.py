@@ -6,14 +6,6 @@ from lmnad.models import Account
 from django_extensions.db.models import TimeStampedModel
 
 
-RU = 0
-EN = 1
-LANGUAGES = (
-    (RU, u'Русский'),
-    (EN, u'Английский')
-)
-
-
 class Journal(TimeStampedModel):
     """ Journal """
     name = models.CharField(unique=True, max_length=255, verbose_name=u'Название журнала, конференции')
@@ -59,7 +51,6 @@ class Publication(TimeStampedModel):
     """ Publication """
     type = models.ForeignKey(PublicationType, verbose_name=u'Тип публикации')
     title = models.CharField(max_length=200, verbose_name=u'Название')
-    language = models.PositiveIntegerField(default=RU, choices=LANGUAGES, verbose_name=u'Язык публикации')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
     journal = models.ForeignKey(Journal, blank=True, verbose_name=u'Журнал, конференция')
     year = models.IntegerField(verbose_name=u'Год')
