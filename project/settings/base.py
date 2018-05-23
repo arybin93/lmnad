@@ -35,7 +35,8 @@ PROJECT_APPS = [
    'lmnad',
    'igwatlas',
    'igwcoeffs',
-   'tank'
+   'tank',
+   'publications'
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -145,6 +146,12 @@ SUIT_CONFIG = {
                 'people',
                 'grant',
                 'project'
+        ]},
+        {'app': 'publications', 'label': u'Публикации', 'models': [
+            'publication',
+            'author',
+            'publicationType',
+            'journal'
         ]},
         {'app': 'tank', 'label': u'Эксперименты', 'models': [
             'experiment',

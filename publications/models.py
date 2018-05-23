@@ -35,6 +35,7 @@ class Author(TimeStampedModel):
     """ Author """
     name = models.CharField(max_length=55, verbose_name=u'Имя')
     last_name = models.CharField(max_length=55, verbose_name=u'Фамилия')
+    middle_name = models.CharField(max_length=55, blank=True, verbose_name=u'Отчество')
     user = models.ForeignKey(Account, blank=True, null=True,
                              verbose_name=u'Пользователь',
                              help_text=u'Если есть аккаунт')
