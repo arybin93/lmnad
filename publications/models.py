@@ -18,19 +18,6 @@ class Journal(TimeStampedModel):
         verbose_name_plural = 'Журналы'
 
 
-class PublicationType(TimeStampedModel):
-    """ Publication Type """
-    name = models.CharField(unique=True, max_length=55, verbose_name=u'Название типа',
-                            help_text=u'Например: Статья, патент, монография, тезис')
-
-    def __unicode__(self):
-        return unicode(self.name)
-
-    class Meta:
-        verbose_name = 'Тип публикации'
-        verbose_name_plural = 'Типы публикации'
-
-
 class Author(TimeStampedModel):
     """ Author """
     name = models.CharField(max_length=55, verbose_name=u'Имя')
@@ -50,7 +37,12 @@ class Author(TimeStampedModel):
 
 class Publication(TimeStampedModel):
     """ Publication """
-    type = models.ForeignKey(PublicationType, verbose_name=u'Тип публикации')
+    ARTICLE = 'Article'
+    TYPE = (
+        (ARTICLE, u'Статья'),
+    )
+
+    type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
     title = models.CharField(max_length=200, verbose_name=u'Название')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
     journal = models.ForeignKey(Journal, blank=True, verbose_name=u'Журнал, конференция')

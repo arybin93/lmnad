@@ -139,7 +139,6 @@ SUIT_CONFIG = {
         },
         {'app': 'lmnad', 'label': u'Основные разделы',
             'models': [
-                'article',
                 'event',
                 'seminar',
                 'protection',
@@ -147,11 +146,12 @@ SUIT_CONFIG = {
                 'grant',
                 'project'
         ]},
-        {'app': 'publications', 'label': u'Публикации', 'models': [
+        {'app': 'publications', 'label': u'Менеджер публикаций', 'models': [
             'publication',
             'author',
             'publicationType',
-            'journal'
+            'journal',
+            'lmnad.article',
         ]},
         {'app': 'tank', 'label': u'Эксперименты', 'models': [
             'experiment',

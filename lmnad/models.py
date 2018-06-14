@@ -224,8 +224,8 @@ class Article(models.Model):
         return unicode(self.title)
 
     class Meta:
-        verbose_name = 'Статья'
-        verbose_name_plural = 'Статьи'
+        verbose_name = '(Old) Статья'
+        verbose_name_plural = '(Old) Статьи'
 
 
 def send_email(title, text, date):
