@@ -10,7 +10,7 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
-    url(r'^admin/$', RedirectView.as_view(url='lmnad/article/')),
+    url(r'^admin/$', RedirectView.as_view(url='lmnad/event/')),
     url(r'^admin/', admin.site.urls),
     url(r'^', include('lmnad.urls')),
     url(r'^', include('igwatlas.urls')),
