@@ -5,6 +5,7 @@ from django_select2.forms import Select2MultipleWidget
 from suit.widgets import SuitDateWidget, SuitSplitDateTimeWidget
 from django import forms
 
+from igwatlas.admin import RowDateRangeFilter
 from lmnad.models import *
 from igwatlas.models import Record, Source
 from django.contrib.admin import ModelAdmin
@@ -71,6 +72,8 @@ class ProtectionForm(ModelForm):
 
 class ProtectionAdmin(TranslationAdmin):
     list_display = ['author', 'title', 'date']
+    list_filter = [('date', RowDateRangeFilter)]
+    search_fields = ['title']
     form = ProtectionForm
     suit_form_tabs = (('media', 'Media'),)
 
@@ -145,6 +148,8 @@ class EventForm(ModelForm):
 
 class EventAdmin(TranslationAdmin):
     list_display = ['title', 'date']
+    list_filter = [('date', RowDateRangeFilter)]
+    search_fields = ['title']
     form = EventForm
     suit_form_tabs = (('media', 'Media'),)
 
@@ -183,6 +188,8 @@ class SeminarForm(ModelForm):
 
 class SeminarAdmin(TranslationAdmin):
     list_display = ['title', 'date']
+    list_filter = [('date', RowDateRangeFilter)]
+    search_fields = ['title']
     fields = ['title', 'text', 'date', 'is_send_email']
     form = SeminarForm
     suit_form_tabs = (('media', 'Media'),)
@@ -278,8 +285,9 @@ class GrantForm(ModelForm):
 
 class GrantAdmin(TranslationAdmin):
     form = GrantForm
-    list_display = ['type', 'number', 'name']
+    list_display = ['type', 'number', 'name', 'date_start', 'date_end']
     search_fields = ['name', 'number', 'head']
+    list_filter = ['date_start', 'date_end']
 
 admin.site.register(Grant, GrantAdmin)
 

@@ -17,10 +17,10 @@ class File(models.Model):
         verbose_name_plural = u'Файлы'
 
     def __unicode__(self):
-        if self.path:
-            return unicode(self.path)
-        else:
+        if self.file:
             return unicode(self.file)
+        else:
+            return unicode(self.path)
 
 
 # IGWAtlas

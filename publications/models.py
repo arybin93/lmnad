@@ -6,14 +6,6 @@ from lmnad.models import Account
 from django_extensions.db.models import TimeStampedModel
 
 
-RU = 0
-EN = 1
-LANGUAGES = (
-    (RU, u'Русский'),
-    (EN, u'Английский')
-)
-
-
 class Journal(TimeStampedModel):
     """ Journal """
     name = models.CharField(unique=True, max_length=255, verbose_name=u'Название журнала, конференции')
@@ -26,23 +18,11 @@ class Journal(TimeStampedModel):
         verbose_name_plural = 'Журналы'
 
 
-class PublicationType(TimeStampedModel):
-    """ Publication Type """
-    name = models.CharField(unique=True, max_length=55, verbose_name=u'Название типа',
-                            help_text=u'Например: Статья, патент, монография, тезис')
-
-    def __unicode__(self):
-        return unicode(self.name)
-
-    class Meta:
-        verbose_name = 'Тип публикации'
-        verbose_name_plural = 'Типы публикации'
-
-
 class Author(TimeStampedModel):
     """ Author """
     name = models.CharField(max_length=55, verbose_name=u'Имя')
     last_name = models.CharField(max_length=55, verbose_name=u'Фамилия')
+    middle_name = models.CharField(max_length=55, blank=True, verbose_name=u'Отчество')
     user = models.ForeignKey(Account, blank=True, null=True,
                              verbose_name=u'Пользователь',
                              help_text=u'Если есть аккаунт')
@@ -57,15 +37,19 @@ class Author(TimeStampedModel):
 
 class Publication(TimeStampedModel):
     """ Publication """
-    type = models.ForeignKey(PublicationType, verbose_name=u'Тип публикации')
+    ARTICLE = 'Article'
+    TYPE = (
+        (ARTICLE, u'Статья'),
+    )
+
+    type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
     title = models.CharField(max_length=200, verbose_name=u'Название')
-    language = models.PositiveIntegerField(default=RU, choices=LANGUAGES, verbose_name=u'Язык публикации')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
     journal = models.ForeignKey(Journal, blank=True, verbose_name=u'Журнал, конференция')
     year = models.IntegerField(verbose_name=u'Год')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
-    volume = models.CharField(max_length=15, blank=True, verbose_name='Том, номер')
-    pages = models.CharField(max_length=15, blank=True, verbose_name='Страницы')
+    volume = models.CharField(max_length=55, blank=True, verbose_name='Том, номер')
+    pages = models.CharField(max_length=55, blank=True, verbose_name='Страницы')
     number = models.PositiveIntegerField(blank=True, null=True, verbose_name=u'Номер свидетельства')
     link = models.CharField(max_length=200, blank=True, verbose_name=u'Ссылка', help_text=u'Если есть')
     doi = models.CharField(max_length=200, blank=True, verbose_name=u'DOI', help_text=u'Если есть')

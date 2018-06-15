@@ -140,8 +140,8 @@ admin.site.register(Source, SourceAdmin)
 
 
 class FileAdmin(admin.ModelAdmin):
-    list_display = ['path', 'file']
-    search_fields = ['path', 'file']
+    list_display = ['file']
+    search_fields = ['file']
 
 admin.site.register(File, FileAdmin)
 
