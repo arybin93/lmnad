@@ -146,7 +146,7 @@ SUIT_CONFIG = {
                 'grant',
                 'project'
         ]},
-        {'app': 'publications', 'label': u'Менеджер публикаций', 'models': [
+        {'app': 'publications', 'label': u'Менеджер публикаций (В разработке)', 'models': [
             'publication',
             'author',
             'publicationType',
