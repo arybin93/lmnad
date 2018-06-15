@@ -28,7 +28,8 @@ class Author(TimeStampedModel):
                              help_text=u'Если есть аккаунт')
 
     def __unicode__(self):
-        return unicode(self.name)
+        full_name = '{} {}'.format(self.last_name, self.name)
+        return unicode(full_name)
 
     class Meta:
         verbose_name = 'Автор'
