@@ -17,14 +17,18 @@ class PublicationAdmin(admin.ModelAdmin):
     list_display = [
         'type',
         'title',
-        'get_reference',
+        'year',
+        'get_authors',
+        'journal',
+        'volume',
+        'issue',
+        'pages',
         'doi',
         'is_rinc',
         'is_wos',
         'is_scopus',
         'is_can_download',
         'is_show',
-        'year'
     ]
 
     list_filter = [
@@ -40,13 +44,21 @@ class PublicationAdmin(admin.ModelAdmin):
     search_fields = ['title', 'doi', 'authors__last_name']
     inlines = [AuthorInline]
 
-    def get_reference(self, obj):
-        str = ', '
+    def get_authors(self, obj):
+        str = ''
         for author in obj.authors.all():
-            str += author.last_name
-        str += obj.journal.name + ', '+ obj.volume + ', ' + obj.pages
+            short_name = author.name[0] + '. '
+            if author.middle_name:
+                short_middle = author.middle_name[0]
+                author_str = u"{} {}. {}. ;".format(author.last_name,
+                                                   short_name,
+                                                   short_middle)
+            else:
+                author_str = u"{} {}. ;".format(author.last_name,
+                                               short_name)
+            str += author_str
         return str
-    get_reference.short_description = u'Источник'
+    get_authors.short_description = u'Авторы'
 
 
 admin.site.register(Publication, PublicationAdmin)
