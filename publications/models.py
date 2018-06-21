@@ -44,7 +44,7 @@ class Publication(TimeStampedModel):
     )
 
     type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
-    title = models.CharField(max_length=200, verbose_name=u'Название')
+    title = models.CharField(max_length=200, db_index=True, verbose_name=u'Название')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
     journal = models.ForeignKey(Journal, blank=True, verbose_name=u'Журнал, конференция')
     year = models.IntegerField(verbose_name=u'Год')

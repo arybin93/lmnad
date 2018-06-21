@@ -42,7 +42,7 @@ class PublicationAdmin(TabbedTranslationAdmin):
         'is_show'
     ]
 
-    search_fields = ['title', 'doi', 'authors__last_name']
+    search_fields = ['title_ru', 'title_en', 'doi', 'authors__last_name']
     inlines = [AuthorInline]
 
     def get_authors(self, obj):
@@ -67,7 +67,7 @@ admin.site.register(Publication, PublicationAdmin)
 
 class AuthorAdmin(TabbedTranslationAdmin):
     list_display = ['name', 'last_name', 'middle_name', 'get_count']
-    search_fields = ['last_name']
+    search_fields = ['last_name_ru', 'last_name_en']
 
     def get_count(self, obj):
         return 0
@@ -78,6 +78,6 @@ admin.site.register(Author, AuthorAdmin)
 
 class JournalAdmin(TabbedTranslationAdmin):
     list_display = ['name']
-    search_fields = ['name']
+    search_fields = ['name_ru', 'name_en']
 
 admin.site.register(Journal, JournalAdmin)
