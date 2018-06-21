@@ -2,12 +2,19 @@
 from django.contrib import admin
 from django.contrib.admin import StackedInline
 from django.utils.html import format_html_join
-from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
-
+from django_select2.forms import Select2Widget
+from modeltranslation.admin import TabbedTranslationAdmin
+from django.db import models
 from publications.models import Publication, Author, Journal, AuthorPublication
 
 
-class AuthorInline(StackedInline):
+class MixinModelAdmin:
+    formfield_overrides = {
+        models.ForeignKey: {'widget': Select2Widget},
+    }
+
+
+class AuthorInline(MixinModelAdmin, StackedInline):
     model = AuthorPublication
     sortable = 'order_by'
     verbose_name = 'Автор'
@@ -15,7 +22,7 @@ class AuthorInline(StackedInline):
     extra = 0
 
 
-class PublicationAdmin(TabbedTranslationAdmin):
+class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
     list_display = [
         'type',
         'title',
@@ -43,7 +50,15 @@ class PublicationAdmin(TabbedTranslationAdmin):
         'is_show'
     ]
 
-    search_fields = ['title_ru', 'title_en', 'doi', 'authors__last_name', 'journal__name']
+    search_fields = [
+        'title_ru',
+        'title_en',
+        'doi',
+        'authors__last_name_ru',
+        'authors__last_name_en',
+        'journal__name_ru',
+        'journal__name_en'
+    ]
     inlines = [AuthorInline]
 
     def get_authors(self, obj):
