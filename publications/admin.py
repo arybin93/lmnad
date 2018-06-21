@@ -51,11 +51,11 @@ class PublicationAdmin(TabbedTranslationAdmin):
             short_name = author.name[0] + '. '
             if author.middle_name:
                 short_middle = author.middle_name[0]
-                author_str = u"{} {}. {}. ;".format(author.last_name,
+                author_str = u"{} {} {}. ;".format(author.last_name,
                                                     short_name,
                                                     short_middle)
             else:
-                author_str = u"{} {}. ;".format(author.last_name,
+                author_str = u"{} {} ;".format(author.last_name,
                                                 short_name)
             str += author_str
         return str
