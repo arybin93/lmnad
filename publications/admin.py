@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
+from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 
 from publications.models import Publication, Author, Journal, AuthorPublication
 
@@ -13,7 +14,7 @@ class AuthorInline(StackedInline):
     extra = 0
 
 
-class PublicationAdmin(admin.ModelAdmin):
+class PublicationAdmin(TabbedTranslationAdmin):
     list_display = [
         'type',
         'title',
@@ -64,7 +65,7 @@ class PublicationAdmin(admin.ModelAdmin):
 admin.site.register(Publication, PublicationAdmin)
 
 
-class AuthorAdmin(admin.ModelAdmin):
+class AuthorAdmin(TabbedTranslationAdmin):
     list_display = ['name', 'last_name', 'middle_name', 'get_count']
     search_fields = ['last_name']
 
@@ -75,7 +76,7 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Author, AuthorAdmin)
 
 
-class JournalAdmin(admin.ModelAdmin):
+class JournalAdmin(TabbedTranslationAdmin):
     list_display = ['name']
     search_fields = ['name']
 
