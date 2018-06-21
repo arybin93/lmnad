@@ -43,7 +43,7 @@ class PublicationAdmin(TabbedTranslationAdmin):
         'is_show'
     ]
 
-    search_fields = ['title_ru', 'title_en', 'doi', 'authors__last_name']
+    search_fields = ['title_ru', 'title_en', 'doi', 'authors__last_name', 'journal__name']
     inlines = [AuthorInline]
 
     def get_authors(self, obj):
