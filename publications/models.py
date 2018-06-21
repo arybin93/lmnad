@@ -31,6 +31,18 @@ class Author(TimeStampedModel):
         full_name = '{} {}'.format(self.last_name, self.name)
         return unicode(full_name)
 
+    def get_short_name(self):
+        short_name = self.name[0]
+        if self.middle_name:
+            short_middle = self.middle_name[0]
+            author_str = u"{} {}. {}.".format(self.last_name,
+                                              short_name,
+                                              short_middle)
+        else:
+            author_str = u"{} {}.".format(self.last_name,
+                                          short_name)
+        return author_str
+
     class Meta:
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
+from django.utils.html import format_html_join
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 
 from publications.models import Publication, Author, Journal, AuthorPublication
@@ -46,19 +47,11 @@ class PublicationAdmin(TabbedTranslationAdmin):
     inlines = [AuthorInline]
 
     def get_authors(self, obj):
-        str = ''
-        for author in obj.authors.all():
-            short_name = author.name[0] + '. '
-            if author.middle_name:
-                short_middle = author.middle_name[0]
-                author_str = u"{} {} {}. ;".format(author.last_name,
-                                                    short_name,
-                                                    short_middle)
-            else:
-                author_str = u"{} {} ;".format(author.last_name,
-                                                short_name)
-            str += author_str
-        return str
+        result = format_html_join(
+            '\n', u"""<li>{}</li>""",
+            ((author.get_short_name(),) for author in obj.authors.all())
+        )
+        return result
     get_authors.short_description = u'Авторы'
 
 
