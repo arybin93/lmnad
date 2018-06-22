@@ -19,7 +19,7 @@ class AuthorInline(MixinModelAdmin, StackedInline):
     sortable = 'order_by'
     verbose_name = 'Автор'
     verbose_name_plural = 'Авторы'
-    extra = 0
+    extra = 1
 
 
 class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
