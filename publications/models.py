@@ -89,8 +89,8 @@ class Publication(TimeStampedModel):
 
 class AuthorPublication(models.Model):
     """ Author Publication connection """
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name=u'Автор')
-    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, verbose_name=u'Публикация')
+    author = models.ForeignKey(Author, related_name='authors', on_delete=models.CASCADE, verbose_name=u'Автор')
+    publication = models.ForeignKey(Publication, related_name='publications', on_delete=models.CASCADE, verbose_name=u'Публикация')
     order_by = models.PositiveIntegerField(default=0, verbose_name=u'Порядок отображения', help_text=u'От 0 - 100')
 
     def __unicode__(self):

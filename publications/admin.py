@@ -78,7 +78,8 @@ class AuthorAdmin(TabbedTranslationAdmin):
     search_fields = ['last_name_ru', 'last_name_en']
 
     def get_count(self, obj):
-        return 0
+        print obj.publication_set.count()
+        return obj.publication_set.count()
     get_count.short_description = u'Число публикаций'
 
 admin.site.register(Author, AuthorAdmin)
