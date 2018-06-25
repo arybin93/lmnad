@@ -74,7 +74,7 @@ admin.site.register(Publication, PublicationAdmin)
 
 
 class AuthorAdmin(TabbedTranslationAdmin):
-    list_display = ['name', 'last_name', 'middle_name', 'get_count']
+    list_display = ['last_name', 'name', 'middle_name', 'get_count']
     search_fields = ['last_name_ru', 'last_name_en']
 
     def get_count(self, obj):
