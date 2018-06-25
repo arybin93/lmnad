@@ -78,7 +78,6 @@ class AuthorAdmin(TabbedTranslationAdmin):
     search_fields = ['last_name_ru', 'last_name_en']
 
     def get_count(self, obj):
-        print obj.publication_set.count()
         return obj.publication_set.count()
     get_count.short_description = u'Число публикаций'
 
