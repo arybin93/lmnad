@@ -228,6 +228,18 @@ class Article(models.Model):
         verbose_name_plural = '(Old) Статьи'
 
 
+class Wiki(models.Model):
+    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
+    text = models.TextField(max_length=2000, verbose_name=u'Текст')
+
+    def __unicode__(self):
+        return unicode(self.text)
+
+    class Meta:
+        verbose_name = u'Wiki'
+        verbose_name_plural = u'Wiki'
+
+
 def send_email(title, text, date):
     template_text = get_template('lmnad/send_email.txt')
     context = {

@@ -327,3 +327,18 @@ class ProjectAdmin(TranslationAdmin):
     thumbnail.allow_tags = True
 
 admin.site.register(Project, ProjectAdmin)
+
+
+class WikiForm(ModelForm):
+    class Meta:
+        widgets = {
+            'text': CKEditorWidget(),
+        }
+
+
+class WikiAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+    form = WikiForm
+
+admin.site.register(Wiki, WikiAdmin)

@@ -144,7 +144,7 @@ SUIT_CONFIG = {
                 'protection',
                 'people',
                 'grant',
-                'project'
+                'project',
         ]},
         {'app': 'publications', 'label': u'Менеджер публикаций (В разработке)', 'models': [
             'publication',
@@ -164,6 +164,9 @@ SUIT_CONFIG = {
             'source',
             'file',
             'pageData'
+        ]},
+        {'app': 'lmnad', 'label': u'Wiki', 'models': [
+            'wiki',
         ]},
         {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
     )
