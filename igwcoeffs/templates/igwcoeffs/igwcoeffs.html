@@ -27,7 +27,22 @@
             </form>
         </div>
         <div class="row" id="parse-file-row">
-            parse
+            <div class="panel panel-default">
+            <!-- Default panel contents -->
+                <div class="panel-heading">{% trans 'Loaded data' %}</div>
+                <!-- Table -->
+                <table class="table">
+                    <tbody id="loaded-data-table">
+                    </tbody>
+                </table>
+                <div>
+                    <h5 id="max_row">
+                    </h5>
+                </div>
+                <div class="panel-body">
+                    <p>{% trans 'Instructions' %}</p>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

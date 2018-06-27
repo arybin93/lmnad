@@ -10,6 +10,9 @@ function update_page(current_state, data) {
     var loadFileRow = $('#load-file-row');
     var parseFileRow = $('#parse-file-row');
     var inputFile = $('#load-file-input');
+    var loadedDataTable = $('#loaded-data-table');
+    var maxRow = $('#max_row');
+
     if (current_state == LOAD_FILE) {
          // load file to server
         loadFileRow.show();
@@ -17,9 +20,7 @@ function update_page(current_state, data) {
         $("#submit-load-file").click(function(event) {
             event.preventDefault();
             // Get the selected files from the input.
-            console.log(inputFile);
             var files = inputFile[0].files;
-            console.log(files);
             // Create a new FormData object.
             var formData = new FormData();
             formData.append('file', files[0]);
@@ -47,6 +48,16 @@ function update_page(current_state, data) {
         console.log('Parse file');
         loadFileRow.hide();
         parseFileRow.show();
+        console.log(data);
+        if (data['success'] == true) {
+            $.each(data['result'], function(index, value) {
+                console.log(value);
+                loadedDataTable.append('<tr>' + '<th scope="row">' + value +'</th>' + '</tr>');
+            });
+            maxRow.html('Всего строк: ' + data['max_row']);
+        } else {
+            maxRow.html(data['max_row']);
+        }
     }
 }
 
