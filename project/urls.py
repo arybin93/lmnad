@@ -3,8 +3,18 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
+from rest_framework import routers
+
+from igwatlas.views import RecordsViewSet, SourceViewSet
+from igwcoeffs.views import CalculationViewSet
+
+router = routers.DefaultRouter()
+router.register(r'calculation', CalculationViewSet, base_name='calculation')
+router.register(r'records', RecordsViewSet, base_name='records')
+router.register(r'sources', SourceViewSet, base_name='sources')
 
 urlpatterns = [
+    url(r'^api/v1/', include(router.urls)),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
 
