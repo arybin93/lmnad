@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^igwcoeffs/', igwcoeffs, name='igwcoeffs'),
-    url(r'^igwcoeffs_about', igwcoeffs_about, name='about_igwcoeffs')
+    url(r'^igwcoeffs_about', igwcoeffs_about, name='igwcoeffs_about')
 ]
