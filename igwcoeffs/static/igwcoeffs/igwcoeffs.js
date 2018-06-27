@@ -11,6 +11,7 @@ function update_page(current_state, data) {
     var parseFileRow = $('#parse-file-row');
     var inputFile = $('#load-file-input');
     var loadedDataTable = $('#loaded-data-table');
+    var separator = $('#separator');
     var maxRow = $('#max_row');
 
     if (current_state == LOAD_FILE) {
@@ -24,6 +25,7 @@ function update_page(current_state, data) {
             // Create a new FormData object.
             var formData = new FormData();
             formData.append('file', files[0]);
+            formData.append('separator', separator.val());
             formData.append('api_key', KEY);
             if (formData) {
                 $.ajax({
@@ -36,8 +38,7 @@ function update_page(current_state, data) {
                     enctype: 'multipart/form-data',
                     success: function(response){
                         console.log("file successfully submitted");
-                        var data = response;
-                        update_page(PARSE_FILE, data)
+                        update_page(PARSE_FILE, response);
                     }, error: function(){
                         console.log("not okay");
                     }
@@ -52,7 +53,11 @@ function update_page(current_state, data) {
         if (data['success'] == true) {
             $.each(data['result'], function(index, value) {
                 console.log(value);
-                loadedDataTable.append('<tr>' + '<th scope="row">' + value +'</th>' + '</tr>');
+                var tr = $(document.createElement('tr'));
+                $.each(value, function(index, value) {
+                    tr.append('<th scope="row">' + value +'</th>');
+                });
+                loadedDataTable.append(tr);
             });
             maxRow.html('Всего строк: ' + data['max_row']);
         } else {

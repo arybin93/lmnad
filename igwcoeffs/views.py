@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from igwcoeffs.api_serializers import CommonSerializer
 from igwcoeffs.igw import handle_file
 from igwcoeffs.models import Calculation
+from constance import config
 
 
 class CalculationViewSet(viewsets.ViewSet):
@@ -32,13 +33,26 @@ class CalculationViewSet(viewsets.ViewSet):
               description: File
               paramType: form
               type: file
+            - name: separator
+              required: true
+              defaultValue:
+              description: separator for parse
+              paramType: form
+              type: string
         """
+        api_key = request.POST.get('api_key', None)
+        separator = request.POST.get('separator', None)
         file = request.FILES['file']
-        status, result, max_row = handle_file(file, max_row=5)
-        if status:
-            return Response({"success": status, 'result': result, 'max_row': max_row})
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+            status, result, max_row = handle_file(file, separator, max_row=5)
+            if status:
+                return Response({"success": status, 'result': result, 'max_row': max_row})
+            else:
+                return Response(CommonSerializer({"success": False, "reason": result, 'message': max_row}).data)
         else:
-            return Response(CommonSerializer({"success": False, "reason": result, 'message': max_row}).data)
+            return Response(CommonSerializer({"success": False,
+                                              "reason": 'WRONG_API_KEY',
+                                              'message': 'WRONG_API_KEY'}).data)
 
 
 def igwcoeffs(request):
