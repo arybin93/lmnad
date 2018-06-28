@@ -13,6 +13,7 @@ function update_page(current_state, data) {
     var loadedDataTable = $('#loaded-data-table');
     var separator = $('#separator');
     var maxRow = $('#max_row');
+    var mappingFields = $('#mapping-data-table');
 
     if (current_state == LOAD_FILE) {
          // load file to server
@@ -50,9 +51,12 @@ function update_page(current_state, data) {
         loadFileRow.hide();
         parseFileRow.show();
         console.log(data);
+        var first_row = '';
         if (data['success'] == true) {
             $.each(data['result'], function(index, value) {
-                console.log(value);
+                if (index == 0) {
+                    first_row = value;
+                }
                 var tr = $(document.createElement('tr'));
                 $.each(value, function(index, value) {
                     tr.append('<th scope="row">' + value +'</th>');
@@ -60,6 +64,31 @@ function update_page(current_state, data) {
                 loadedDataTable.append(tr);
             });
             maxRow.html('Всего строк: ' + data['max_row']);
+
+            // mappingFields
+            $.each(first_row, function(index, value) {
+                var tr = $(document.createElement('tr'));
+                tr.append('<td scope="row"><h4>' + value +'</h4></td>');
+                var id = 'field-' + index;
+                tr.append('<td scope="row"><div class="form-group">' +
+                    '<div class="form-group">' +
+                    '<select class="form-control" id='+ id + '>' +
+                    '<option value="lon">Longitude</option>' +
+                    '<option value="lat">Latitude</option>' +
+                    '<option value="max_depth">Max depth</option>' +
+                    '<option value="depth">Depth</option>' +
+                    '<option value="tempterature">Tempterature</option>' +
+                    '<option value="salinity">Salinity</option>' +
+                    '<option value="density">Density</option>' +
+                    '<option value="bvf">Brant-Vaisala Frequency</option>' +
+                    '</select></div></div></td>');
+                mappingFields.append(tr);
+
+                $("#submit-parse-file").click(function(event) {
+                    event.preventDefault();
+
+                });
+            });
         } else {
             maxRow.html(data['max_row']);
         }
