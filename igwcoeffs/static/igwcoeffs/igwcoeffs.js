@@ -12,31 +12,9 @@ function update_page(current_state, data) {
     var inputFile = $('#load-file-input');
     var loadedDataTable = $('#loaded-data-table');
     var separator = $('#separator');
+    var name = $('#name-calculation');
     var maxRow = $('#max_row');
     var mappingFields = $('#mapping-data-table');
-
-
-    var loadTab = $('load-file-tab');
-    var parseTab = $('parse-file-tab');
-    var startTab = $('start-tab');
-    var resultsTab = $('results-tab');
-
-    loadTab.click(function(event) {
-        event.preventDefault();
-        console.log('Load tab');
-    });
-    parseTab.click(function(event) {
-        event.preventDefault();
-        console.log('Parse tab');
-    });
-    startTab.click(function(event) {
-        event.preventDefault();
-        console.log('Start tab');
-    });
-    resultsTab.click(function(event) {
-        event.preventDefault();
-        console.log('Result tab');
-    });
 
     if (current_state == LOAD_FILE) {
          // load file to server
@@ -50,6 +28,7 @@ function update_page(current_state, data) {
             var formData = new FormData();
             formData.append('file', files[0]);
             formData.append('separator', separator.val());
+            formData.append('name', name.val());
             formData.append('api_key', KEY);
             if (formData) {
                 $.ajax({
@@ -64,7 +43,7 @@ function update_page(current_state, data) {
                         console.log("file successfully submitted");
                         update_page(PARSE_FILE, response);
                     }, error: function(){
-                        console.log("not okay");
+                        alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
                     }
                 });
             }
@@ -122,5 +101,28 @@ function update_page(current_state, data) {
 $(document).ready(function() {
     console.log('ready');
     var state = LOAD_FILE;
+
+    var loadTab = $('#load-file-tab');
+    var parseTab = $('#parse-file-tab');
+    var startTab = $('#start-tab');
+    var resultsTab = $('#results-tab');
+    console.log(loadTab);
+    loadTab.click(function(event) {
+        event.preventDefault();
+        console.log('Load tab');
+    });
+    parseTab.click(function(event) {
+        event.preventDefault();
+        console.log('Parse tab');
+    });
+    startTab.click(function(event) {
+        event.preventDefault();
+        console.log('Start tab');
+    });
+    resultsTab.click(function(event) {
+        event.preventDefault();
+        console.log('Result tab');
+    });
+
     update_page(state);
 });

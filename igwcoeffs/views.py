@@ -27,6 +27,12 @@ class CalculationViewSet(viewsets.ViewSet):
               description: api key access to API
               paramType: form
               type: string
+            - name: name
+              required: true
+              defaultValue:
+              description: name of calculation
+              paramType: form
+              type: string
             - name: file
               required: true
               defaultValue:
@@ -41,18 +47,24 @@ class CalculationViewSet(viewsets.ViewSet):
               type: string
         """
         api_key = request.POST.get('api_key', None)
+        name = request.POST.get('name', None)
         separator = request.POST.get('separator', None)
         file = request.FILES['file']
         if api_key and api_key == config.API_KEY_IGWATLAS:
-            status, result, max_row = handle_file(file, separator, max_row=5)
-            if status:
-                return Response({"success": status, 'result': result, 'max_row': max_row})
+            if file and name and separator:
+                status, result, max_row = handle_file(file, separator, max_row=5)
+                if status:
+                    return Response({"success": status, 'result': result, 'max_row': max_row})
+                else:
+                    return Response(CommonSerializer({"success": False, "reason": result, 'message': max_row}).data)
             else:
-                return Response(CommonSerializer({"success": False, "reason": result, 'message': max_row}).data)
+                return Response(CommonSerializer({"success": False,
+                                                  "reason": 'NOT_ENOUGH_PARAMS',
+                                                  'message': u'Не достаточно параметров'}).data)
         else:
             return Response(CommonSerializer({"success": False,
                                               "reason": 'WRONG_API_KEY',
-                                              'message': 'WRONG_API_KEY'}).data)
+                                              'message': u'Неправильный API KEY'}).data)
 
 
 def igwcoeffs(request):
