@@ -15,6 +15,29 @@ function update_page(current_state, data) {
     var maxRow = $('#max_row');
     var mappingFields = $('#mapping-data-table');
 
+
+    var loadTab = $('load-file-tab');
+    var parseTab = $('parse-file-tab');
+    var startTab = $('start-tab');
+    var resultsTab = $('results-tab');
+
+    loadTab.click(function(event) {
+        event.preventDefault();
+        console.log('Load tab');
+    });
+    parseTab.click(function(event) {
+        event.preventDefault();
+        console.log('Parse tab');
+    });
+    startTab.click(function(event) {
+        event.preventDefault();
+        console.log('Start tab');
+    });
+    resultsTab.click(function(event) {
+        event.preventDefault();
+        console.log('Result tab');
+    });
+
     if (current_state == LOAD_FILE) {
          // load file to server
         loadFileRow.show();
@@ -50,7 +73,6 @@ function update_page(current_state, data) {
         console.log('Parse file');
         loadFileRow.hide();
         parseFileRow.show();
-        console.log(data);
         var first_row = '';
         if (data['success'] == true) {
             $.each(data['result'], function(index, value) {
@@ -86,7 +108,8 @@ function update_page(current_state, data) {
 
                 $("#submit-parse-file").click(function(event) {
                     event.preventDefault();
-
+                    loadFileRow.hide();
+                    parseFileRow.hide();
                 });
             });
         } else {

@@ -43,6 +43,10 @@ class Calculation(TimeStampedModel):
     mode = models.PositiveIntegerField(default=ONE_MODE, choices=MODE_TYPES, verbose_name=u'Расчёт для')
     email = models.CharField(max_length=55, blank=True, verbose_name=u'Email',
                              help_text=u'Для отправки результата расчёта на почту')
+    #parse_start_from = models.PositiveIntegerField(default=0, verbose_name=u'Считать файл с', help_text=u'Номер строки')
+    #parse_file_fields = models.CharField(max_length=255, blank=True, verbose_name=u'Соответствие полей')
+    #parse_separator = models.CharField(default=SPACE, choices=SEPARATORS, verbose_name = u'Разделитель')
+    # user =
 
     class Meta:
         verbose_name = 'Расчёт'
