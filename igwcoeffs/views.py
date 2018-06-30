@@ -54,7 +54,14 @@ class CalculationViewSet(viewsets.ViewSet):
             if file and name and separator:
                 status, result, max_row = handle_file(file, separator, max_row=5)
                 if status:
-                    return Response({"success": status, 'result': result, 'max_row': max_row})
+                    # create calculation
+                    calculation = Calculation.objects.create(name=name,
+                                                             source_file=file,
+                                                             parse_separator=separator)
+                    return Response({"success": status,
+                                     'result': result,
+                                     'max_row': max_row,
+                                     'id': calculation.id})
                 else:
                     return Response(CommonSerializer({"success": False, "reason": result, 'message': max_row}).data)
             else:
@@ -65,6 +72,74 @@ class CalculationViewSet(viewsets.ViewSet):
             return Response(CommonSerializer({"success": False,
                                               "reason": 'WRONG_API_KEY',
                                               'message': u'Неправильный API KEY'}).data)
+
+    @list_route(methods=['post'])
+    def parse_file(self, request):
+        """
+        Load file
+        ---
+        parameters_strategy: merge
+        parameters:
+            - name: api_key
+              required: true
+              defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+              description: api key access to API
+              paramType: form
+              type: string
+            - name: calc_id
+              required: true
+              defaultValue:
+              description: id of calculation
+              paramType: form
+              type: string
+            - name: parse_field
+              required: true
+              defaultValue:
+              description: Mapping fields
+              paramType: form
+              type: string
+            - name: parse_from
+              required: true
+              defaultValue: 0
+              description: Parse file from
+              paramType: form
+              type: integer
+        """
+        pass
+
+    @list_route(methods=['post'])
+    def start_calculation(self):
+        """
+        Load file
+        ---
+        parameters_strategy: merge
+        parameters:
+            - name: api_key
+              required: true
+              defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+              description: api key access to API
+              paramType: form
+              type: string
+            - name: name
+              required: true
+              defaultValue:
+              description: name of calculation
+              paramType: form
+              type: string
+            - name: file
+              required: true
+              defaultValue:
+              description: File
+              paramType: form
+              type: file
+            - name: separator
+              required: true
+              defaultValue:
+              description: separator for parse
+              paramType: form
+              type: string
+        """
+        pass
 
 
 def igwcoeffs(request):

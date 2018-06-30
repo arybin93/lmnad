@@ -12,6 +12,12 @@ GG = constants.g
 PI = constants.pi
 
 
+epsilon_f = 1e-4
+epsilon_t = 1e-4
+
+epsilon_t_rough = 1e-4
+epsilot_t_exact = 1e-5
+
 def get_rho(temp, sal):
     """
     Get density, Foffonoff state sea water
@@ -96,16 +102,6 @@ def handle_file(file, separator, max_row=None):
         return False, 'EMPTY_FILE, 'u'Пустой файл'
 
 
-num_mode = 1
-max_mode = 1
-
-epsilon_f = 1e-4
-epsilon_t = 1e-4
-
-epsilon_t_rough = 1e-4
-epsilot_t_exact = 1e-5
-
-
 def read_file(fname, path=r"C:\Users\Rybin\PycharmProjects\sandbox\resources\data", skip_rows=0):
     os.chdir(path)
     print("read file ", fname)
@@ -130,7 +126,7 @@ def sys_f_or_tn(y, z, N, c, alpha, dif_phi, dif2_phi):
     return dy
 
 
-def calc_coeffs_point():
+def calc_coeffs_point(filename, num_mode = 1, max_mode = 1):
     data = read_file('data.txt')
     # lat = data[:, 0]
     # lon = data[:, 1]

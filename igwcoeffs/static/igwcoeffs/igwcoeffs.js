@@ -4,6 +4,46 @@ const MAIN_URL = window.location.protocol + "//" + window.location.host + "/api/
 const KEY = 'd837d31970deb03ee35c416c5a66be1bba9f56d3';
 const LOAD_FILE = 'LOAD_FILE';
 const PARSE_FILE = 'PARSE_FILE';
+var state = LOAD_FILE;
+
+function generate_parse_form(data) {
+    var loadedDataTable = $('#loaded-data-table');
+    var mappingFields = $('#mapping-data-table');
+    var maxRow = $('#max_row');
+
+    var first_row = '';
+    $.each(data['result'], function(index, value) {
+        if (index == 0) {
+            first_row = value;
+        }
+        var tr = $(document.createElement('tr'));
+        $.each(value, function(index, value) {
+            tr.append('<th scope="row">' + value +'</th>');
+        });
+        loadedDataTable.append(tr);
+    });
+    maxRow.html('Всего строк: ' + data['max_row']);
+
+    // mappingFields
+    $.each(first_row, function(index, value) {
+        var tr = $(document.createElement('tr'));
+        tr.append('<td scope="row"><h4>' + value +'</h4></td>');
+        var id = 'field-' + index;
+        tr.append('<td scope="row"><div class="form-group">' +
+            '<div class="form-group">' +
+            '<select class="form-control" id='+ id + '>' +
+            '<option value="lon">Longitude</option>' +
+            '<option value="lat">Latitude</option>' +
+            '<option value="max_depth">Max depth</option>' +
+            '<option value="depth">Depth</option>' +
+            '<option value="tempterature">Tempterature</option>' +
+            '<option value="salinity">Salinity</option>' +
+            '<option value="density">Density</option>' +
+            '<option value="bvf">Brant-Vaisala Frequency</option>' +
+            '</select></div></div></td>');
+        mappingFields.append(tr);
+    });
+}
 
 
 function update_page(current_state, data) {
@@ -21,6 +61,12 @@ function update_page(current_state, data) {
         loadFileRow.show();
         parseFileRow.hide();
         $("#submit-load-file").click(function(event) {
+            var loadTab = $('#load-file-tab');
+            var parseTab = $('#parse-file-tab');
+            loadTab.removeClass("active");
+            parseTab.removeClass("disable");
+            parseTab.addClass("active");
+
             event.preventDefault();
             // Get the selected files from the input.
             var files = inputFile[0].files;
@@ -40,8 +86,8 @@ function update_page(current_state, data) {
                     data: formData,
                     enctype: 'multipart/form-data',
                     success: function(response){
-                        console.log("file successfully submitted");
-                        update_page(PARSE_FILE, response);
+                        state = PARSE_FILE;
+                        update_page(state, response);
                     }, error: function(){
                         alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
                     }
@@ -52,44 +98,39 @@ function update_page(current_state, data) {
         console.log('Parse file');
         loadFileRow.hide();
         parseFileRow.show();
-        var first_row = '';
+
         if (data['success'] == true) {
-            $.each(data['result'], function(index, value) {
-                if (index == 0) {
-                    first_row = value;
+            generate_parse_form(data);
+
+            $("#submit-parse-file").click(function(event) {
+                event.preventDefault();
+                loadFileRow.hide();
+                parseFileRow.hide();
+
+                // parse mapping fields
+
+                // update calculation
+                var formData = new FormData();
+                formData.append('parse_from', '');
+                formData.append('parse_field', '');
+                formData.append('calc_id', '');
+                formData.append('api_key', KEY);
+                if (formData) {
+                    $.ajax({
+                        url: MAIN_URL + 'calculation/parse_file/',
+                        method: 'post',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        data: formData,
+                        enctype: 'multipart/form-data',
+                        success: function(response) {
+                            console.log(response);
+                        }, error: function(){
+                            alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
+                        }
+                    });
                 }
-                var tr = $(document.createElement('tr'));
-                $.each(value, function(index, value) {
-                    tr.append('<th scope="row">' + value +'</th>');
-                });
-                loadedDataTable.append(tr);
-            });
-            maxRow.html('Всего строк: ' + data['max_row']);
-
-            // mappingFields
-            $.each(first_row, function(index, value) {
-                var tr = $(document.createElement('tr'));
-                tr.append('<td scope="row"><h4>' + value +'</h4></td>');
-                var id = 'field-' + index;
-                tr.append('<td scope="row"><div class="form-group">' +
-                    '<div class="form-group">' +
-                    '<select class="form-control" id='+ id + '>' +
-                    '<option value="lon">Longitude</option>' +
-                    '<option value="lat">Latitude</option>' +
-                    '<option value="max_depth">Max depth</option>' +
-                    '<option value="depth">Depth</option>' +
-                    '<option value="tempterature">Tempterature</option>' +
-                    '<option value="salinity">Salinity</option>' +
-                    '<option value="density">Density</option>' +
-                    '<option value="bvf">Brant-Vaisala Frequency</option>' +
-                    '</select></div></div></td>');
-                mappingFields.append(tr);
-
-                $("#submit-parse-file").click(function(event) {
-                    event.preventDefault();
-                    loadFileRow.hide();
-                    parseFileRow.hide();
-                });
             });
         } else {
             maxRow.html(data['max_row']);
@@ -100,16 +141,24 @@ function update_page(current_state, data) {
 
 $(document).ready(function() {
     console.log('ready');
-    var state = LOAD_FILE;
-
+    // class = "active"
+    // class = "disable"
     var loadTab = $('#load-file-tab');
     var parseTab = $('#parse-file-tab');
     var startTab = $('#start-tab');
     var resultsTab = $('#results-tab');
-    console.log(loadTab);
+
+    var loadFileRow = $('#load-file-row');
+    var parseFileRow = $('#parse-file-row');
+
     loadTab.click(function(event) {
         event.preventDefault();
         console.log('Load tab');
+
+        if (state == PARSE_FILE) {
+            parseTab.removeClass("active");
+            loadTab.addClass("active");
+        }
     });
     parseTab.click(function(event) {
         event.preventDefault();

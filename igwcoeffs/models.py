@@ -34,6 +34,18 @@ class Calculation(TimeStampedModel):
         (TWO_MODE, u'Второй моды')
     )
 
+    SPACE = ' '
+    SLASH = '/'
+    COMMA = ','
+    SEMICOLON = ';'
+
+    SEPARATORS = (
+        (SPACE, u'Пробел'),
+        (SLASH, u'/'),
+        (COMMA, u','),
+        (SEMICOLON, u';')
+    )
+
     name = models.CharField(max_length=255, verbose_name=u'Название расчёта')
     source_file = models.FileField(upload_to='uploads/igwcoeffs/sources', max_length=255,
                                    verbose_name=u'Файл с исходными данными')
@@ -43,10 +55,9 @@ class Calculation(TimeStampedModel):
     mode = models.PositiveIntegerField(default=ONE_MODE, choices=MODE_TYPES, verbose_name=u'Расчёт для')
     email = models.CharField(max_length=55, blank=True, verbose_name=u'Email',
                              help_text=u'Для отправки результата расчёта на почту')
-    #parse_start_from = models.PositiveIntegerField(default=0, verbose_name=u'Считать файл с', help_text=u'Номер строки')
-    #parse_file_fields = models.CharField(max_length=255, blank=True, verbose_name=u'Соответствие полей')
-    #parse_separator = models.CharField(default=SPACE, choices=SEPARATORS, verbose_name = u'Разделитель')
-    # user =
+    parse_start_from = models.PositiveIntegerField(default=0, verbose_name=u'Считать файл с', help_text=u'Номер строки')
+    parse_file_fields = models.CharField(max_length=255, blank=True, verbose_name=u'Соответствие полей')
+    parse_separator = models.CharField(max_length=10, default=SPACE, choices=SEPARATORS, verbose_name = u'Разделитель')
 
     class Meta:
         verbose_name = 'Расчёт'
