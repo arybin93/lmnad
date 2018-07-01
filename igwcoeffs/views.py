@@ -105,7 +105,32 @@ class CalculationViewSet(viewsets.ViewSet):
               paramType: form
               type: integer
         """
-        pass
+        api_key = request.POST.get('api_key', None)
+        calc_id = request.POST.get('calc_id', None)
+        parse_field = request.POST.get('parse_field', None)
+        parse_from = request.POST.get('parse_from', None)
+
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+            if calc_id and parse_field and parse_from:
+                try:
+                    calculation = Calculation.objects.get(id=calc_id)
+                except Calculation.DoesNotExist:
+                    return Response(CommonSerializer({"success": False,
+                                                      "reason": 'CALCULATION_NOT_FOUND',
+                                                      'message': u'Расчёт не найден'}).data)
+                else:
+                    calculation.parse_start_from = parse_from
+                    calculation.parse_file_fields = parse_field
+                    calculation.save()
+                    return Response(CommonSerializer({"success": True, "reason": '', 'message': ''}).data)
+            else:
+                return Response(CommonSerializer({"success": False,
+                                                  "reason": 'NOT_ENOUGH_PARAMS',
+                                                  'message': u'Не достаточно параметров'}).data)
+        else:
+            return Response(CommonSerializer({"success": False,
+                                            "reason": 'WRONG_API_KEY',
+                                            'message': u'Неправильный API KEY'}).data)
 
     @list_route(methods=['post'])
     def start_calculation(self):

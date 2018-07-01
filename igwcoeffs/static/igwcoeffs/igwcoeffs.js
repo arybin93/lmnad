@@ -31,7 +31,8 @@ function generate_parse_form(data) {
         var id = 'field-' + index;
         tr.append('<td scope="row"><div class="form-group">' +
             '<div class="form-group">' +
-            '<select class="form-control" id='+ id + '>' +
+            '<select class="form-control" name="mapping" id='+ id + '>' +
+            '<option value="---">---</option>' +
             '<option value="lon">Longitude</option>' +
             '<option value="lat">Latitude</option>' +
             '<option value="max_depth">Max depth</option>' +
@@ -55,6 +56,7 @@ function update_page(current_state, data) {
     var name = $('#name-calculation');
     var maxRow = $('#max_row');
     var mappingFields = $('#mapping-data-table');
+    var startFrom = $('#start-from');
 
     if (current_state == LOAD_FILE) {
          // load file to server
@@ -102,18 +104,27 @@ function update_page(current_state, data) {
         if (data['success'] == true) {
             generate_parse_form(data);
 
+            var calculation_id = data['id'];
+
             $("#submit-parse-file").click(function(event) {
                 event.preventDefault();
                 loadFileRow.hide();
                 parseFileRow.hide();
 
                 // parse mapping fields
+                var mapping_fields = $('select[name=mapping]');
+                var mapping = [];
+                $.each(mapping_fields, function(index, value) {
+                    mapping[index] = $(this).val();
+                });
+
+                console.log(mapping_fields);
 
                 // update calculation
                 var formData = new FormData();
-                formData.append('parse_from', '');
-                formData.append('parse_field', '');
-                formData.append('calc_id', '');
+                formData.append('parse_from', startFrom.val());
+                formData.append('parse_field', mapping);
+                formData.append('calc_id', calculation_id);
                 formData.append('api_key', KEY);
                 if (formData) {
                     $.ajax({
