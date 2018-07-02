@@ -22,3 +22,4 @@ pytz
 numpy
 scipy
 matplotlib
+celery

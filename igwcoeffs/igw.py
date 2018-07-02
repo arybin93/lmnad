@@ -8,6 +8,8 @@ from scipy.integrate import odeint
 from scipy import constants
 
 # acceleration of gravity
+from igwcoeffs.models import Calculation
+
 GG = constants.g
 PI = constants.pi
 
@@ -302,3 +304,11 @@ def sys_phi_new(z, y, c, N):
     phi, dphi = y
     dy = [dphi, -((N(z) / c) ** 2) * phi]
     return dy
+
+
+def run_calculation(id):
+    try:
+        calculation = Calculation.objects.get(id=id)
+    except Calculation.DoesNotExist:
+        return -1
+

@@ -5,7 +5,7 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from igwcoeffs.api_serializers import CommonSerializer
-from igwcoeffs.igw import handle_file
+from igwcoeffs.igw import handle_file, run_calculation
 from igwcoeffs.models import Calculation
 from constance import config
 
@@ -122,20 +122,20 @@ class CalculationViewSet(viewsets.ViewSet):
                     calculation.parse_start_from = parse_from
                     calculation.parse_file_fields = parse_field
                     calculation.save()
-                    return Response(CommonSerializer({"success": True, "reason": '', 'message': ''}).data)
+                    return Response({"success": True, 'id': calculation.id})
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
                                                   'message': u'Не достаточно параметров'}).data)
         else:
             return Response(CommonSerializer({"success": False,
-                                            "reason": 'WRONG_API_KEY',
-                                            'message': u'Неправильный API KEY'}).data)
+                                              "reason": 'WRONG_API_KEY',
+                                              "message": u'Неправильный API KEY'}).data)
 
     @list_route(methods=['post'])
-    def start_calculation(self):
+    def start_calculation(self, request):
         """
-        Load file
+        Start calculation
         ---
         parameters_strategy: merge
         parameters:
@@ -145,26 +145,93 @@ class CalculationViewSet(viewsets.ViewSet):
               description: api key access to API
               paramType: form
               type: string
-            - name: name
+            - name: calc_id
               required: true
               defaultValue:
-              description: name of calculation
+              description: id of calculation
               paramType: form
               type: string
-            - name: file
+            - name: mode
               required: true
-              defaultValue:
-              description: File
+              defaultValue: 1
+              description: Mode: 1- first, 2 - second, 0 - both
               paramType: form
-              type: file
-            - name: separator
-              required: true
-              defaultValue:
-              description: separator for parse
+              type: string
+            - name: email
+              required: false
+              defaultValue: test@test.com
+              description: Send result on email
               paramType: form
               type: string
         """
-        pass
+        api_key = request.POST.get('api_key', None)
+        calc_id = request.POST.get('calc_id', None)
+        email = request.POST.get('email', None)
+        mode = request.POST.get('mode', None)
+
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+            if calc_id:
+                try:
+                    calculation = Calculation.objects.get(id=calc_id)
+                except Calculation.DoesNotExist:
+                    return Response(CommonSerializer({"success": False,
+                                                      "reason": 'CALCULATION_NOT_FOUND',
+                                                      'message': u'Расчёт не найден'}).data)
+                else:
+                    if email:
+                        calculation.email = email
+
+                    if mode:
+                        calculation.mode = int(mode)
+                    calculation.save()
+
+                    # run calculation
+                    result = run_calculation(calculation.id)
+
+                    return Response({"success": True, 'job_id': calculation.id})
+            else:
+                return Response(CommonSerializer({"success": False,
+                                                  "reason": 'NOT_ENOUGH_PARAMS',
+                                                  'message': u'Не достаточно параметров'}).data)
+        else:
+            return Response(CommonSerializer({"success": False,
+                                              "reason": 'WRONG_API_KEY',
+                                              "message": u'Неправильный API KEY'}).data)
+
+    @list_route(methods=['get'])
+    def status(self, request):
+        """
+        Get status of calculation
+        ---
+        parameters_strategy: merge
+        parameters:
+        - name: api_key
+          required: true
+          defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+          description: api key access to API
+          paramType: query
+          type: string
+        - name: job_id
+          required: true
+          defaultValue:
+          description: id of job
+          paramType: query
+          type: string
+        """
+        api_key = request.GET.get('api_key', None)
+        job_id = request.GET.get('job_id', None)
+
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+            if job_id:
+                return Response({"success": True})
+            else:
+                return Response(CommonSerializer({"success": False,
+                                                  "reason": 'NOT_ENOUGH_PARAMS',
+                                                  'message': u'Не достаточно параметров'}).data)
+        else:
+            return Response(CommonSerializer({"success": False,
+                                              "reason": 'WRONG_API_KEY',
+                                              "message": u'Неправильный API KEY'}).data)
 
 
 def igwcoeffs(request):

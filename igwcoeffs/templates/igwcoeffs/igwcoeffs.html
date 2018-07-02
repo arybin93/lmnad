@@ -10,9 +10,9 @@
         <div class="row">
             <ul class="nav nav-tabs nav-justified">
                 <li role="presentation" id='load-file-tab'><a href="">{% trans "Load file" %}</a></li>
-                <li role="presentation" id='parse-file-tab'><a href="">{% trans "Parse file" %}</a></li>
-                <li role="presentation" id='start-tab'><a href="">{% trans "Start" %}</a></li>
-                <li role="presentation" id='results-tab'><a href="">{% trans "Result" %}</a></li>
+                <li role="presentation" class="disabled" id='parse-file-tab'><a href="">{% trans "Parse file" %}</a></li>
+                <li role="presentation" class="disabled" id='start-tab'><a href="">{% trans "Start" %}</a></li>
+                <li role="presentation" class="disabled" id='results-tab'><a href="">{% trans "Result" %}</a></li>
             </ul>
         </div>
         <br>
@@ -74,6 +74,28 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="row" id="start-row">
+            <br>
+            <form class="form-horizontal" role="form">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="name-calculation">{% trans 'Email for result' %}</label>
+                        <input id='email' type="email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="mode">{% trans 'Mode' %}</label>
+                        <select class="form-control" id="mode">
+                          <option value="1">{% trans 'First' %}</option>
+                          <option value="2">{% trans 'Second' %}</option>
+                          <option value="0">{% trans 'Both modes' %}</option>
+                        </select>
+                    </div>
+                    <button id='submit-start' type="submit" class="btn btn-default">{% trans 'Start calculation' %}</button>
+                </div>
+            </form>
+        </div>
+        <div class="row" id="result-row">
         </div>
     </div>
 {% endblock %}
