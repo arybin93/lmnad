@@ -26,12 +26,12 @@ class Calculation(TimeStampedModel):
     )
 
     BOTH_MODES = 0
-    ONE_MODE = 1
-    TWO_MODE = 2
+    FIRST_MODE = 1
+    SECOND_MODE = 2
     MODE_TYPES = (
         (BOTH_MODES, u'Двух мод'),
-        (ONE_MODE, u'Первой моды'),
-        (TWO_MODE, u'Второй моды')
+        (FIRST_MODE, u'Первой моды'),
+        (SECOND_MODE, u'Второй моды')
     )
 
     SPACE = ' '
@@ -52,7 +52,7 @@ class Calculation(TimeStampedModel):
     result_file = models.FileField(upload_to='uploads/igwcoeffs/results', max_length=255,
                                    verbose_name=u'Файл с результатом', blank=True, null=True)
     types = models.PositiveIntegerField(default=TYPE_POINT, choices=TYPES, verbose_name=u'Тип расчёта')
-    mode = models.PositiveIntegerField(default=ONE_MODE, choices=MODE_TYPES, verbose_name=u'Расчёт для')
+    mode = models.PositiveIntegerField(default=FIRST_MODE, choices=MODE_TYPES, verbose_name=u'Расчёт для')
     email = models.CharField(max_length=55, blank=True, verbose_name=u'Email',
                              help_text=u'Для отправки результата расчёта на почту')
     parse_start_from = models.PositiveIntegerField(default=0, verbose_name=u'Считать файл с', help_text=u'Номер строки')

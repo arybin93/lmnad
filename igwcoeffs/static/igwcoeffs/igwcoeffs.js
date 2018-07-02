@@ -40,7 +40,7 @@ function generate_parse_form(data) {
             '<option value="lat">Latitude</option>' +
             '<option value="max_depth">Max depth</option>' +
             '<option value="depth">Depth</option>' +
-            '<option value="tempterature">Tempterature</option>' +
+            '<option value="temperature">Temperature</option>' +
             '<option value="salinity">Salinity</option>' +
             '<option value="density">Density</option>' +
             '<option value="bvf">Brant-Vaisala Frequency</option>' +

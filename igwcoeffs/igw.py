@@ -13,12 +13,15 @@ from igwcoeffs.models import Calculation
 GG = constants.g
 PI = constants.pi
 
+NOT_FOUND_CALCULATION = -1
+NOT_ENOUGH_PARAMS = -2
 
 epsilon_f = 1e-4
 epsilon_t = 1e-4
 
 epsilon_t_rough = 1e-4
 epsilot_t_exact = 1e-5
+
 
 def get_rho(temp, sal):
     """
@@ -104,10 +107,9 @@ def handle_file(file, separator, max_row=None):
         return False, 'EMPTY_FILE, 'u'Пустой файл'
 
 
-def read_file(fname, path=r"C:\Users\Rybin\PycharmProjects\sandbox\resources\data", skip_rows=0):
-    os.chdir(path)
-    print("read file ", fname)
-    data = np.loadtxt(fname, skiprows=skip_rows)
+def read_file(filename, skip_rows=0, delimiter=' '):
+    print("read file ", filename)
+    data = np.loadtxt(filename, skiprows=skip_rows, delimiter=delimiter)
     return data
 
 
@@ -128,17 +130,7 @@ def sys_f_or_tn(y, z, N, c, alpha, dif_phi, dif2_phi):
     return dy
 
 
-def calc_coeffs_point(filename, num_mode = 1, max_mode = 1):
-    data = read_file('data.txt')
-    # lat = data[:, 0]
-    # lon = data[:, 1]
-    # depth = data[:, 2]
-    z_down = data[:, 3]
-    temp = data[:, 4]
-    sal = data[:, 5]
-    rho = data[:, 6]
-    n_freq = data[:, 7]
-
+def calc_coeffs_point(z_down, n_freq, num_mode=0, max_mode=1):
     max_depth = np.amax(z_down)
     max_bvf = np.amax(n_freq)
     len_data = np.size(z_down)
@@ -158,7 +150,7 @@ def calc_coeffs_point(filename, num_mode = 1, max_mode = 1):
     beta = np.zeros(2)
     alpha = np.zeros(2)
     alpha1 = np.zeros(2)
-    for i in range(0, max_mode):
+    for i in range(num_mode, max_mode):
         current_mode = i + 1
         print 'Current mode {}'.format(current_mode)
         c[i] = max_bvf * max_depth / PI / current_mode
@@ -308,7 +300,70 @@ def sys_phi_new(z, y, c, N):
 
 def run_calculation(id):
     try:
-        calculation = Calculation.objects.get(id=id)
+        calc = Calculation.objects.get(id=id)
     except Calculation.DoesNotExist:
-        return -1
+        return NOT_FOUND_CALCULATION
 
+    data = read_file(calc.source_file,
+                     calc.parse_start_from,
+                     calc.parse_separator)
+
+    # parse data
+    fields = calc.parse_file_fields.split(',')
+    lon = None
+    lat = None
+    depth = None
+    z_down = None
+    temp = None
+    sal = None
+    rho = None
+    n_freq = None
+    for i, field in enumerate(fields):
+        if field == 'lon':
+            lon = data[:, i]
+        elif field == 'lat':
+            lat = data[:, i]
+        elif field == 'max_depth':
+            depth = data[:, i]
+        elif field == 'depth':
+            z_down = data[:, i]
+        elif field == 'temperature':
+            temp = data[:, i]
+        elif field == 'salinity':
+            sal = data[:, i]
+        elif field == 'density':
+            rho = data[:, i]
+        elif field == 'bvf':
+            n_freq = data[:, i]
+
+    if not n_freq:
+        if rho and z_down:
+            n_freq = get_bvf(rho, z_down)
+        elif temp and sal and z_down:
+            rho = get_rho(temp, sal)
+            n_freq = get_bvf(rho, z_down)
+        else:
+            return NOT_ENOUGH_PARAMS
+
+    if calc.types == Calculation.TYPE_POINT:
+        if calc.mode == Calculation.FIRST_MODE:
+            num_mode = 0
+            max_mode = 1
+        elif calc.mode == Calculation.SECOND_MODE:
+            num_mode = 1
+            max_mode = 2
+        else:
+            num_mode = 0
+            max_mode = 2
+
+        result = calc_coeffs_point(z_down, n_freq, num_mode=num_mode, max_mode=max_mode)
+
+        print result
+        # save file
+
+        # send email with file
+
+
+    elif calc.types == Calculation.TYPE_SECTION:
+        # TBD
+        pass

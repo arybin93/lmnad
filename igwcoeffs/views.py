@@ -180,7 +180,6 @@ class CalculationViewSet(viewsets.ViewSet):
                 else:
                     if email:
                         calculation.email = email
-
                     if mode:
                         calculation.mode = int(mode)
                     calculation.save()
