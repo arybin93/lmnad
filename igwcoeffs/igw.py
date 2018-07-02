@@ -107,9 +107,12 @@ def handle_file(file, separator, max_row=None):
         return False, 'EMPTY_FILE, 'u'Пустой файл'
 
 
-def read_file(filename, skip_rows=0, delimiter=' '):
+def read_file(filename, skip_rows=0, delimiter=None):
     print("read file ", filename)
-    data = np.loadtxt(filename, skiprows=skip_rows, delimiter=delimiter)
+    if delimiter:
+        data = np.loadtxt(filename, skiprows=skip_rows)
+    else:
+        data = np.loadtxt(filename, skiprows=skip_rows, delimiter=delimiter)
     return data
 
 
@@ -298,26 +301,31 @@ def sys_phi_new(z, y, c, N):
     return dy
 
 
+#@app.task()
 def run_calculation(id):
     try:
         calc = Calculation.objects.get(id=id)
     except Calculation.DoesNotExist:
         return NOT_FOUND_CALCULATION
 
-    data = read_file(calc.source_file,
-                     calc.parse_start_from,
-                     calc.parse_separator)
+    if calc.parse_separator == Calculation.SPACE:
+        data = read_file(calc.source_file,
+                        calc.parse_start_from,
+                        calc.parse_separator)
+    else:
+        data = read_file(calc.source_file,
+                         calc.parse_start_from)
 
     # parse data
     fields = calc.parse_file_fields.split(',')
-    lon = None
-    lat = None
-    depth = None
-    z_down = None
-    temp = None
-    sal = None
-    rho = None
-    n_freq = None
+    lon = np.array([])
+    lat = np.array([])
+    depth = np.array([])
+    z_down = np.array([])
+    temp = np.array([])
+    sal = np.array([])
+    rho = np.array([])
+    n_freq = np.array([])
     for i, field in enumerate(fields):
         if field == 'lon':
             lon = data[:, i]
@@ -336,10 +344,10 @@ def run_calculation(id):
         elif field == 'bvf':
             n_freq = data[:, i]
 
-    if not n_freq:
-        if rho and z_down:
+    if not n_freq.size:
+        if rho.size and z_down.size:
             n_freq = get_bvf(rho, z_down)
-        elif temp and sal and z_down:
+        elif temp.size and sal.size and z_down.size:
             rho = get_rho(temp, sal)
             n_freq = get_bvf(rho, z_down)
         else:
@@ -352,18 +360,14 @@ def run_calculation(id):
         elif calc.mode == Calculation.SECOND_MODE:
             num_mode = 1
             max_mode = 2
-        else:
-            num_mode = 0
-            max_mode = 2
 
         result = calc_coeffs_point(z_down, n_freq, num_mode=num_mode, max_mode=max_mode)
 
         print result
-        # save file
-
+        # save result to file
         # send email with file
-
-
+        return result
     elif calc.types == Calculation.TYPE_SECTION:
         # TBD
         pass
+
