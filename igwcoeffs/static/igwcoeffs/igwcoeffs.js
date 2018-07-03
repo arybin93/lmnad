@@ -71,6 +71,7 @@ function update_page(current_state, data) {
     var loadFileRow = $('#load-file-row');
     var parseFileRow = $('#parse-file-row');
     var startRow = $('#start-row');
+    var resultRow = $('#result-row');
     var inputFile = $('#load-file-input');
     var separator = $('#separator');
     var name = $('#name-calculation');
@@ -84,6 +85,7 @@ function update_page(current_state, data) {
         loadFileRow.show();
         parseFileRow.hide();
         startRow.hide();
+        resultRow.hide();
         $('#load-file-tab').addClass("active");
 
         $("#submit-load-file").click(function(event) {
@@ -175,6 +177,7 @@ function update_page(current_state, data) {
                 clearActiveTab();
                 setActiveTab($('#results-tab'));
                 startRow.hide();
+                resultRow.show();
                 event.preventDefault();
 
                 // update and start calculation
@@ -206,8 +209,13 @@ function update_page(current_state, data) {
         }
     } else if (state == RESULT) {
         if (data['success'] == true) {
-            // check result by job_id
+            console.log(data['result']);
+            $('#in_process').hide();
             // show link for load result file
+            resultRow.append('<a href="'+ data['result']+ '">Файл с результатом</a>');
+
+            // check result by job_id
+
         } else {
             alert(data['message']);
         }

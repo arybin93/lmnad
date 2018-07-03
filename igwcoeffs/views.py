@@ -186,6 +186,9 @@ class CalculationViewSet(viewsets.ViewSet):
 
                     # run calculation
                     result = run_calculation(calculation.id)
+                    # get job id
+                    if result:
+                        return Response({"success": True, 'result': 'url_to_result'})
 
                     return Response({"success": True, 'job_id': calculation.id})
             else:

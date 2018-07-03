@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 import os
+from email.mime.text import MIMEText
+
 import numpy as np
+from django.core.mail import EmailMessage
+from django.core.mail import send_mail
+from django.template.loader import get_template
 from scipy import integrate
 from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from scipy import constants
+from tempfile import TemporaryFile
+from django.core.files import File
 
 # acceleration of gravity
 from igwcoeffs.models import Calculation
@@ -281,17 +287,7 @@ def calc_coeffs_point(z_down, n_freq, num_mode=0, max_mode=1):
         z_min_Phi = max_depth - z_min_phi
         z_zer_phi = max_depth - z_zer_phi
 
-        result = {
-            'c': c,
-            'beta': beta,
-            'alpha': alpha,
-            'alpha1': alpha1,
-            't_z_phi_norm': t_z_phi_norm,
-            'z_max_phi': z_max_phi,
-            'z_min_Phi': z_min_Phi,
-            'z_zer_phi': z_zer_phi
-        }
-
+        result = [c[i], beta[i], alpha[i], alpha1[i], z_max_phi, z_min_Phi, z_zer_phi]
         return result
 
 
@@ -354,20 +350,60 @@ def run_calculation(id):
             return NOT_ENOUGH_PARAMS
 
     if calc.types == Calculation.TYPE_POINT:
-        if calc.mode == Calculation.FIRST_MODE:
-            num_mode = 0
-            max_mode = 1
-        elif calc.mode == Calculation.SECOND_MODE:
+        num_mode = 0
+        max_mode = 1
+        if calc.mode == Calculation.SECOND_MODE:
             num_mode = 1
             max_mode = 2
 
         result = calc_coeffs_point(z_down, n_freq, num_mode=num_mode, max_mode=max_mode)
 
-        print result
+        title = ''
+        output = []
+        if lon.size and lat.size:
+            title += '    lon    lat'
+            output.extend([lon[0], lat[0]])
+        if depth.size:
+            title += '    max_depth    '
+            output.append(depth[0])
+        if result:
+            title += '    c    beta    alpha    alpha1    z_max_phi    z_min_Phi    z_zer_phi\n'
+            output.extend(result)
+
+        fname = 'result_{}.txt'.format(calc.id)
+        outfile = TemporaryFile()
+        x = np.array(output)
+        np.savetxt(outfile, x, newline='     ', fmt='%8.5f', comments='', header=title)
+
         # save result to file
-        # send email with file
-        return result
+        calc.result_file.save(fname, File(outfile))
+        calc.save()
+
+        # send email with attachments
+        if calc.email:
+            send_result_by_email(calc.id, calc.result_file, calc.email, u'Результат расчёта # {}'.format(calc.id))
+
+        return True
     elif calc.types == Calculation.TYPE_SECTION:
         # TBD
         pass
 
+
+def send_result_by_email(id, outfile, email, title):
+    template_text = get_template('igwcoeffs/send_result_email.html')
+    context = {
+        'id': id,
+    }
+
+    recipient_list = [email]
+    body_text = template_text.render(context)
+
+    message = EmailMessage(
+        title,
+        body_text,
+        from_email='lmnad@nntu.ru',
+        to=recipient_list,
+    )
+
+    #message.attach(MIMEText(open(outfile.name).read()))
+    message.send(fail_silently=True)
