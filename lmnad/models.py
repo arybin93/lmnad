@@ -233,7 +233,7 @@ class Wiki(models.Model):
     text = models.TextField(max_length=2000, verbose_name=u'Текст')
 
     def __unicode__(self):
-        return unicode(self.text)
+        return unicode(self.title)
 
     class Meta:
         verbose_name = u'Wiki'
