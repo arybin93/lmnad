@@ -9,6 +9,8 @@ from igwcoeffs.api_serializers import CommonSerializer
 from igwcoeffs.igw import handle_file, run_calculation
 from igwcoeffs.models import Calculation
 from constance import config
+
+from lmnad.models import Page
 from project.celery import app
 
 
@@ -256,4 +258,10 @@ def igwcoeffs(request):
 def igwcoeffs_about(request):
     """ IGW Coeffs calculator, about page """
     context = {}
+    try:
+        about_text = Page.objects.get(name='igwcoeffs_about')
+    except Page.DoesNotExist:
+        pass
+    else:
+        context['about_text'] = about_text
     return render(request, 'igwcoeffs/about.html', context)
