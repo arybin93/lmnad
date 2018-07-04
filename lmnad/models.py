@@ -152,6 +152,10 @@ class Project(models.Model):
     text = models.TextField(verbose_name=u'Текст')
     link = models.CharField(max_length=100, blank=True, verbose_name=u'Ссылка на проект')
     is_only_user = models.BooleanField(default=False, verbose_name=u'Доступно зарегистрированным пользователям')
+    order_by = models.PositiveIntegerField(verbose_name=u'Сортировать', default=0)
+
+    class MPTTMeta:
+        order_insertion_by = ['order_by']
 
     def get_absolute_url(self):
         return "%s/" % self.name
