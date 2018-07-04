@@ -8,6 +8,7 @@ const CALCULATION_START = 'CALCULATION_START';
 const RESULT = 'RESULT';
 
 var state = LOAD_FILE;
+var timer;
 
 function generate_parse_form(data) {
     var loadedDataTable = $('#loaded-data-table');
@@ -63,10 +64,11 @@ function send(job_id) {
             console.log(data);
             if (data['success']) {
                 // show link for load result file
-                resultRow.append('<a href="'+ data['result']+ '">Файл с результатом</a>');
+                resultRow.append('<a href="'+ window.location.protocol + "//" + window.location.host + data['result']+ '">Файл с результатом</a>');
+                clearTimeout(timer);
             }
             //Send another request in 5 seconds.
-            setTimeout(function(){
+            timer = setTimeout(function(){
                 send(job_id);
             }, 5000);
         }
