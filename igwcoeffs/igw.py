@@ -108,6 +108,9 @@ def handle_file(file, separator, max_row=None):
                 row.append(element)
         result.append(row)
 
+    # remove tmp file
+    os.unlink(file.name)
+
     if result:
         return True, result[:max_row], len(data)
     else:
