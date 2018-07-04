@@ -387,7 +387,7 @@ def run_calculation(id):
         if calc.email:
             send_result_by_email(calc.id, calc.result_file, calc.email, u'Результат расчёта # {}'.format(calc.id))
 
-        return True, calc.result_file
+        return True, calc.result_file.path
     elif calc.types == Calculation.TYPE_SECTION:
         # TBD
         pass

@@ -232,6 +232,8 @@ class CalculationViewSet(viewsets.ViewSet):
                         return Response(CommonSerializer({"success": False,
                                                           "reason": 'CALCULATION_ERROR',
                                                           "message": u'Ошибка при расчёте'}).data)
+                elif res.status == 'FAILURE ':
+                    return Response({"success": False, "reason": 'ERROR', "message": u'Ошибка'})
                 else:
                     return Response({"success": False, "reason": 'IN_PROCESS', "message": u'Расчёт выполняется'})
             else:
