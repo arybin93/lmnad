@@ -61,9 +61,9 @@ function send(job_id) {
         },
         success:function(data)
         {
-            console.log(data);
             if (data['success']) {
-                // show link for load result file
+                $('#in_process').hide();
+                $('#result-description').show();
                 resultRow.append('<a href="'+ window.location.protocol + "//" + window.location.host + data['result']+ '">Файл с результатом</a>');
                 clearTimeout(timer);
             }
@@ -231,9 +231,7 @@ function update_page(current_state, data) {
         }
     } else if (state == RESULT) {
         if (data['success'] == true) {
-            console.log(data['result']);
-            $('#in_process').hide();
-            // check result by job_id
+            $('#result-description').hide();
             //Send another request in 5 seconds.
             timer = setTimeout(function(){
                 send(data['job_id']);
@@ -254,17 +252,9 @@ $(document).ready(function() {
     var startTab = $('#start-tab');
     var resultsTab = $('#results-tab');
 
-    var loadFileRow = $('#load-file-row');
-    var parseFileRow = $('#parse-file-row');
-
     loadTab.click(function(event) {
         event.preventDefault();
         console.log('Load tab');
-
-        if (state == PARSE_FILE) {
-            parseTab.removeClass("active");
-            loadTab.addClass("active");
-        }
     });
     parseTab.click(function(event) {
         event.preventDefault();
