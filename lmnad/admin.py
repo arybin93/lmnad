@@ -27,7 +27,6 @@ class AccountForm(ModelForm):
 class AccountAdmin(TabbedTranslationAdmin):
     model = Account
     form = AccountForm
-    suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
         if obj.image:
@@ -53,7 +52,6 @@ class ProtectionAdmin(TranslationAdmin):
     list_filter = [('date', RowDateRangeFilter)]
     search_fields = ['title']
     form = ProtectionForm
-    suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
         if obj.image:
@@ -77,7 +75,6 @@ class PageForm(ModelForm):
 class PageAdmin(TabbedTranslationAdmin):
     list_display = ['name', 'title']
     form = PageForm
-    suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
         if obj.image:
@@ -107,7 +104,6 @@ class EventAdmin(TabbedTranslationAdmin):
     list_filter = [('date', RowDateRangeFilter)]
     search_fields = ['title']
     form = EventForm
-    suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
         if obj.image:
@@ -137,7 +133,6 @@ class SeminarAdmin(TabbedTranslationAdmin):
     search_fields = ['title']
     fields = ['title', 'text', 'date', 'is_send_email']
     form = SeminarForm
-    suit_form_tabs = (('media', 'Media'),)
 
     def thumbnail(self, obj):
         if obj.image:
@@ -219,11 +214,12 @@ class ProjectForm(ModelForm):
         }
 
 
-class ProjectAdmin(TabbedTranslationAdmin):
+class ProjectAdmin(TabbedTranslationAdmin, SortableModelAdmin):
     form = ProjectForm
-    list_display = ['title']
+    list_display = ['title', 'order_by']
+    search_fields = ['title']
     fields = ['name', 'title', 'short_text', 'text', 'link', 'is_only_user']
-    suit_form_tabs = (('media', 'Media'),)
+    sortable = 'order_by'
 
     def thumbnail(self, obj):
         if obj.image:
