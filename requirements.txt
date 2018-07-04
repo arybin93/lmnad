@@ -21,3 +21,4 @@ celery==4.1.0
 django-extensions
 pytz
 numpy
+scipy
