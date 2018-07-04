@@ -67,10 +67,6 @@ function send(job_id) {
                 resultRow.append('<a href="'+ window.location.protocol + "//" + window.location.host + data['result']+ '">Файл с результатом</a>');
                 clearTimeout(timer);
             }
-            //Send another request in 5 seconds.
-            timer = setTimeout(function(){
-                send(job_id);
-            }, 5000);
         }
     });
 }
@@ -238,7 +234,10 @@ function update_page(current_state, data) {
             console.log(data['result']);
             $('#in_process').hide();
             // check result by job_id
-            send(data['job_id']);
+            //Send another request in 5 seconds.
+            timer = setTimeout(function(){
+                send(data['job_id']);
+            }, 5000);
         } else {
             alert(data['message']);
         }
