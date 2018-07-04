@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from celery.result import AsyncResult
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
@@ -8,6 +9,7 @@ from igwcoeffs.api_serializers import CommonSerializer
 from igwcoeffs.igw import handle_file, run_calculation
 from igwcoeffs.models import Calculation
 from constance import config
+from project.celery import app
 
 
 class CalculationViewSet(viewsets.ViewSet):
@@ -185,12 +187,8 @@ class CalculationViewSet(viewsets.ViewSet):
                     calculation.save()
 
                     # run calculation
-                    result = run_calculation(calculation.id)
-                    # get job id
-                    if result:
-                        return Response({"success": True, 'result': 'url_to_result'})
-
-                    return Response({"success": True, 'job_id': calculation.id})
+                    job = run_calculation.delay(calculation.id)
+                    return Response({"success": True, 'job_id': job.id})
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
@@ -225,7 +223,17 @@ class CalculationViewSet(viewsets.ViewSet):
 
         if api_key and api_key == config.API_KEY_IGWATLAS:
             if job_id:
-                return Response({"success": True})
+                res = AsyncResult(job_id, app=app)
+                if res.status == 'SUCCESS':
+                    status, result = res.get()
+                    if status:
+                        return Response({"success": True, "result": result})
+                    else:
+                        return Response(CommonSerializer({"success": False,
+                                                          "reason": 'CALCULATION_ERROR',
+                                                          "message": u'Ошибка при расчёте'}).data)
+                else:
+                    return Response({"success": False, "reason": 'IN_PROCESS', "message": u'Расчёт выполняется'})
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
@@ -246,5 +254,4 @@ def igwcoeffs(request):
 def igwcoeffs_about(request):
     """ IGW Coeffs calculator, about page """
     context = {}
-
     return render(request, 'igwcoeffs/about.html', context)

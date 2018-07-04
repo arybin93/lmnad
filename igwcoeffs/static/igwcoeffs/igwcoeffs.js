@@ -49,6 +49,30 @@ function generate_parse_form(data) {
     });
 }
 
+function send(job_id) {
+    var resultRow = $('#result-row');
+    $.ajax({
+        url: MAIN_URL + 'calculation/status/',
+        type: "get",
+        data: {
+            job_id: job_id,
+            api_key: KEY
+        },
+        success:function(data)
+        {
+            console.log(data);
+            if (data['success']) {
+                // show link for load result file
+                resultRow.append('<a href="'+ data['result']+ '">Файл с результатом</a>');
+            }
+            //Send another request in 5 seconds.
+            setTimeout(function(){
+                send(job_id);
+            }, 5000);
+        }
+    });
+}
+
 function clearActiveTab() {
     var loadTab = $('#load-file-tab');
     var parseTab = $('#parse-file-tab');
@@ -211,11 +235,8 @@ function update_page(current_state, data) {
         if (data['success'] == true) {
             console.log(data['result']);
             $('#in_process').hide();
-            // show link for load result file
-            resultRow.append('<a href="'+ data['result']+ '">Файл с результатом</a>');
-
             // check result by job_id
-
+            send(data['job_id']);
         } else {
             alert(data['message']);
         }

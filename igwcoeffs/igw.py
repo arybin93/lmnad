@@ -15,6 +15,7 @@ from django.core.files import File
 
 # acceleration of gravity
 from igwcoeffs.models import Calculation
+from project.celery import app
 
 GG = constants.g
 PI = constants.pi
@@ -297,7 +298,7 @@ def sys_phi_new(z, y, c, N):
     return dy
 
 
-#@app.task()
+@app.task()
 def run_calculation(id):
     try:
         calc = Calculation.objects.get(id=id)
@@ -306,8 +307,8 @@ def run_calculation(id):
 
     if calc.parse_separator == Calculation.SPACE:
         data = read_file(calc.source_file,
-                        calc.parse_start_from,
-                        calc.parse_separator)
+                         calc.parse_start_from,
+                         calc.parse_separator)
     else:
         data = read_file(calc.source_file,
                          calc.parse_start_from)
@@ -383,7 +384,7 @@ def run_calculation(id):
         if calc.email:
             send_result_by_email(calc.id, calc.result_file, calc.email, u'Результат расчёта # {}'.format(calc.id))
 
-        return True
+        return True, calc.result_file
     elif calc.types == Calculation.TYPE_SECTION:
         # TBD
         pass
@@ -404,6 +405,6 @@ def send_result_by_email(id, outfile, email, title):
         from_email='lmnad@nntu.ru',
         to=recipient_list,
     )
-
-    #message.attach(MIMEText(open(outfile.name).read()))
+    message.content_subtype = "html"
+    message.attach_file(outfile.path)
     message.send(fail_silently=True)
