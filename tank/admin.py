@@ -16,14 +16,6 @@ class ExperimentForm(ModelForm):
             'description': CKEditorWidget(),
         }
 
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-        }
-
 
 class MovieInline(StackedInline):
     model = Movie

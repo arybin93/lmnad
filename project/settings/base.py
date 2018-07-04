@@ -133,7 +133,7 @@ SUIT_CONFIG = {
             'models': [
                 {'label': u'Основные настройки', 'url': '/admin/constance/config/'},
                 {'label': u'Редактирование страниц', 'url': 'lmnad.page'},
-                {'label': u'Файловый менеджер', 'url': '/admin/filebrowser/browse/'},
+                #{'label': u'Файловый менеджер', 'url': '/admin/filebrowser/browse/'},
                 {'label': u'Персональные страницы', 'url': 'lmnad.account'}
             ]
         },
@@ -158,7 +158,7 @@ SUIT_CONFIG = {
         {'app': 'igwcoeffs', 'label': u'IGW Калькулятор', 'models': [
             'calculation',
         ]},
-        {'app': 'igwatlas', 'label': u'IGWAtlas', 'models': [
+        {'app': 'igwatlas', 'label': u'IGW Atlas', 'models': [
             'record',
             'source',
             'file',

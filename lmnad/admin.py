@@ -13,7 +13,7 @@ from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
 from suit.admin import SortableModelAdmin
 
-from modeltranslation.admin import TranslationAdmin
+from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 
 
 class AccountForm(ModelForm):
@@ -23,19 +23,8 @@ class AccountForm(ModelForm):
             'text_en': CKEditorWidget(),
         }
 
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class AccountAdmin(TranslationAdmin):
+class AccountAdmin(TabbedTranslationAdmin):
     model = Account
     form = AccountForm
     suit_form_tabs = (('media', 'Media'),)
@@ -56,17 +45,6 @@ class ProtectionForm(ModelForm):
             'date': SuitDateWidget,
             'message_ru': CKEditorWidget(editor_options={'startupFocus': True}),
             'message_en': CKEditorWidget(editor_options={'startupFocus': True})
-        }
-
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
 
@@ -95,17 +73,8 @@ class PageForm(ModelForm):
             'text_en': CKEditorWidget(),
         }
 
-    class Media:
-        js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class PageAdmin(TranslationAdmin):
+class PageAdmin(TabbedTranslationAdmin):
     list_display = ['name', 'title']
     form = PageForm
     suit_form_tabs = (('media', 'Media'),)
@@ -132,19 +101,8 @@ class EventForm(ModelForm):
             'date': SuitSplitDateTimeWidget(),
         }
 
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class EventAdmin(TranslationAdmin):
+class EventAdmin(TabbedTranslationAdmin):
     list_display = ['title', 'date']
     list_filter = [('date', RowDateRangeFilter)]
     search_fields = ['title']
@@ -172,19 +130,8 @@ class SeminarForm(ModelForm):
             'date': SuitSplitDateTimeWidget(),
         }
 
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class SeminarAdmin(TranslationAdmin):
+class SeminarAdmin(TabbedTranslationAdmin):
     list_display = ['title', 'date']
     list_filter = [('date', RowDateRangeFilter)]
     search_fields = ['title']
@@ -213,16 +160,8 @@ class PeopleForm(ModelForm):
             'science_index': RedactorWidget(editor_options={'lang': 'en'})
         }
 
-    class Media:
-        js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',)
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class PeopleAdmin(TranslationAdmin, SortableModelAdmin):
+class PeopleAdmin(TabbedTranslationAdmin, SortableModelAdmin):
     list_display = ['fullname', 'degree', 'rank', 'position', 'order_by', 'status']
     list_filter = ['status']
     list_editable = ('status',)
@@ -240,17 +179,8 @@ class ArticleForm(ModelForm):
             'abstract_en': RedactorWidget(editor_options={'lang': 'en'})
         }
 
-    class Media:
-        js = ('http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class ArticleAdmin(TranslationAdmin):
+class ArticleAdmin(TabbedTranslationAdmin):
     list_display = ['authors', 'title', 'source', 'year']
     search_fields = ['authors', 'title', 'year']
     form = ArticleForm
@@ -269,19 +199,8 @@ class GrantForm(ModelForm):
             'abstract_en': RedactorWidget(editor_options={'lang': 'en'})
         }
 
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class GrantAdmin(TranslationAdmin):
+class GrantAdmin(TabbedTranslationAdmin):
     form = GrantForm
     list_display = ['type', 'number', 'name', 'date_start', 'date_end']
     search_fields = ['name', 'number', 'head']
@@ -299,19 +218,8 @@ class ProjectForm(ModelForm):
             'short_text_en': CKEditorWidget()
         }
 
-    class Media:
-        js = ('filebrowser/js/FB_CKEditor.js', 'filebrowser/js/FB_Redactor.js',
-              'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-              'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-              'modeltranslation/js/tabbed_translation_fields.js',
-              )
-        css = {
-            'all': ('filebrowser/css/suit-filebrowser.css',),
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
 
-
-class ProjectAdmin(TranslationAdmin):
+class ProjectAdmin(TabbedTranslationAdmin):
     form = ProjectForm
     list_display = ['title']
     fields = ['name', 'title', 'short_text', 'text', 'link', 'is_only_user']
