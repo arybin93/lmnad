@@ -3,7 +3,7 @@
 
 {% block content %}
 <h3 class="page-header">{% trans "Projects" %}</h3>
-    {% for project in projects|dictsortreversed:"order_by"  %}
+    {% for project in projects|dictsort:"order_by"  %}
         <h3><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h3>
         <p>
             {{ project.short_text | safe }}
