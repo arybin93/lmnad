@@ -5,7 +5,20 @@ from django.db import models
 from constance import config
 from django.core.mail import send_mail
 from django.template.loader import get_template
+from django_extensions.db.models import TimeStampedModel
 from filebrowser.fields import FileBrowseField
+
+
+class Images(TimeStampedModel):
+    """ Store restaurant images """
+    file = models.ImageField(upload_to='uploads/images', max_length=255, verbose_name=u'Изображение')
+
+    class Meta:
+        verbose_name = u'Изображение'
+        verbose_name_plural = u'Изображение'
+
+    def __unicode__(self):
+        return unicode(self.file)
 
 
 class Account(models.Model):
