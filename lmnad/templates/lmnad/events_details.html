@@ -1,6 +1,16 @@
 {% extends 'lmnad/base.html' %}
+{% load filename %}
 
 {% block content %}
 <h3 class="page-header">{{ event.title }}</h3>
     {{ event.full_text | safe }}
+    <p>
+        {% if event.images.all %}
+            {% for image in event.images.all %}
+                <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                    <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="100">
+                </a>
+            {% endfor %}
+        {% endif %}
+    </p>
 {% endblock %}
