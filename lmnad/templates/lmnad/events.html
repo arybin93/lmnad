@@ -1,5 +1,6 @@
 {% extends 'lmnad/base.html' %}
 {% load i18n %}
+{% load filename %}
 
 {% block content %}
     <h3 class="page-header">{% trans "Events" %}</h3>
@@ -12,6 +13,14 @@
         {% endif %}
         <p>
             {{ event.text | safe  }}
+            {% if event.images.all %}
+                {% for image in event.images.all %}
+                    <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                        <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="100">
+                    </a>
+                {% endfor %}
+            {% endif %}
+            <br>
             <small><b>{{ event.date }}</b></small>
         </p>
         <hr>

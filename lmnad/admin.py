@@ -96,6 +96,7 @@ class EventForm(ModelForm):
             'text_en': CKEditorWidget(editor_options={'lang': 'en'}),
             'full_text_en': CKEditorWidget(editor_options={'lang': 'en'}),
             'date': SuitSplitDateTimeWidget(),
+            'images': Select2MultipleWidget()
         }
 
 
@@ -244,3 +245,9 @@ class WikiAdmin(admin.ModelAdmin):
     form = WikiForm
 
 admin.site.register(Wiki, WikiAdmin)
+
+class WikiAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+    form = WikiForm
+admin.site.register(Images)

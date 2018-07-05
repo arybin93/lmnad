@@ -187,6 +187,7 @@ class Event(models.Model):
     full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
     date = models.DateTimeField(verbose_name=u'Дата и время')
     is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
+    images = models.ManyToManyField(Images, blank=True, verbose_name=u'Изображения')
 
     def save(self, *args, **kwargs):
         if self.is_send_email:
