@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+    <div>
+        <h3>Доступные ссылки:</h3>
+        {% if harvard %}
+            <p><b>Harvard:</b> {{ harvard }} </p>
+        {% endif %}
+    </div>
+{% endblock %}

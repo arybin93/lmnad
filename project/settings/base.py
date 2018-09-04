@@ -149,8 +149,7 @@ SUIT_CONFIG = {
         {'app': 'publications', 'label': u'Менеджер публикаций', 'models': [
             'publication',
             'author',
-            'journal',
-            'lmnad.article',
+            'journal'
         ]},
         {'app': 'tank', 'label': u'Эксперименты', 'models': [
             'experiment',

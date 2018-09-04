@@ -43,6 +43,18 @@ class Author(TimeStampedModel):
                                           short_name)
         return author_str
 
+    def get_short_name_harvard(self):
+        short_name = self.name[0]
+        if self.middle_name:
+            short_middle = self.middle_name[0]
+            author_str = u"{}, {}. {}.,".format(self.last_name,
+                                                short_name,
+                                                short_middle)
+        else:
+            author_str = u"{}, {}.,".format(self.last_name,
+                                            short_name)
+        return author_str
+
     class Meta:
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
@@ -81,6 +93,57 @@ class Publication(TimeStampedModel):
 
     def __unicode__(self):
         return unicode(self.title)
+
+    def get_harvard(self):
+        """ Get reference in Harvard format, examples:
+        Alpers, W., Pahl, U. & Gross, G., 1998.
+        Katabatic wind fields in coastal areas studied by ERS-1 synthetic aperture radar imagery and numerical modeling.
+        Journal of Geophysical Research: Oceans, 103(C4), pp.7875–7886.
+        Available at: http://dx.doi.org/10.1029/97jc01774. Volume 103, Issue C4
+        ---
+        Ocampo-Torres, F.J., 2000.
+        Spatial Variations of Ocean Wave Spectra in Coastal Regions from RADARSAT and ERS Synthetic Aperture Radar Images.
+        Available at: http://dx.doi.org/10.4095/219636.
+        """
+        result = '{authors} {year}. {title}. {journal} {volume}{issue} {pages} {doi}'
+
+        result_authors = ''
+        if self.authors:
+            authors = self.authors.order_by('authors__order_by')
+            len_authors = authors.count() - 1
+            authors_list = []
+            author_str = ''
+            for index, author in enumerate(authors):
+                author_str = '{}'.format(author.get_short_name_harvard())
+                authors_list.append(author_str)
+                if index == len_authors:
+                    author_str = '& {}'.format(author.get_short_name_harvard())
+
+            result_authors = ' '.join(authors_list) + author_str
+
+        year = str(self.year) if self.year else ''
+        title = self.title if self.title else ''
+        journal = '{},'.format(self.journal.name) if self.journal else ''
+        doi = 'doi: {}'.format(self.doi) if self.doi else ''
+
+        volume = ''
+        issue = ''
+        pages = ''
+        if self.volume and self.issue:
+            volume = self.volume
+            issue = '({}),'.format(self.issue)
+
+        if self.pages:
+            pages = 'pp. {pages},'.format(pages=self.pages)
+
+        return result.format(authors=result_authors,
+                             year=year,
+                             title=title,
+                             journal=journal,
+                             volume=volume,
+                             issue=issue,
+                             pages=pages,
+                             doi=doi)
 
     class Meta:
         verbose_name = 'Публикация'

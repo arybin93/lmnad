@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
-from django.utils.html import format_html_join
+from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
+from django.utils.html import format_html_join, format_html
 from django_select2.forms import Select2Widget
 from modeltranslation.admin import TabbedTranslationAdmin
 from django.db import models
 from publications.models import Publication, Author, Journal, AuthorPublication
+from django.conf.urls import url
 
 
 class MixinModelAdmin:
@@ -38,6 +41,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         'is_scopus',
         'is_can_download',
         'is_show',
+        'cite'
     ]
 
     list_filter = [
@@ -61,6 +65,17 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
     ]
     inlines = [AuthorInline]
 
+    def get_urls(self):
+        urls = super(PublicationAdmin, self).get_urls()
+
+        info = self.model._meta.app_label, self.model._meta.model_name
+        my_urls = [
+            url(r'^(.+)/cite/$',
+                self.admin_site.admin_view(self.cite_view),
+                name='%s_%s_cite' % info)
+        ]
+        return my_urls + urls
+
     def get_authors(self, obj):
         result = format_html_join(
             '\n', u"""<li>{}</li>""",
@@ -69,6 +84,28 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         return result
     get_authors.short_description = u'Авторы'
 
+    def cite(self, obj):
+        result = format_html(
+            u"""
+            <a onclick="return showAddAnotherPopup(this);"
+            href="{}/cite/"
+            class="btn btn-primary custom">Получить</a>
+            """,
+            obj.id
+        )
+        return result
+    cite.short_description = u'Ссылка'
+
+    def cite_view(self, request, obj_id):
+        template = 'admin/cite.html'
+
+        publication = get_object_or_404(Publication, pk=obj_id)
+
+        context = {
+            'harvard': publication.get_harvard(),
+            'is_popup': True
+        }
+        return TemplateResponse(request, template, context)
 
 admin.site.register(Publication, PublicationAdmin)
 

@@ -248,7 +248,8 @@ class Article(models.Model):
 
 class Wiki(models.Model):
     title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(max_length=2000, verbose_name=u'Текст')
+    text = models.TextField(max_length=5000, verbose_name=u'Текст')
+    link = models.CharField(max_length=255, blank=True, verbose_name=u'Ссылка')
 
     def __unicode__(self):
         return unicode(self.title)
