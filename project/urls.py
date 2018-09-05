@@ -7,9 +7,11 @@ from rest_framework import routers
 
 from igwatlas.views import RecordsViewSet, SourceViewSet
 from igwcoeffs.views import CalculationViewSet
+from publications.views import PublicationViewSet
 
 router = routers.DefaultRouter()
 router.register(r'calculation', CalculationViewSet, base_name='calculation')
+router.register(r'publication', PublicationViewSet, base_name='calculation')
 router.register(r'records', RecordsViewSet, base_name='records')
 router.register(r'sources', SourceViewSet, base_name='sources')
 
@@ -25,6 +27,7 @@ urlpatterns += i18n_patterns(
     url(r'^', include('lmnad.urls')),
     url(r'^', include('igwatlas.urls')),
     url(r'^', include('igwcoeffs.urls')),
+    url(r'^', include('publications.urls')),
     url(r'^', include('tank.urls')),
     url(r'^', include('favicon.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),

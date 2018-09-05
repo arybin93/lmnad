@@ -26,7 +26,7 @@
             <td>
                 {% for head in grant.head.all %}
                     {% if head.account %}
-                         <a href="{{ head.get_absolute_url }}">{{ head}}</a>;
+                         <a href="{{ head.get_absolute_url }}">{{ head }}</a>;
                     {% else %}
                         {{ head }};
                     {% endif %}

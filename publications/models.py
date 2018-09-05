@@ -94,6 +94,27 @@ class Publication(TimeStampedModel):
     def __unicode__(self):
         return unicode(self.title)
 
+    def source(self):
+        """ Get journal, issue, volume, pages """
+        result = '{journal} {volume}{issue} {pages}'
+
+        journal = '{},'.format(self.journal.name) if self.journal else ''
+        volume = ''
+        issue = ''
+        pages = ''
+        if self.volume and self.issue:
+            volume = self.volume
+            issue = '({}),'.format(self.issue)
+
+        if self.pages:
+            pages = 'pp. {pages},'.format(pages=self.pages)
+
+        return result.format(
+                             journal=journal,
+                             volume=volume,
+                             issue=issue,
+                             pages=pages)
+
     def get_harvard(self):
         """ Get reference in Harvard format, examples:
         Alpers, W., Pahl, U. & Gross, G., 1998.
@@ -115,9 +136,10 @@ class Publication(TimeStampedModel):
             author_str = ''
             for index, author in enumerate(authors):
                 author_str = '{}'.format(author.get_short_name_harvard())
-                authors_list.append(author_str)
                 if index == len_authors:
                     author_str = '& {}'.format(author.get_short_name_harvard())
+                else:
+                    authors_list.append(author_str)
 
             result_authors = ' '.join(authors_list) + author_str
 
