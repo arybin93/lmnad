@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.template.response import TemplateResponse
 from rest_framework import viewsets
 
 from publications.models import Publication
@@ -35,6 +36,18 @@ def publications(request):
         'publications': publications
     }
     return render(request, 'publications/page.html', context)
+
+
+def cite_view(request, obj_id):
+    template = 'admin/cite.html'
+
+    publication = get_object_or_404(Publication, pk=obj_id)
+
+    context = {
+        'harvard': publication.get_harvard(),
+        'is_popup': True
+    }
+    return TemplateResponse(request, template, context)
 
 
 class PublicationViewSet(viewsets.ViewSet):

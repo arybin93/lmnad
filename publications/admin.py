@@ -10,6 +10,8 @@ from django.db import models
 from publications.models import Publication, Author, Journal, AuthorPublication
 from django.conf.urls import url
 
+from publications.views import cite_view
+
 
 class MixinModelAdmin:
     formfield_overrides = {
@@ -71,7 +73,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         info = self.model._meta.app_label, self.model._meta.model_name
         my_urls = [
             url(r'^(.+)/cite/$',
-                self.admin_site.admin_view(self.cite_view),
+                self.admin_site.admin_view(cite_view),
                 name='%s_%s_cite' % info)
         ]
         return my_urls + urls
@@ -95,17 +97,6 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         )
         return result
     cite.short_description = u'Ссылка'
-
-    def cite_view(self, request, obj_id):
-        template = 'admin/cite.html'
-
-        publication = get_object_or_404(Publication, pk=obj_id)
-
-        context = {
-            'harvard': publication.get_harvard(),
-            'is_popup': True
-        }
-        return TemplateResponse(request, template, context)
 
 admin.site.register(Publication, PublicationAdmin)
 

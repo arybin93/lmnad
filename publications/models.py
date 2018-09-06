@@ -131,17 +131,20 @@ class Publication(TimeStampedModel):
         result_authors = ''
         if self.authors:
             authors = self.authors.order_by('authors__order_by')
-            len_authors = authors.count() - 1
-            authors_list = []
-            author_str = ''
-            for index, author in enumerate(authors):
-                author_str = '{}'.format(author.get_short_name_harvard())
-                if index == len_authors:
-                    author_str = '& {}'.format(author.get_short_name_harvard())
-                else:
-                    authors_list.append(author_str)
+            if authors.count() > 1:
+                len_authors = authors.count() - 1
+                authors_list = []
+                author_str = ''
+                for index, author in enumerate(authors):
+                    author_str = '{}'.format(author.get_short_name_harvard())
+                    if index == len_authors:
+                        author_str = '& {}'.format(author.get_short_name_harvard())
+                    else:
+                        authors_list.append(author_str)
 
-            result_authors = ' '.join(authors_list) + author_str
+                result_authors = ' '.join(authors_list) + author_str
+            else:
+                result_authors = '{}'.format(authors.first().get_short_name_harvard())
 
         year = str(self.year) if self.year else ''
         title = self.title if self.title else ''

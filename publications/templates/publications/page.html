@@ -29,12 +29,39 @@
                     <th> {% trans "Authors" %} </th>
                     <th> {% trans "doi" %} </th>
                     <th> {% trans "Year" %} </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
             {% for publication in publications %}
                 <tr>
-                    <td class="row">{{ publication.title }}</td>
+                    <td class="row">
+                        {% if publication.link %}
+                            <a href="{{ publication.link }}">{{ publication.title }}</a>
+                        {% else %}
+                            {{ publication.title }}
+                        {% endif %}
+                        <p>
+                        РИНЦ -
+                        {% if publication.is_rinc %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        Web of Science -
+                        {% if publication.is_wos %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        SCOPUS -
+                        {% if publication.is_scopus %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        </p>
+                    </td>
                     <td class="row">{{ publication.source }}</td>
                     <td>
                         {% for author in publication.authors.all %}
@@ -46,10 +73,26 @@
                         {% endfor %}
                     </td>
                     <td>
-                        <p> {{ publication.doi }} </p>
+                        {{ publication.doi }}
                     </td>
                     <td>
                         <p> {{ publication.year }} </p>
+                    </td>
+                    <td>
+                        {% if publication.is_can_download and publication.file %}
+                            <a href="{{ publication.file.url }}"
+                               class="btn btn-success"
+                               style="width: 100px !important">
+                                {% trans 'Download' %}
+                            </a>
+                        {% endif %}
+                        <a onclick="return showAddAnotherPopup(this);"
+                           href="/publications/cite/{{ publication.id }}"
+                           class="btn btn-primary"
+                           style="width: 100px !important"
+                           target="_blank">
+                            {% trans 'Cite' %}
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
