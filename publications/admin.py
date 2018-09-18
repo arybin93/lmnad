@@ -39,6 +39,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         'pages',
         'doi',
         'is_rinc',
+        'is_vak',
         'is_wos',
         'is_scopus',
         'is_can_download',
@@ -50,6 +51,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         'type',
         'year',
         'is_rinc',
+        'is_vak',
         'is_wos',
         'is_scopus',
         'is_can_download',
@@ -101,9 +103,9 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
 admin.site.register(Publication, PublicationAdmin)
 
 
-class AuthorAdmin(TabbedTranslationAdmin):
+class AuthorAdmin(MixinModelAdmin, TabbedTranslationAdmin):
     list_display = ['last_name', 'name', 'middle_name', 'get_count']
-    fields = ['last_name', 'name', 'middle_name']
+    fields = ['last_name', 'name', 'middle_name', 'user']
     search_fields = ['last_name_ru', 'last_name_en']
 
     def get_count(self, obj):

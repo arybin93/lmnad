@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.forms import ModelForm, forms
-from django_select2.forms import Select2MultipleWidget
+from django.utils.html import format_html, format_html_join
+from django_select2.forms import Select2MultipleWidget, Select2Widget
 from suit.widgets import SuitDateWidget, SuitSplitDateTimeWidget
 from django import forms
 
@@ -15,6 +16,14 @@ from suit.admin import SortableModelAdmin
 
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 
+from publications.models import Author
+
+
+class MixinModelAdmin:
+    formfield_overrides = {
+        models.ForeignKey: {'widget': Select2Widget},
+    }
+
 
 class AccountForm(ModelForm):
     class Meta:
@@ -27,6 +36,28 @@ class AccountForm(ModelForm):
 class AccountAdmin(TabbedTranslationAdmin):
     model = Account
     form = AccountForm
+    list_display = ['full_name', 'user', 'is_worker', 'is_author']
+    search_fields = ['user__username', 'author__last_name']
+
+    def full_name(self, obj):
+        return obj.get_full_name()
+    full_name.short_description = u'Пользователь'
+
+    def is_worker(self, obj):
+        if obj.is_worker():
+            result = format_html('<img src = "/static/admin/img/icon-yes.svg" alt="True">')
+        else:
+            result = format_html('<img src = "/static/admin/img/icon-no.svg" alt="False">')
+        return result
+    is_worker.short_description = u'Является сотрудником'
+
+    def is_author(self, obj):
+        if obj.is_author():
+            result = format_html('<img src = "/static/admin/img/icon-yes.svg" alt="True">')
+        else:
+            result = format_html('<img src = "/static/admin/img/icon-no.svg" alt="False">')
+        return result
+    is_author.short_description = u'Является автором'
 
     def thumbnail(self, obj):
         if obj.image:
@@ -192,15 +223,26 @@ class GrantForm(ModelForm):
             'date_start': SuitDateWidget(),
             'date_end': SuitDateWidget(),
             'abstract_ru': RedactorWidget(editor_options={'lang': 'en'}),
-            'abstract_en': RedactorWidget(editor_options={'lang': 'en'})
+            'abstract_en': RedactorWidget(editor_options={'lang': 'en'}),
+            'head': Select2MultipleWidget,
+            'members': Select2MultipleWidget,
         }
 
 
 class GrantAdmin(TabbedTranslationAdmin):
     form = GrantForm
-    list_display = ['type', 'number', 'name', 'date_start', 'date_end']
-    search_fields = ['name', 'number', 'head']
+    list_display = ['type', 'number', 'name', 'heads', 'date_start', 'date_end']
+    search_fields = ['name', 'number', 'members__fullname']
     list_filter = ['date_start', 'date_end']
+
+    def heads(self, obj):
+        result = format_html_join(
+            '\n', u"""<li>{}</li>""",
+            ((head,) for head in obj.head.all())
+        )
+        return result
+
+    heads.short_description = u'Руководители'
 
 admin.site.register(Grant, GrantAdmin)
 

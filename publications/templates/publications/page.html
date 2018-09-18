@@ -48,6 +48,12 @@
                         {% else %}
                             <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
                         {% endif %}
+                        ВАК -
+                        {% if publication.is_vak %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
                         Web of Science -
                         {% if publication.is_wos %}
                             <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">

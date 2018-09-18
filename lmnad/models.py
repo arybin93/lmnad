@@ -36,13 +36,29 @@ class Account(models.Model):
     def get_absolute_url(self):
         return "/profile/%s/" % self.user.username
 
-    def get_name(self):
+    def is_worker(self):
         try:
-            person = People.objects.get(account=self)
-        except:
-            return self
+            if self.people.status:
+                # work status
+                return True
+        except People.DoesNotExist:
+            pass
+        return False
+
+    def is_author(self):
+        if self.author.first():
+            return True
         else:
-            return person.fullname
+            return False
+
+    def get_full_name(self):
+        if self.author.first():
+            return self.author.first().get_full_name()
+
+        try:
+            return self.people.fullname
+        except People.DoesNotExist:
+            return self
 
     class Meta:
         verbose_name = 'Персональная страница'
@@ -54,7 +70,8 @@ class People(models.Model):
     degree = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Степень')
     rank = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Учёное звание')
     position = models.CharField(max_length=50, verbose_name=u'Должность')
-    account = models.OneToOneField(Account, blank=True, null=True, verbose_name=u'Аккаунт сотрудника')
+    account = models.OneToOneField(Account, blank=True, null=True, verbose_name=u'Аккаунт сотрудника',
+                                   related_name='people', help_text=u'Если есть')
     science_index = models.TextField(max_length=500, null=True, blank=True, verbose_name=u'Научный индекс')
     status = models.BooleanField(default=True, verbose_name=u'Работает')
     date_start = models.DateField(blank=True, null=True, verbose_name=u'Дата начала работы')

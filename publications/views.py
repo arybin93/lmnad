@@ -24,7 +24,7 @@ def publications(request):
     else:
         publications_qs = Publication.objects.filter(is_show=True).order_by('-year')
 
-    paginator = Paginator(publications_qs, 5)
+    paginator = Paginator(publications_qs, 25)
     try:
         publications = paginator.page(page)
     except PageNotAnInteger:

@@ -23,12 +23,19 @@ class Author(TimeStampedModel):
     name = models.CharField(max_length=55, verbose_name=u'Имя')
     last_name = models.CharField(max_length=55, verbose_name=u'Фамилия')
     middle_name = models.CharField(max_length=55, blank=True, verbose_name=u'Отчество')
-    user = models.ForeignKey(Account, blank=True, null=True,
+    user = models.ForeignKey(Account, blank=True, null=True, related_name='author',
                              verbose_name=u'Пользователь',
                              help_text=u'Если есть аккаунт')
 
     def __unicode__(self):
         full_name = '{} {}'.format(self.last_name, self.name)
+        return unicode(full_name)
+
+    def get_full_name(self):
+        if self.middle_name:
+            full_name = '{} {} {}'.format(self.last_name, self.name, self.middle_name)
+        else:
+            full_name = '{} {}'.format(self.last_name, self.name)
         return unicode(full_name)
 
     def get_short_name(self):
@@ -63,8 +70,21 @@ class Author(TimeStampedModel):
 class Publication(TimeStampedModel):
     """ Publication """
     ARTICLE = 'Article'
+    MONOGRAPH = 'Monograph'
+    GROUP_MONOGRAPH = 'Group Monograph'
+    PROCEEDINGS = 'Proceedings'
+    THESES_CONFERENCE = 'Theses conference'
+    TEACHING_MATERIALS = 'Teaching materials'
+    PATENT = 'Patent'
+
     TYPE = (
-        (ARTICLE, u'Статья'),
+        (ARTICLE, u'Статья в периодическом издании'),
+        (MONOGRAPH, u'Авторская монография'),
+        (GROUP_MONOGRAPH, u'Глава в коллективной монографии'),
+        (PROCEEDINGS, u'Статья в сборнике трудов конференции'),
+        (THESES_CONFERENCE, u'Тезисы конференции'),
+        (TEACHING_MATERIALS, u'Учебно-методические материалы'),
+        (PATENT, u'Свидетельство о регистрации права на программный продукт'),
     )
 
     type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
@@ -81,10 +101,13 @@ class Publication(TimeStampedModel):
     doi = models.CharField(max_length=200, blank=True, verbose_name=u'DOI', help_text=u'Если есть')
     is_rinc = models.BooleanField(default=False, verbose_name=u'Входит в РИНЦ',
                                   help_text=u'Отметьте галочку, если публикация входит в РИНЦ')
+    is_vak = models.BooleanField(default=False, verbose_name=u'Входит в ВАК',
+                                 help_text=u'Отметьте галочку, если публикация входит в ВАК')
     is_wos = models.BooleanField(default=False, verbose_name=u'Входит в WOS',
                                     help_text=u'Отметьте галочку, если публикация входит в Web of Science')
     is_scopus = models.BooleanField(default=False, verbose_name=u'Входит в Scopus',
                                     help_text=u'Отметьте галочку, если публикация входит в Scopus')
+    is_other_db = models.BooleanField(default=False, verbose_name=u'Входит в другие базы данных')
     file = models.FileField(upload_to='uploads/articles/', null=True, blank=True, verbose_name="Файл с тектом статьи")
     is_can_download = models.BooleanField(default=False, verbose_name=u'Можно скачать',
                                           help_text=u'Отметьте галочку, если файл доступен для скачивания')
