@@ -14,10 +14,12 @@ from django.contrib.auth import logout
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
+
+from publications.models import Publication
 
 
 def home(request):
@@ -187,24 +189,29 @@ def contacts(request):
 
 
 def profile(request, username):
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        ## 404
-        pass
-    else:
-        context = {
-            'profile': user
-        }
-        return render(request, 'lmnad/profile.html', context)
+    user = get_object_or_404(User, username=username)
+
+    publications = Publication.objects.filter(authors__user=user.account).order_by('-year')
+    grants = Grant.objects.filter(members__account=user.account).order_by('-date_start')
+
+    #TODO: implement conferences
+    conferences = None
+
+    context = {
+        'profile': user,
+        'publications': publications,
+        'grants': grants,
+        'conferences': conferences
+    }
+    return render(request, 'lmnad/profile.html', context)
 
 
 class EditProfileForm(forms.Form):
-    email = forms.EmailField(label='email', max_length=200, required=False,
+    email = forms.EmailField(label='Email', max_length=200, required=False,
                              widget=forms.TextInput(attrs = {'class': 'form-control'}))
     is_subscribe = forms.BooleanField(label=u'Подписка на рассылку', required=False)
-    text = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы')
-    cv_file = forms.FileField(required=False, label=u'CV файл')
+    text_ru = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы (ru)')
+    text_en = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы (en)')
 
 
 def edit_profile(request):
@@ -214,30 +221,25 @@ def edit_profile(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             is_subscribe = form.cleaned_data['is_subscribe']
-            text = form.cleaned_data['text']
-            cv_file = form.cleaned_data['cv_file']
+            text_ru = form.cleaned_data['text_ru']
+            text_en = form.cleaned_data['text_en']
 
             current_user.email = email
             try:
-                account = Account.objects.get(user_id=current_user.id)
+                Account.objects.get(user_id=current_user.id)
             except Account.DoesNotExist:
-                account = Account.objects.create(is_subscribe=is_subscribe,
-                                                 text=text,
-                                                 cv_file=cv_file,
-                                                 user_id=current_user.id)
+                Account.objects.create(is_subscribe=is_subscribe,
+                                       text_ru=text_ru,
+                                       text_en=text_en,
+                                       user_id=current_user.id)
             else:
                 current_user.account.is_subscribe = is_subscribe
-                current_user.account.text = text
-                current_user.account.cv_file = cv_file
+                current_user.account.text_ru = text_ru
+                current_user.account.text_en = text_en
                 current_user.account.save()
 
             current_user.save()
-
-            context = {
-                'profile': current_user
-            }
-
-            return render(request, 'lmnad/profile.html', context)
+            return redirect(profile, current_user)
     else:
         try:
             current_user.account
@@ -245,12 +247,14 @@ def edit_profile(request):
             init = {}
         else:
             is_subscribe = current_user.account.is_subscribe
-            text = current_user.account.text
-            cv_file = current_user.account.cv_file
-            init = {"email": current_user.email,
-                    "is_subscribe": is_subscribe,
-                    "text": text,
-                    "cv_file": cv_file}
+            text_ru = current_user.account.text_ru
+            text_en = current_user.account.text_en
+            init = {
+                "email": current_user.email,
+                "is_subscribe": is_subscribe,
+                "text_ru": text_ru,
+                "text_en": text_en
+            }
 
         form = EditProfileForm(initial=init)
 

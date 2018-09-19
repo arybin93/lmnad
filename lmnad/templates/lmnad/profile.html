@@ -1,24 +1,110 @@
 {% extends 'lmnad/base.html' %}
 {% load bootstrap_tags %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block content %}
-<h3 class="page-header">{% trans "Profile" %}:</h3>
-
-    {% if user.is_authenticated and user.id == profile.id %}
-        <div>{{ profile.account.text | safe }}</div>
-        {% if profile.account.cv_file %}
-            <a href="{{ profile.account.cv_file }}">{% trans "Download CV" %}</a>
+    <h3 class="page-header">{% trans "Profile" %}:</h3>
+    {% if profile.account.text %}
+        {% if user.is_authenticated and user.id == profile.id %}
+            <div>{{ profile.account.text | safe }}</div>
+            <form action="{% url 'edit_profile' %}">
+                <button type="submit" class="btn btn-primary">{% trans "Edit" %}</button>
+            </form>
+        {% else %}
+            <div>{{ profile.account.text | safe }}</div>
         {% endif %}
-        <br>
-        <form action="{% url 'edit_profile' %}">
-            <button type="submit" class="btn btn-primary">{% trans "Edit" %}</button>
-        </form>
     {% else %}
-        <div>{{ profile.account.text | safe }}</div>
-        {% if profile.account.cv_file %}
-            <a href="{{ profile.account.cv_file }}">{% trans "Download CV" %}</a>
-        {% endif %}
+        <p>{% trans "No information" %}</p>
+    {% endif %}
+
+    {% if publications %}
+        <h3 class="page-header">{% trans "Publications" %}:</h3>
+        <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th> {% trans "Title" %} </th>
+                    <th> {% trans "Source" %} </th>
+                    <th> {% trans "Authors" %} </th>
+                    <th> {% trans "doi" %} </th>
+                    <th> {% trans "Year" %} </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for publication in publications %}
+                <tr>
+                    <td class="row">
+                        {% if publication.link %}
+                            <a href="{{ publication.link }}">{{ publication.title }}</a>
+                        {% else %}
+                            {{ publication.title }}
+                        {% endif %}
+                        <p>
+                        РИНЦ -
+                        {% if publication.is_rinc %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        ВАК -
+                        {% if publication.is_vak %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        Web of Science -
+                        {% if publication.is_wos %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        SCOPUS -
+                        {% if publication.is_scopus %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        </p>
+                    </td>
+                    <td class="row">{{ publication.source }}</td>
+                    <td>
+                        {% for author in publication.authors.all %}
+                            {% if author.user %}
+                                 <a href="{{ author.user.get_absolute_url }}">{{ author }}</a>;
+                            {% else %}
+                                {{ author }};
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ publication.doi }}
+                    </td>
+                    <td>
+                        <p> {{ publication.year }} </p>
+                    </td>
+                    <td>
+                        {% if publication.is_can_download and publication.file %}
+                            <a href="{{ publication.file.url }}"
+                               class="btn btn-success"
+                               style="width: 100px !important">
+                                {% trans 'Download' %}
+                            </a>
+                        {% endif %}
+                        <a onclick="return showAddAnotherPopup(this);"
+                           href="/publications/cite/{{ publication.id }}"
+                           class="btn btn-primary"
+                           style="width: 100px !important"
+                           target="_blank">
+                            {% trans 'Cite' %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
     {% endif %}
 
 {% endblock %}

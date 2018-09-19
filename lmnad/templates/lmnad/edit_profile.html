@@ -3,21 +3,14 @@
 {% load i18n %}
 
 {% block content %}
-<h3 class="page-header"> {% trans "Edit profile" %} </h3>
-    <form action="" method="post">
+<h3 class="page-header">{% trans "Edit profile" %}</h3>
+    <form method="post">
         {% csrf_token %}
         {{ form.media }}
+        {{ form|as_bootstrap_horizontal }}
         {{ form.non_field_errors }}
-        {% for field in form.visible_fields %}
-            <div class="control-group {{ field.html_name }} {% if field.errors %}error{% endif %}">
-                <label class="control-label">{{ field.label }} {% if field.field.required %} *{% endif %}
-                    <div>
-                        {{ field }}
-                        {% if field.errors %}<span class="help-inline">{{ field.errors.as_text }}</span>{% endif %}
-                    </div>
-                </label>
-            </div>
-        {% endfor %}
-        <input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/>
+        <div class="form-actions">
+          <input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/>
+        </div>
     </form>
 {% endblock %}
