@@ -30,20 +30,16 @@ class AuthorInline(MixinModelAdmin, StackedInline):
 class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
     list_display = [
         'type',
-        'title',
-        'year',
         'get_authors',
-        'journal',
-        'volume',
-        'issue',
-        'pages',
-        'doi',
+        'title',
+        'get_information',
         'is_rinc',
         'is_vak',
         'is_wos',
         'is_scopus',
         'is_can_download',
         'is_show',
+        'year',
         'cite'
     ]
 
@@ -88,6 +84,40 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         return result
     get_authors.short_description = u'Авторы'
 
+    def get_information(self, obj):
+        if obj.type == Publication.PATENT or obj.type == Publication.PATENT_BD:
+            result = format_html(
+                u'''
+                <strong>Номер свидетельства №: </strong> {} <br>
+                <strong>От: </strong> {} <br>
+                ''',
+                obj.number,
+                obj.date.strftime('%d.%m.%Y') if obj.date else u'-'
+            )
+        else:
+            doi = None
+            if 'http' not in obj.doi or 'https' not in obj.doi:
+                doi = 'https://doi.org/' + obj.doi
+
+            result = format_html(
+                u'''
+                <strong>Журнал: </strong> {} <br>
+                <strong>Том: </strong> {} <br>
+                <strong>Номер журнала: </strong> {} <br>
+                <strong>Страницы: </strong> {} <br>
+                <strong>DOI: </strong> <a href="{}">{}</a> <br>
+                ''',
+                obj.journal,
+                obj.volume if obj.volume else u'-',
+                obj.issue if obj.issue else u'-',
+                obj.pages if obj.pages else u'-',
+                doi if doi else obj.doi,
+                obj.doi.replace('https://doi.org/', '') if obj.doi else u'',
+            )
+
+        return result
+    get_information.short_description = u'Источник'
+
     def cite(self, obj):
         result = format_html(
             u"""
@@ -99,6 +129,9 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         )
         return result
     cite.short_description = u'Ссылка'
+
+    class Media:
+        js = ('admin/publications.js',)
 
 admin.site.register(Publication, PublicationAdmin)
 

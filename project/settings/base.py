@@ -280,3 +280,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+YANDEX_TRANSLATE_API_KEY = 'trnsl.1.1.20180920T154850Z.a2bee67a152acd7d.4c5ab6ccd1dde56613600283456a79ab81cea23b'

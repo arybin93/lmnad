@@ -5,6 +5,16 @@ from django.db import models
 from lmnad.models import Account
 from django_extensions.db.models import TimeStampedModel
 
+from lmnad.utils import detect_language_text
+
+RU = 'ru'
+EN = 'en'
+
+LANGUAGES = (
+    (RU, u'Русский'),
+    (EN, u'Английкий')
+)
+
 
 class Journal(TimeStampedModel):
     """ Journal """
@@ -76,6 +86,7 @@ class Publication(TimeStampedModel):
     THESES_CONFERENCE = 'Theses conference'
     TEACHING_MATERIALS = 'Teaching materials'
     PATENT = 'Patent'
+    PATENT_BD = 'Patent_BD'
 
     TYPE = (
         (ARTICLE, u'Статья в периодическом издании'),
@@ -85,18 +96,19 @@ class Publication(TimeStampedModel):
         (THESES_CONFERENCE, u'Тезисы конференции'),
         (TEACHING_MATERIALS, u'Учебно-методические материалы'),
         (PATENT, u'Свидетельство о регистрации права на программный продукт'),
+        (PATENT_BD, u'Свидетельство о регистрации права на базу данных')
     )
 
     type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
     title = models.CharField(max_length=200, db_index=True, verbose_name=u'Название')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
-    journal = models.ForeignKey(Journal, blank=True, verbose_name=u'Журнал, конференция')
+    journal = models.ForeignKey(Journal, blank=True, null=True, verbose_name=u'Журнал, конференция')
     year = models.IntegerField(verbose_name=u'Год')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
     volume = models.CharField(max_length=55, blank=True, verbose_name='Том')
     issue = models.CharField(max_length=55, blank=True, verbose_name=u'Номер журнала')
     pages = models.CharField(max_length=55, blank=True, verbose_name='Страницы')
-    number = models.PositiveIntegerField(blank=True, null=True, verbose_name=u'Номер свидетельства')
+    number = models.CharField(max_length=55, blank=True, null=True, verbose_name=u'Номер свидетельства')
     link = models.CharField(max_length=200, blank=True, verbose_name=u'Ссылка', help_text=u'Если есть')
     doi = models.CharField(max_length=200, blank=True, verbose_name=u'DOI', help_text=u'Если есть')
     is_rinc = models.BooleanField(default=False, verbose_name=u'Входит в РИНЦ',
@@ -113,6 +125,17 @@ class Publication(TimeStampedModel):
                                           help_text=u'Отметьте галочку, если файл доступен для скачивания')
     is_show = models.BooleanField(default=True, verbose_name=u'Показывать на сайте',
                      help_text = u'Отметьте галочку, чтобы публикация была доступна на сайте')
+    language = models.CharField(default=RU, max_length=10, choices=LANGUAGES, verbose_name=u'Основной язык публикации',
+                                help_text=u'Используется для экпорта/отображения на сайте в независимости'
+                                          u' от выбранного языка на сайте')
+
+    def save(self, *args, **kwargs):
+        language = detect_language_text(self.title)
+        if language == RU:
+            self.language = RU
+        else:
+            self.language = EN
+        super(Publication, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return unicode(self.title)
@@ -130,10 +153,12 @@ class Publication(TimeStampedModel):
             issue = '({}),'.format(self.issue)
 
         if self.pages:
-            pages = 'pp. {pages},'.format(pages=self.pages)
+            if RU == self.language:
+                pages = 'С. {pages},'.format(pages=self.pages)
+            else:
+                pages = 'pp. {pages},'.format(pages=self.pages)
 
-        return result.format(
-                             journal=journal,
+        return result.format(journal=journal,
                              volume=volume,
                              issue=issue,
                              pages=pages)
@@ -149,8 +174,8 @@ class Publication(TimeStampedModel):
         Spatial Variations of Ocean Wave Spectra in Coastal Regions from RADARSAT and ERS Synthetic Aperture Radar Images.
         Available at: http://dx.doi.org/10.4095/219636.
         """
-        result = '{authors} {year}. {title}. {journal} {volume}{issue} {pages} {doi}'
-
+        year = str(self.year) if self.year else ''
+        title = self.title if self.title else ''
         result_authors = ''
         if self.authors:
             authors = self.authors.order_by('authors__order_by')
@@ -169,29 +194,49 @@ class Publication(TimeStampedModel):
             else:
                 result_authors = '{}'.format(authors.first().get_short_name_harvard())
 
-        year = str(self.year) if self.year else ''
-        title = self.title if self.title else ''
-        journal = '{},'.format(self.journal.name) if self.journal else ''
-        doi = 'doi: {}'.format(self.doi) if self.doi else ''
+        if self.type == self.PATENT or self.type == self.PATENT_BD:
+            result = u'{authors} {title}. {type_text} {number} от {date}'
 
-        volume = ''
-        issue = ''
-        pages = ''
-        if self.volume and self.issue:
-            volume = self.volume
-            issue = '({}),'.format(self.issue)
+            number = self.number if self.number else ''
 
-        if self.pages:
-            pages = 'pp. {pages},'.format(pages=self.pages)
+            if self.type == self.PATENT:
+                type_text = u'Свидетельство о государственной регистрации программы для ЭВМ №'
+            else:
+                type_text = u'Свидетельство о государственной регистрации базы данных №'
 
-        return result.format(authors=result_authors,
-                             year=year,
-                             title=title,
-                             journal=journal,
-                             volume=volume,
-                             issue=issue,
-                             pages=pages,
-                             doi=doi)
+            date = self.date.strftime('%d.%m.%Y') if self.date else ''
+
+            return result.format(authors=result_authors,
+                                 title=title,
+                                 type_text=type_text,
+                                 number=number,
+                                 date=date)
+        else:
+            result = '{authors} {year}. {title}. {journal} {volume}{issue} {pages} {doi}'
+            journal = '{},'.format(self.journal.name) if self.journal else ''
+            doi = 'doi: {}'.format(self.doi) if self.doi else ''
+
+            volume = ''
+            issue = ''
+            pages = ''
+            if self.volume and self.issue:
+                volume = self.volume
+                issue = '({}),'.format(self.issue)
+
+            if self.pages:
+                if RU == self.language:
+                    pages = 'С. {pages},'.format(pages=self.pages)
+                else:
+                    pages = 'pp. {pages},'.format(pages=self.pages)
+
+            return result.format(authors=result_authors,
+                                 year=year,
+                                 title=title,
+                                 journal=journal,
+                                 volume=volume,
+                                 issue=issue,
+                                 pages=pages,
+                                 doi=doi)
 
     class Meta:
         verbose_name = 'Публикация'
