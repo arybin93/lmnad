@@ -11,7 +11,7 @@ from publications.views import PublicationViewSet
 
 router = routers.DefaultRouter()
 router.register(r'calculation', CalculationViewSet, base_name='calculation')
-router.register(r'publication', PublicationViewSet, base_name='calculation')
+router.register(r'publication', PublicationViewSet, base_name='publication')
 router.register(r'records', RecordsViewSet, base_name='records')
 router.register(r'sources', SourceViewSet, base_name='sources')
 

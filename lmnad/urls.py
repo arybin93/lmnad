@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^change_password/$', views.change_password, name='change_password'),
     url(r'^reset_password/$', views.reset_password, name='reset_password'),
-    url(r'^profile/(?P<username>.*)?/$', views.profile),
+    url(r'^profile/(?P<username>.*)?/$', views.profile, name='profile'),
     url(r'^edit/$', views.edit_profile, name='edit_profile'),
     url(r'^pages/(?P<name>.*)?$', views.pages, name='pages')
 ]

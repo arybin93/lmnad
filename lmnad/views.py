@@ -191,8 +191,55 @@ def contacts(request):
 def profile(request, username):
     user = get_object_or_404(User, username=username)
 
-    publications = Publication.objects.filter(authors__user=user.account).order_by('-year')
-    grants = Grant.objects.filter(members__account=user.account).order_by('-date_start')
+    year_from = request.GET.get('year_from', None)
+    year_to = request.GET.get('year_to', None)
+    types = request.GET.getlist('type', [])
+    enable_checkbox = request.GET.get('enable_checkbox', False)
+    rinc = request.GET.get('rinc', False)
+    vak = request.GET.get('vak', False)
+    wos = request.GET.get('wos', False)
+    scopus = request.GET.get('scopus', False)
+
+    publications = Publication.objects.filter(authors__user=user.account, is_show=True).order_by('-year')
+
+    if year_from and year_to:
+        publications = publications.filter(year__gte=int(year_from), year__lte=int(year_to))
+    elif year_to:
+        publications = publications.filter(year__lte=int(year_to))
+    elif year_from:
+        publications = publications.filter(year__gte=int(year_from))
+
+    if types:
+        publications = publications.filter(type__in=types)
+
+    if enable_checkbox == 'on':
+        if rinc and rinc == 'on':
+            is_rinc = True
+        else:
+            is_rinc = False
+
+        if vak and vak == 'on':
+            is_vak = True
+        else:
+            is_vak = False
+
+        if wos and wos == 'on':
+            is_wos = True
+        else:
+            is_wos = False
+
+        if scopus and scopus == 'on':
+            is_scopus = True
+        else:
+            is_scopus = False
+
+        publications = publications.filter(Q(is_rinc=is_rinc) &
+                                           Q(is_vak=is_vak) &
+                                           Q(is_wos=is_wos) &
+                                           Q(is_scopus=is_scopus))
+
+    grants_member = Grant.objects.filter(members__account=user.account).order_by('-date_start')
+    grants_head = Grant.objects.filter(head__account=user.account).order_by('-date_start')
 
     #TODO: implement conferences
     conferences = None
@@ -200,7 +247,8 @@ def profile(request, username):
     context = {
         'profile': user,
         'publications': publications,
-        'grants': grants,
+        'grants_member': grants_member,
+        'grants_head': grants_head,
         'conferences': conferences
     }
     return render(request, 'lmnad/profile.html', context)

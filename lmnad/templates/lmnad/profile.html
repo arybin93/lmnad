@@ -4,6 +4,7 @@
 {% load staticfiles %}
 
 {% block content %}
+    <div class="row">
     <h3 class="page-header">{% trans "Profile" %}:</h3>
     {% if profile.account.text %}
         {% if user.is_authenticated and user.id == profile.id %}
@@ -17,17 +18,25 @@
     {% else %}
         <p>{% trans "No information" %}</p>
     {% endif %}
+    </div>
 
     {% if publications %}
+        <div class="row">
         <h3 class="page-header">{% trans "Publications" %}:</h3>
+        {% if user.is_authenticated %}
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter">
+                {% trans "Filter" %}
+            </button>
+        {% endif %}
+        </div>
         <div class="row">
         <table class="table table-hover">
             <thead>
                 <tr>
+                    <th> {% trans "Type" %} </th>
                     <th> {% trans "Title" %} </th>
-                    <th> {% trans "Source" %} </th>
+                    <th> {% trans "Information" %} </th>
                     <th> {% trans "Authors" %} </th>
-                    <th> {% trans "doi" %} </th>
                     <th> {% trans "Year" %} </th>
                     <th></th>
                 </tr>
@@ -35,6 +44,25 @@
             <tbody>
             {% for publication in publications %}
                 <tr>
+                    <td class="row">
+                        {% if publication.type == 'Article' %}
+                            {% trans 'Article' %}
+                        {% elif publication.type == 'Monograph' %}
+                            {% trans 'Monograph' %}
+                        {% elif publication.type == 'Group Monograph' %}
+                            {% trans 'Group Monograph' %}
+                        {% elif publication.type == 'Proceedings' %}
+                            {% trans 'Proceedings' %}
+                        {% elif publication.type == 'Theses conference' %}
+                            {% trans 'Theses conference' %}
+                        {% elif publication.type == 'Teaching materials' %}
+                            {% trans 'Teaching materials' %}
+                        {% elif publication.type == 'Patent' %}
+                            {% trans 'Patent' %}
+                        {% elif publication.type == 'Patent_BD' %}
+                            {% trans 'Patent_BD' %}
+                        {% endif %}
+                    </td>
                     <td class="row">
                         {% if publication.link %}
                             <a href="{{ publication.link }}">{{ publication.title }}</a>
@@ -68,7 +96,7 @@
                         {% endif %}
                         </p>
                     </td>
-                    <td class="row">{{ publication.source }}</td>
+                    <td class="row">{{ publication.information }}</td>
                     <td>
                         {% for author in publication.authors.all %}
                             {% if author.user %}
@@ -77,9 +105,6 @@
                                 {{ author }};
                             {% endif %}
                         {% endfor %}
-                    </td>
-                    <td>
-                        {{ publication.doi }}
                     </td>
                     <td>
                         <p> {{ publication.year }} </p>
@@ -106,5 +131,99 @@
         </table>
         </div>
     {% endif %}
+
+    <!-- Modal -->
+     <div id="filter" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <form class="form-horizontal" role="form" action="{{ user.get_absolute_url }}" method="get">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title"> {% trans "Filter" %}</h4>
+                  </div>
+              <div class="modal-body">
+                <div class="form-group">
+                        <label for="types_id" class="col-sm-2 control-label">
+                            {% trans 'Select types' %}
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="types_multiple" name="type" id="types_id" multiple="multiple" style="width: 100%">
+                                <option value="Article">{% trans 'Article' %}</option>
+                                <option value="Monograph">{% trans 'Monograph' %}</option>
+                                <option value="Group Monograph">{% trans 'Group Monograph' %}</option>
+                                <option value="Proceedings">{% trans 'Proceedings' %}</option>
+                                <option value="Theses conference">{% trans 'Theses conference' %}</option>
+                                <option value="Teaching materials">{% trans 'Teaching materials' %}</option>
+                                <option value="Patent">{% trans 'Patent' %}</option>
+                                <option value="Patent_BD">{% trans 'Patent_BD' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_from_id" class="col-sm-2 control-label">
+                            {% trans "Year from" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text"  name="year_from" class="form-control" id="year_from_id" placeholder="{% trans "Year from" %} ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_to_id" class="col-sm-2 control-label">
+                            {% trans "Year to" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="year_to" class="form-control" id="year_to_id" placeholder="{% trans "Year to" %} ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="active_checkbox_id" class="col-sm-2 control-label">
+                            {% trans "Enable checkboxes below for search" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="enable_checkbox" class="form-control" id="active_checkbox_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rinc_id" class="col-sm-2 control-label">
+                            {% trans "RINC" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="rinc" class="form-control" id="rinc_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="vak_id" class="col-sm-2 control-label">
+                            {% trans "VAK" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="vak" class="form-control" id="vak_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="wos_id" class="col-sm-2 control-label">
+                            {% trans "WOS" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="wos" class="form-control" id="wos_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="scopus_id" class="col-sm-2 control-label">
+                            {% trans "SCOPUS" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="scopus" class="form-control" id="scopus_id">
+                        </div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                  <button id='search_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                  <button id='search_btn' type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+              </div>
+              </form>
+            </div>
+         </div>
+     </div>
 
 {% endblock %}

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
+from django.utils.html import format_html
 
 from lmnad.models import Account
 from django_extensions.db.models import TimeStampedModel
@@ -126,11 +127,11 @@ class Publication(TimeStampedModel):
     is_show = models.BooleanField(default=True, verbose_name=u'Показывать на сайте',
                      help_text = u'Отметьте галочку, чтобы публикация была доступна на сайте')
     language = models.CharField(default=RU, max_length=10, choices=LANGUAGES, verbose_name=u'Основной язык публикации',
-                                help_text=u'Используется для экпорта/отображения на сайте в независимости'
+                                help_text=u'Используется для экпорта/цитирования на сайте в независимости'
                                           u' от выбранного языка на сайте')
 
     def save(self, *args, **kwargs):
-        language = detect_language_text(self.title)
+        language = detect_language_text(self.title[:30])
         if language == RU:
             self.language = RU
         else:
@@ -140,28 +141,50 @@ class Publication(TimeStampedModel):
     def __unicode__(self):
         return unicode(self.title)
 
-    def source(self):
-        """ Get journal, issue, volume, pages """
-        result = '{journal} {volume}{issue} {pages}'
+    def information(self):
+        """ Get information for publication, use in template """
 
-        journal = '{},'.format(self.journal.name) if self.journal else ''
-        volume = ''
-        issue = ''
-        pages = ''
-        if self.volume and self.issue:
-            volume = self.volume
-            issue = '({}),'.format(self.issue)
+        if self.type == self.PATENT or self.type == self.PATENT_BD:
+            result = format_html(
+                u'''
+                <strong>Номер свидетельства №: </strong> {number} От: {date}
+                ''',
+                number=self.number,
+                date=self.date.strftime('%d.%m.%Y') if self.date else u'-'
+            )
+        else:
+            journal = '{},'.format(self.journal.name) if self.journal else ''
+            volume = ''
+            issue = ''
+            pages = ''
+            if self.volume and self.issue:
+                volume = self.volume
+                issue = '({}),'.format(self.issue)
 
-        if self.pages:
-            if RU == self.language:
-                pages = 'С. {pages},'.format(pages=self.pages)
-            else:
-                pages = 'pp. {pages},'.format(pages=self.pages)
+            if self.pages:
+                if RU == self.language:
+                    pages = 'С. {pages},'.format(pages=self.pages)
+                else:
+                    pages = 'pp. {pages},'.format(pages=self.pages)
 
-        return result.format(journal=journal,
-                             volume=volume,
-                             issue=issue,
-                             pages=pages)
+            doi = None
+            if self.doi and ('http' not in self.doi or 'https' not in self.doi):
+                doi = 'https://doi.org/' + self.doi
+
+            result = format_html(
+                u'''
+                {journal} {volume}{issue} {pages} <strong>DOI: </strong> <a href="{doi_ref}">{doi}</a>
+                ''',
+                journal=journal,
+                volume=volume,
+                issue=issue,
+                pages=pages,
+                doi_ref=doi if doi else self.doi,
+                doi=self.doi.replace('https://doi.org/', '') if self.doi else u'-',
+
+            )
+
+        return result
 
     def get_harvard(self):
         """ Get reference in Harvard format, examples:
