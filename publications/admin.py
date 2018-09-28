@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.html import format_html_join, format_html
 from django_select2.forms import Select2Widget
 from modeltranslation.admin import TabbedTranslationAdmin
 from django.db import models
+
+from publications.functions import export_publication_to_doc
 from publications.models import Publication, Author, Journal, AuthorPublication
 from django.conf.urls import url
 
 from publications.views import cite_view
+from datetime import datetime
 
 
 class MixinModelAdmin:
@@ -64,15 +68,16 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         'journal__name_en'
     ]
     inlines = [AuthorInline]
+    change_list_template = "admin/change_list_export.html"
 
     def get_urls(self):
         urls = super(PublicationAdmin, self).get_urls()
-
         info = self.model._meta.app_label, self.model._meta.model_name
         my_urls = [
             url(r'^(.+)/cite/$',
                 self.admin_site.admin_view(cite_view),
-                name='%s_%s_cite' % info)
+                name='%s_%s_cite' % info),
+            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc), name='%s_%s_export' % info)
         ]
         return my_urls + urls
 
@@ -129,6 +134,29 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         )
         return result
     cite.short_description = u'Ссылка'
+
+    def export_to_doc(self, request, **kwargs):
+        ChangeList = self.get_changelist(request)
+        cl = ChangeList(request,
+                        self.model,
+                        self.list_display,
+                        self.list_display_links,
+                        self.list_filter,
+                        self.date_hierarchy,
+                        self.search_fields,
+                        self.list_select_related,
+                        self.list_per_page,
+                        self.list_max_show_all,
+                        self.list_editable,
+                        self)
+
+        filtered_queryset = cl.get_queryset(request)
+        document = export_publication_to_doc(filtered_queryset)
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response['Content-Disposition'] = 'attachment; filename=export_{}.docx'.\
+            format(datetime.now().strftime('%d-%m-%Y'))
+        document.save(response)
+        return response
 
     class Media:
         js = ('admin/publications.js',)

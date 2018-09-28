@@ -125,7 +125,7 @@ class Publication(TimeStampedModel):
     is_can_download = models.BooleanField(default=False, verbose_name=u'Можно скачать',
                                           help_text=u'Отметьте галочку, если файл доступен для скачивания')
     is_show = models.BooleanField(default=True, verbose_name=u'Показывать на сайте',
-                     help_text = u'Отметьте галочку, чтобы публикация была доступна на сайте')
+                                  help_text = u'Отметьте галочку, чтобы публикация была доступна на сайте')
     language = models.CharField(default=RU, max_length=10, choices=LANGUAGES, verbose_name=u'Основной язык публикации',
                                 help_text=u'Используется для экпорта/цитирования на сайте в независимости'
                                           u' от выбранного языка на сайте')
