@@ -25,8 +25,8 @@ class Journal(TimeStampedModel):
         return unicode(self.name)
 
     class Meta:
-        verbose_name = 'Журнал'
-        verbose_name_plural = 'Журналы'
+        verbose_name = 'Журнал/Конференция'
+        verbose_name_plural = 'Журналы/Конференции'
 
 
 class Author(TimeStampedModel):
@@ -107,7 +107,7 @@ class Publication(TimeStampedModel):
     year = models.IntegerField(verbose_name=u'Год')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
     volume = models.CharField(max_length=55, blank=True, verbose_name='Том')
-    issue = models.CharField(max_length=55, blank=True, verbose_name=u'Номер журнала')
+    issue = models.CharField(max_length=55, blank=True, verbose_name=u'Номер журнала/конференции')
     pages = models.CharField(max_length=55, blank=True, verbose_name='Страницы')
     number = models.CharField(max_length=55, blank=True, null=True, verbose_name=u'Номер свидетельства')
     link = models.CharField(max_length=200, blank=True, verbose_name=u'Ссылка', help_text=u'Если есть')
@@ -278,3 +278,31 @@ class AuthorPublication(models.Model):
     class Meta:
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
+
+
+class Conference(TimeStampedModel):
+    """ Conference """
+    INTERNATIONAL = 'international'
+    NATIONAL = 'national'
+    TYPES = (
+        (INTERNATIONAL, u'Международная'),
+        (NATIONAL, u'Российская')
+    )
+    type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES, verbose_name=u'Классификация')
+    publication = models.ForeignKey(Publication, verbose_name=u'Публикация',
+                                    help_text=u'Отсюда берётся название доклада и название конференции')
+    author = models.ForeignKey(Author, verbose_name=u'Докладчик')
+    organizer = models.CharField(max_length=550, blank=True, verbose_name=u'Организатор')
+    date_start = models.DateTimeField(verbose_name=u'Дата и время', null=True, blank=True,
+                                      help_text=u'Начало конференции')
+    date_stop = models.DateTimeField(verbose_name=u'Дата и время', null=True, blank=True,
+                                     help_text=u'Конец конференции')
+    place = models.CharField(max_length=255, blank=True, verbose_name=u'Место проведения',
+                             help_text=u'Например: Страна, город или университет')
+
+    def __unicode__(self):
+        return unicode(self.publication.title)
+
+    class Meta:
+        verbose_name = 'Участник конференции'
+        verbose_name_plural = 'Участники конференций'
