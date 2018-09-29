@@ -241,15 +241,32 @@ def profile(request, username):
     grants_member = Grant.objects.filter(members__account=user.account).order_by('-date_start')
     grants_head = Grant.objects.filter(head__account=user.account).order_by('-date_start')
 
+    if year_from and year_to:
+        grants_member = grants_member.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+        grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+    elif year_to:
+        grants_member = grants_member.filter(date_start__year__lte=int(year_to))
+        grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+    elif year_from:
+        grants_member = grants_member.filter(date_end__year__gte=int(year_from))
+        grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+
+    grants_head_ids = grants_head.values('id')
+    grants_member = grants_member.exclude(id__in=grants_head_ids)
+
     #TODO: implement conferences
     conferences = None
+
+    #TODO: add statistic
+    stats = {}
 
     context = {
         'profile': user,
         'publications': publications,
         'grants_member': grants_member,
         'grants_head': grants_head,
-        'conferences': conferences
+        'conferences': conferences,
+        'stats': stats
     }
     return render(request, 'lmnad/profile.html', context)
 

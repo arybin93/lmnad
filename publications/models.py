@@ -61,15 +61,29 @@ class Author(TimeStampedModel):
                                           short_name)
         return author_str
 
-    def get_short_name_harvard(self):
+    def get_short_name_harvard(self, lang=None):
+        # set default value
         short_name = self.name[0]
-        if self.middle_name:
-            short_middle = self.middle_name[0]
-            author_str = u"{}, {}. {}.,".format(self.last_name,
+        short_middle = self.middle_name[0] if self.middle_name else None
+        last_name = self.last_name
+
+        # set language
+        if lang and lang == RU:
+            short_name = self.name_ru[0]
+            short_middle = self.middle_name_ru[0] if self.middle_name else None
+            last_name = self.last_name_ru
+        elif lang and lang == EN:
+            if self.name_en and self.last_name_en:
+                short_name = self.name_en[0]
+                short_middle = self.middle_name_en[0] if self.middle_name else None
+                last_name = self.last_name_en
+
+        if short_middle:
+            author_str = u"{}, {}. {}.,".format(last_name,
                                                 short_name,
                                                 short_middle)
         else:
-            author_str = u"{}, {}.,".format(self.last_name,
+            author_str = u"{}, {}.,".format(last_name,
                                             short_name)
         return author_str
 
@@ -198,7 +212,13 @@ class Publication(TimeStampedModel):
         Available at: http://dx.doi.org/10.4095/219636.
         """
         year = str(self.year) if self.year else ''
-        title = self.title if self.title else ''
+        title = ''
+        # set language for title
+        if self.language == RU:
+            title = self.title_ru if self.title_ru else self.title
+        elif self.language == EN:
+            title = self.title_en if self.title_en else self.title
+
         result_authors = ''
         if self.authors:
             authors = self.authors.order_by('authors__order_by')
@@ -207,15 +227,15 @@ class Publication(TimeStampedModel):
                 authors_list = []
                 author_str = ''
                 for index, author in enumerate(authors):
-                    author_str = '{}'.format(author.get_short_name_harvard())
+                    author_str = '{}'.format(author.get_short_name_harvard(lang=self.language))
                     if index == len_authors:
-                        author_str = '& {}'.format(author.get_short_name_harvard())
+                        author_str = '& {}'.format(author.get_short_name_harvard(lang=self.language))
                     else:
                         authors_list.append(author_str)
 
                 result_authors = ' '.join(authors_list) + author_str
             else:
-                result_authors = '{}'.format(authors.first().get_short_name_harvard())
+                result_authors = '{}'.format(authors.first().get_short_name_harvard(lang=self.language))
 
         if self.type == self.PATENT or self.type == self.PATENT_BD:
             result = u'{authors} {title}. {type_text} {number} от {date}'
@@ -236,8 +256,14 @@ class Publication(TimeStampedModel):
                                  date=date)
         else:
             result = '{authors} {year}. {title}. {journal} {volume}{issue} {pages} {doi}'
-            journal = '{},'.format(self.journal.name) if self.journal else ''
             doi = 'doi: {}'.format(self.doi) if self.doi else ''
+
+            journal = '{},'.format(self.journal.name) if self.journal else ''
+            # set language for title
+            if self.language == RU:
+                journal = self.journal.name_ru if self.journal.name_ru else self.journal.name
+            elif self.language == EN:
+                journal = self.journal.name_en if self.journal.name_en else self.journal.name
 
             volume = ''
             issue = ''

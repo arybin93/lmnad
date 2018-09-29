@@ -232,8 +232,19 @@ class GrantForm(ModelForm):
 class GrantAdmin(TabbedTranslationAdmin):
     form = GrantForm
     list_display = ['type', 'number', 'name', 'heads', 'date_start', 'date_end']
-    search_fields = ['name', 'number', 'members__fullname']
-    list_filter = ['date_start', 'date_end']
+    fields = [
+        'type',
+        'number',
+        'name',
+        'head',
+        'members',
+        'date_start',
+        'date_end',
+        'reference',
+        'reference_result'
+    ]
+    search_fields = ['name', 'number']
+    list_filter = [('date_start', RowDateRangeFilter)]
 
     def heads(self, obj):
         result = format_html_join(

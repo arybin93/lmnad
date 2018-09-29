@@ -25,6 +25,7 @@ class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True, verbose_name=u'Персональная страница',
                             help_text=u'В произвольной форме')
+    photo = models.ForeignKey(Images, null=True, blank=True, verbose_name=u'Фото')
     cv_file = models.FileField(upload_to='uploads/users/cv/', null=True, blank=True, verbose_name=u'Файл CV',
                                help_text=u'Прикрепить существующее CV')
     is_subscribe = models.BooleanField(default=True, verbose_name=u'Подписка на email оповещения')
