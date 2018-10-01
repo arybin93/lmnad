@@ -19,7 +19,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
-from publications.models import Publication
+from publications.models import Publication, Conference
 
 
 def home(request):
@@ -246,19 +246,31 @@ def profile(request, username):
         grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
     elif year_to:
         grants_member = grants_member.filter(date_start__year__lte=int(year_to))
-        grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+        grants_head = grants_head.filter(date_end__year__lte=int(year_to))
     elif year_from:
         grants_member = grants_member.filter(date_end__year__gte=int(year_from))
-        grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+        grants_head = grants_head.filter(date_start__year__gte=int(year_from))
 
     grants_head_ids = grants_head.values('id')
     grants_member = grants_member.exclude(id__in=grants_head_ids)
 
-    #TODO: implement conferences
-    conferences = None
+    conferences = Conference.objects.filter(author__user=user.account)
+    if year_from and year_to:
+        conferences = conferences.filter(date_start__year__gte=int(year_from), date_stop__year__lte=int(year_to))
+    elif year_to:
+        conferences = conferences.filter(date_start__year__lte=int(year_to))
+    elif year_from:
+        conferences = conferences.filter(date_stop__year__gte=int(year_from))
 
-    #TODO: add statistic
-    stats = {}
+    stats = {
+        'publication_count': publications.count(),
+        'grants_member_count': grants_member.count(),
+        'grants_head_count': grants_head.count(),
+        'conferences': conferences.count(),
+    }
+
+    # TODO: add export to docx file
+    export_file = None
 
     context = {
         'profile': user,
@@ -266,7 +278,8 @@ def profile(request, username):
         'grants_member': grants_member,
         'grants_head': grants_head,
         'conferences': conferences,
-        'stats': stats
+        'stats': stats,
+        'export_to_doc': export_file
     }
     return render(request, 'lmnad/profile.html', context)
 

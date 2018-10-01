@@ -68,3 +68,15 @@ def export_publication_to_doc(queryset):
         )
 
     return document
+
+
+def export_grants_to_doc(queryset):
+    document = Document()
+    document.add_heading(u'Экспорт грантов', 0)
+
+    for grant in queryset:
+        document.add_paragraph(
+            grant.export(), style='List Number'
+        )
+
+    return document

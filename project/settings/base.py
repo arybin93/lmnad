@@ -148,6 +148,7 @@ SUIT_CONFIG = {
         ]},
         {'app': 'publications', 'label': u'Менеджер публикаций', 'models': [
             'publication',
+            'conference',
             'author',
             'journal'
         ]},

@@ -168,12 +168,13 @@ class Publication(TimeStampedModel):
             )
         else:
             journal = '{},'.format(self.journal.name) if self.journal else ''
-            volume = ''
             issue = ''
             pages = ''
             if self.volume and self.issue:
                 volume = self.volume
                 issue = '({}),'.format(self.issue)
+            else:
+                volume = self.volume
 
             if self.pages:
                 if RU == self.language:
@@ -314,9 +315,19 @@ class Conference(TimeStampedModel):
         (INTERNATIONAL, u'Международная'),
         (NATIONAL, u'Российская')
     )
+
+    ORAL = 'oral'
+    POSTER = 'poster'
+    TYPES_FORMS = (
+        (ORAL, u'Устная'),
+        (POSTER, u'Постер')
+    )
+
     type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES, verbose_name=u'Классификация')
-    publication = models.ForeignKey(Publication, verbose_name=u'Публикация',
-                                    help_text=u'Отсюда берётся название доклада и название конференции')
+    form = models.CharField(max_length=25, default=ORAL, choices=TYPES_FORMS, verbose_name=u'Форма доклада')
+    publication = models.OneToOneField(Publication, related_name=u'conference', verbose_name=u'Публикация',
+                                       help_text=u'Отсюда берётся название доклада и название конференции: '
+                                                 u'статья в сборниках трудов конференции или тезисы конференции')
     author = models.ForeignKey(Author, verbose_name=u'Докладчик')
     organizer = models.CharField(max_length=550, blank=True, verbose_name=u'Организатор')
     date_start = models.DateTimeField(verbose_name=u'Дата и время', null=True, blank=True,
@@ -324,11 +335,14 @@ class Conference(TimeStampedModel):
     date_stop = models.DateTimeField(verbose_name=u'Дата и время', null=True, blank=True,
                                      help_text=u'Конец конференции')
     place = models.CharField(max_length=255, blank=True, verbose_name=u'Место проведения',
-                             help_text=u'Например: Страна, город или университет')
+                             help_text=u'Например: Страна, город, университет')
 
     def __unicode__(self):
         return unicode(self.publication.title)
 
+    def name_conference(self):
+        return unicode(self.publication.journal)
+
     class Meta:
-        verbose_name = 'Участник конференции'
-        verbose_name_plural = 'Участники конференций'
+        verbose_name = 'Конференция'
+        verbose_name_plural = 'Конференции'

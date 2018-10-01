@@ -159,7 +159,7 @@ class Grant(models.Model):
     reference_result = models.CharField(max_length=500, blank=True, verbose_name=u'Cсылка на результаты конкурса')
 
     def get_absolute_url(self):
-        return "%s/" % self.number
+        return "/grants/%s/" % self.number
 
     def get_name_head(self):
         try:
@@ -168,6 +168,16 @@ class Grant(models.Model):
             return self.head.user.get_short_name()
         else:
             return person.fullname
+
+    def export(self):
+        date_start = self.date_start.strftime('%d.%m.%Y') if self.date_start else ''
+        date_end = self.date_end.strftime('%d.%m.%Y') if self.date_end else ''
+        result = '{type} {number}; {name}, {date_start} - {date_end}'.format(type=self.type,
+                                                                             number=self.number,
+                                                                             name=self.name,
+                                                                             date_start=date_start,
+                                                                             date_end=date_end)
+        return result
 
     def __unicode__(self):
         return unicode(self.name)

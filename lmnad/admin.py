@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.conf.urls import url
 from django.contrib import admin
 from django.forms import ModelForm, forms
+from django.http import HttpResponse
 from django.utils.html import format_html, format_html_join
 from django_select2.forms import Select2MultipleWidget, Select2Widget
 from suit.widgets import SuitDateWidget, SuitSplitDateTimeWidget
@@ -13,10 +15,10 @@ from django.contrib.admin import ModelAdmin
 from suit_ckeditor.widgets import CKEditorWidget
 from suit_redactor.widgets import RedactorWidget
 from suit.admin import SortableModelAdmin
-
+from datetime import datetime
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 
-from publications.models import Author
+from publications.functions import export_grants_to_doc
 
 
 class MixinModelAdmin:
@@ -245,6 +247,15 @@ class GrantAdmin(TabbedTranslationAdmin):
     ]
     search_fields = ['name', 'number']
     list_filter = [('date_start', RowDateRangeFilter)]
+    change_list_template = "admin/change_list_export.html"
+
+    def get_urls(self):
+        urls = super(GrantAdmin, self).get_urls()
+        info = self.model._meta.app_label, self.model._meta.model_name
+        my_urls = [
+            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc), name='%s_%s_export' % info)
+        ]
+        return my_urls + urls
 
     def heads(self, obj):
         result = format_html_join(
@@ -252,8 +263,30 @@ class GrantAdmin(TabbedTranslationAdmin):
             ((head,) for head in obj.head.all())
         )
         return result
-
     heads.short_description = u'Руководители'
+
+    def export_to_doc(self, request, **kwargs):
+        ChangeList = self.get_changelist(request)
+        cl = ChangeList(request,
+                        self.model,
+                        self.list_display,
+                        self.list_display_links,
+                        self.list_filter,
+                        self.date_hierarchy,
+                        self.search_fields,
+                        self.list_select_related,
+                        self.list_per_page,
+                        self.list_max_show_all,
+                        self.list_editable,
+                        self)
+
+        filtered_queryset = cl.get_queryset(request)
+        document = export_grants_to_doc(filtered_queryset)
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response['Content-Disposition'] = 'attachment; filename=export_grants_{}.docx'.\
+            format(datetime.now().strftime('%d-%m-%Y'))
+        document.save(response)
+        return response
 
 admin.site.register(Grant, GrantAdmin)
 

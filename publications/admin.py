@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
+from django.forms import ModelForm
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -8,9 +9,11 @@ from django.utils.html import format_html_join, format_html
 from django_select2.forms import Select2Widget
 from modeltranslation.admin import TabbedTranslationAdmin
 from django.db import models
+from suit.widgets import SuitSplitDateTimeWidget
 
+from igwatlas.admin import RowDateRangeFilter
 from publications.functions import export_publication_to_doc
-from publications.models import Publication, Author, Journal, AuthorPublication
+from publications.models import Publication, Author, Journal, AuthorPublication, Conference
 from django.conf.urls import url
 
 from publications.views import cite_view
@@ -20,6 +23,13 @@ from datetime import datetime
 class MixinModelAdmin:
     formfield_overrides = {
         models.ForeignKey: {'widget': Select2Widget},
+        models.OneToOneField: {'widget': Select2Widget}
+    }
+
+
+class DateTimeSelectMixin:
+    formfield_overrides = {
+        models.DateTimeField: {'widget': SuitSplitDateTimeWidget},
     }
 
 
@@ -28,6 +38,15 @@ class AuthorInline(MixinModelAdmin, StackedInline):
     sortable = 'order_by'
     verbose_name = 'Автор'
     verbose_name_plural = 'Авторы'
+    extra = 5
+
+
+class ConferenceInline(MixinModelAdmin, DateTimeSelectMixin, StackedInline):
+    model = Conference
+    exclude = ['organizer']
+    verbose_name = 'Конференция'
+    verbose_name_plural = 'Конференция'
+    max_num = 1
     extra = 1
 
 
@@ -67,7 +86,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
         'journal__name_ru',
         'journal__name_en'
     ]
-    inlines = [AuthorInline]
+    inlines = [ConferenceInline, AuthorInline]
     change_list_template = "admin/change_list_export.html"
 
     def get_urls(self):
@@ -106,7 +125,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
 
             result = format_html(
                 u'''
-                <strong>Журнал: </strong> {} <br>
+                <strong>Журнал/Конференция: </strong> {} <br>
                 <strong>Том: </strong> {} <br>
                 <strong>Номер журнала: </strong> {} <br>
                 <strong>Страницы: </strong> {} <br>
@@ -181,3 +200,31 @@ class JournalAdmin(TabbedTranslationAdmin):
     search_fields = ['name_ru', 'name_en']
 
 admin.site.register(Journal, JournalAdmin)
+
+
+class RecordForm(ModelForm):
+    class Meta:
+        model = Conference
+        exclude = ['organizer']
+        widgets = {
+            'date_start': SuitSplitDateTimeWidget(),
+            'date_stop': SuitSplitDateTimeWidget(),
+        }
+
+
+class ConferenceAdmin(MixinModelAdmin, admin.ModelAdmin):
+    list_display = ['get_name_conference', 'publication', 'author', 'place', 'date_start', 'date_stop']
+    list_filter = ['type', 'form', ('date_start', RowDateRangeFilter)]
+    search_fields = [
+        'author__last_name_ru',
+        'author__last_name_en',
+        'publication__journal__name_ru',
+        'publication__journal__name_en'
+    ]
+    form = RecordForm
+
+    def get_name_conference(self, obj):
+        return obj.publication.journal
+    get_name_conference.short_description = u'Название конференции'
+
+admin.site.register(Conference, ConferenceAdmin)

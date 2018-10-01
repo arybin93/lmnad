@@ -23,6 +23,7 @@ function update_form() {
     var fieldWOS = $(document).find('.field-is_wos');
     var fieldSCOPUS = $(document).find('.field-is_scopus');
     var fieldOther = $(document).find('.field-is_other_db');
+    var inlineConference = $(document).find('#conference-group');
 
 
     if (value == PATENT || value == PATENT_BD ) {
@@ -49,6 +50,12 @@ function update_form() {
         fieldWOS.show();
         fieldSCOPUS.show();
         fieldOther.show();
+    }
+
+    if (value == PROCEEDINGS || value == THESES_CONFERENCE) {
+        inlineConference.show();
+    } else {
+        inlineConference.hide();
     }
 }
 

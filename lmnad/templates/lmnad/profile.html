@@ -219,6 +219,58 @@
         </div>
     {% endif %}
 
+    {% if conferences %}
+        <div class="row">
+        <h3 class="page-header">{% trans "Conferences" %}:</h3>
+        <table class="table table-hover">
+        <thead>
+            <tr>
+                <th> {% trans "Name of conference" %} </th>
+                <th> {% trans "Type" %} </th>
+                <th> {% trans "Form" %} </th>
+                <th> {% trans "Title" %} </th>
+                <th> {% trans "Place" %} </th>
+                <th> {% trans "Dates" %} </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conf in conferences|dictsortreversed:"date_start" %}
+            <tr>
+                <td>{{ conf.name_conference }}</td>
+                <td>
+                    {% if conf.type == 'international' %}
+                        {% trans 'International' %}
+                    {% else %}
+                        {% trans 'National' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if conf.form == 'oral' %}
+                        {% trans 'Oral' %}
+                    {% else %}
+                        {% trans 'Poster' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {{ conf.publication.title }}
+                </td>
+                <td>
+                    {{ conf.place }}
+                </td>
+                <td>
+                    {% if conf.date_start and conf.date_stop %}
+                        {{ conf.date_start|date:"d. M. Y." }} - {{ conf.date_stop|date:"d. M. Y." }}
+                    {% else %}
+                        {{ conf.publication.year }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    {% endif %}
+
     <!-- Modal -->
      <div id="filter" class="modal fade" role="dialog">
          <div class="modal-dialog">
