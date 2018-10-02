@@ -19,6 +19,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
+from publications.functions import export_from_profile
 from publications.models import Publication, Conference
 
 
@@ -269,8 +270,7 @@ def profile(request, username):
         'conferences': conferences.count(),
     }
 
-    # TODO: add export to docx file
-    export_file = None
+    export_file = export_from_profile()
 
     context = {
         'profile': user,

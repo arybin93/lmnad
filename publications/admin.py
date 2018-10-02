@@ -12,7 +12,7 @@ from django.db import models
 from suit.widgets import SuitSplitDateTimeWidget
 
 from igwatlas.admin import RowDateRangeFilter
-from publications.functions import export_publication_to_doc
+from publications.functions import export_publication_to_doc, export_conference_to_doc
 from publications.models import Publication, Author, Journal, AuthorPublication, Conference
 from django.conf.urls import url
 
@@ -43,7 +43,15 @@ class AuthorInline(MixinModelAdmin, StackedInline):
 
 class ConferenceInline(MixinModelAdmin, DateTimeSelectMixin, StackedInline):
     model = Conference
-    exclude = ['organizer']
+    fields = [
+        'type',
+        'form',
+        'author',
+        'place',
+        'date_start',
+        'date_stop',
+        'organizer',
+    ]
     verbose_name = 'Конференция'
     verbose_name_plural = 'Конференция'
     max_num = 1
@@ -205,7 +213,16 @@ admin.site.register(Journal, JournalAdmin)
 class RecordForm(ModelForm):
     class Meta:
         model = Conference
-        exclude = ['organizer']
+        fields = [
+            'type',
+            'form',
+            'publication',
+            'author',
+            'place',
+            'date_start',
+            'date_stop',
+            'organizer',
+        ]
         widgets = {
             'date_start': SuitSplitDateTimeWidget(),
             'date_stop': SuitSplitDateTimeWidget(),
@@ -213,7 +230,7 @@ class RecordForm(ModelForm):
 
 
 class ConferenceAdmin(MixinModelAdmin, admin.ModelAdmin):
-    list_display = ['get_name_conference', 'publication', 'author', 'place', 'date_start', 'date_stop']
+    list_display = ['get_name_conference', 'type', 'publication', 'author', 'place', 'date_start', 'date_stop']
     list_filter = ['type', 'form', ('date_start', RowDateRangeFilter)]
     search_fields = [
         'author__last_name_ru',
@@ -222,9 +239,41 @@ class ConferenceAdmin(MixinModelAdmin, admin.ModelAdmin):
         'publication__journal__name_en'
     ]
     form = RecordForm
+    change_list_template = "admin/change_list_export.html"
+
+    def get_urls(self):
+        urls = super(ConferenceAdmin, self).get_urls()
+        info = self.model._meta.app_label, self.model._meta.model_name
+        my_urls = [
+            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc), name='%s_%s_export' % info)
+        ]
+        return my_urls + urls
 
     def get_name_conference(self, obj):
         return obj.publication.journal
     get_name_conference.short_description = u'Название конференции'
+
+    def export_to_doc(self, request, **kwargs):
+        ChangeList = self.get_changelist(request)
+        cl = ChangeList(request,
+                        self.model,
+                        self.list_display,
+                        self.list_display_links,
+                        self.list_filter,
+                        self.date_hierarchy,
+                        self.search_fields,
+                        self.list_select_related,
+                        self.list_per_page,
+                        self.list_max_show_all,
+                        self.list_editable,
+                        self)
+
+        filtered_queryset = cl.get_queryset(request)
+        document = export_conference_to_doc(filtered_queryset)
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response['Content-Disposition'] = 'attachment; filename=export_conferences_{}.docx'. \
+            format(datetime.now().strftime('%d-%m-%Y'))
+        document.save(response)
+        return response
 
 admin.site.register(Conference, ConferenceAdmin)

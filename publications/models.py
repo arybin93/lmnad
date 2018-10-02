@@ -330,11 +330,9 @@ class Conference(TimeStampedModel):
                                                  u'статья в сборниках трудов конференции или тезисы конференции')
     author = models.ForeignKey(Author, verbose_name=u'Докладчик')
     organizer = models.CharField(max_length=550, blank=True, verbose_name=u'Организатор')
-    date_start = models.DateTimeField(verbose_name=u'Дата и время', null=True, blank=True,
-                                      help_text=u'Начало конференции')
-    date_stop = models.DateTimeField(verbose_name=u'Дата и время', null=True, blank=True,
-                                     help_text=u'Конец конференции')
-    place = models.CharField(max_length=255, blank=True, verbose_name=u'Место проведения',
+    date_start = models.DateTimeField(verbose_name=u'Дата и время, начало', help_text=u'Начало конференции')
+    date_stop = models.DateTimeField(verbose_name=u'Дата и время, конец', help_text=u'Конец конференции')
+    place = models.CharField(max_length=255, verbose_name=u'Место проведения',
                              help_text=u'Например: Страна, город, университет')
 
     def __unicode__(self):

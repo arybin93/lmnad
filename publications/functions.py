@@ -2,7 +2,7 @@
 from django.db.models import Q
 from docx import Document
 from docx.shared import Inches
-from publications.models import Publication
+from publications.models import Publication, Conference
 
 
 def export_publication_to_doc(queryset):
@@ -79,4 +79,64 @@ def export_grants_to_doc(queryset):
             grant.export(), style='List Number'
         )
 
+    return document
+
+
+def export_conference_to_doc(queryset):
+    document = Document()
+    document.add_heading(u'Экспорт конференций', 0)
+
+    national_conferences = queryset.filter(type=Conference.NATIONAL)
+    national_count = national_conferences.count()
+    if national_conferences:
+        document.add_heading(u'Отечественные мероприятия:', level=2)
+        document.add_paragraph(u'- отечественные мероприятия: {}'.format(national_count))
+
+        table = document.add_table(rows=1, cols=3)
+        table.style = 'TableGrid'
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = u'Название мероприятия'
+        hdr_cells[1].text = u'Место и время проведения'
+        hdr_cells[2].text = u'Название доклада'
+        for conf in national_conferences:
+            date_start = conf.date_start.strftime('%d.%m.%Y') if conf.date_start else ''
+            date_stop = conf.date_stop.strftime('%d.%m.%Y') if conf.date_start else ''
+            place_and_dates = u'{place}, {date_start} - {date_stop}'.format(place=conf.place,
+                                                                           date_start=date_start,
+                                                                           date_stop=date_stop)
+
+            row_cells = table.add_row().cells
+            row_cells[0].text = conf.publication.journal.name
+            row_cells[1].text = place_and_dates
+            row_cells[2].text = conf.publication.title
+
+    international_conferences = queryset.filter(type=Conference.INTERNATIONAL)
+    inter_count = international_conferences.count()
+    if international_conferences:
+        document.add_heading(u'Зарубежные мероприятия:', level=2)
+        document.add_paragraph(u'- зарубежные мероприятия: {}'.format(inter_count))
+
+        table = document.add_table(rows=1, cols=3)
+        table.style = 'TableGrid'
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = u'Название мероприятия'
+        hdr_cells[1].text = u'Место и время проведения'
+        hdr_cells[2].text = u'Название доклада'
+        for conf in international_conferences:
+            date_start = conf.date_start.strftime('%d.%m.%Y') if conf.date_start else ''
+            date_stop = conf.date_stop.strftime('%d.%m.%Y') if conf.date_start else ''
+            place_and_dates = u'{place}, {date_start} - {date_stop}'.format(place=conf.place,
+                                                                            date_start=date_start,
+                                                                            date_stop=date_stop)
+
+            row_cells = table.add_row().cells
+            row_cells[0].text = conf.publication.journal.name
+            row_cells[1].text = place_and_dates
+            row_cells[2].text = conf.publication.title
+
+    return document
+
+
+def export_from_profile():
+    document = Document()
     return document
