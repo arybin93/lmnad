@@ -54,7 +54,7 @@ def export_publication_to_doc(queryset):
 
     document.add_heading(u'Прочие статьи:', level=2)
     another_articles = queryset.filter(type=Publication.ARTICLE). \
-        filter(Q(is_other_db=True) | Q(Q(is_rinc=False) | Q(is_vak=False) | Q(is_wos=False) | Q(is_scopus=False)))
+        filter(Q(is_other_db=True) & Q(Q(is_rinc=False) | Q(is_vak=False) | Q(is_wos=False) | Q(is_scopus=False)))
     for article in another_articles:
         document.add_paragraph(
             article.get_harvard(), style='List Number'
