@@ -264,7 +264,7 @@ def profile(request, username):
     elif year_from:
         conferences = conferences.filter(publication__journal__date_stop__year__lte=int(year_from))
 
-    conferences.order_by('publication__journal__date_start')
+    conferences = conferences.order_by('-publication__journal__date_start')
 
     stats = {
         'publication_count': publications.count(),
