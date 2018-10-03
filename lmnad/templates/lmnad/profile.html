@@ -234,11 +234,11 @@
             </tr>
         </thead>
         <tbody>
-        {% for conf in conferences|dictsortreversed:"date_start" %}
+        {% for conf in conferences %}
             <tr>
                 <td>{{ conf.name_conference }}</td>
                 <td>
-                    {% if conf.type == 'international' %}
+                    {% if conf.publication.journal.conf_type == 'international' %}
                         {% trans 'International' %}
                     {% else %}
                         {% trans 'National' %}
@@ -255,11 +255,11 @@
                     {{ conf.publication.title }}
                 </td>
                 <td>
-                    {{ conf.place }}
+                    {{ conf.publication.journal.place }}
                 </td>
                 <td>
-                    {% if conf.date_start and conf.date_stop %}
-                        {{ conf.date_start|date:"d. M. Y." }} - {{ conf.date_stop|date:"d. M. Y." }}
+                    {% if conf.publication.journal.date_start and conf.publication.journal.date_stop %}
+                        {{ conf.publication.journal.date_start |date:"d. M. Y." }} - {{ conf.publication.journal.date_stop|date:"d. M. Y." }}
                     {% else %}
                         {{ conf.publication.year }}
                     {% endif %}

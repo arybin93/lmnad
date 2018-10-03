@@ -257,11 +257,14 @@ def profile(request, username):
 
     conferences = Conference.objects.filter(author__user=user.account)
     if year_from and year_to:
-        conferences = conferences.filter(date_start__year__gte=int(year_from), date_stop__year__lte=int(year_to))
+        conferences = conferences.filter(publication__journal__date_start__year__gte=int(year_from),
+                                         publication__journal__date_stop__year__lte=int(year_to))
     elif year_to:
-        conferences = conferences.filter(date_start__year__lte=int(year_to))
+        conferences = conferences.filter(publication__journal__date_start__year__lte=int(year_to))
     elif year_from:
-        conferences = conferences.filter(date_stop__year__gte=int(year_from))
+        conferences = conferences.filter(publication__journal__date_stop__year__lte=int(year_from))
+
+    conferences.order_by('publication__journal__date_start')
 
     stats = {
         'publication_count': publications.count(),

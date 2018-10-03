@@ -415,6 +415,8 @@ class Conference(TimeStampedModel):
     def name_conference(self):
         return unicode(self.publication.journal)
 
+
+
     class Meta:
         verbose_name = 'Участие в конференции'
         verbose_name_plural = 'Участие в конференциях'
