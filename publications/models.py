@@ -18,11 +18,52 @@ LANGUAGES = (
 
 
 class Journal(TimeStampedModel):
-    """ Journal """
-    name = models.CharField(unique=True, max_length=255, verbose_name=u'Название журнала, конференции')
+    """ Journal, Conferences """
+    JOURNAL = 'journal'
+    CONFERENCE = 'conference'
+    TYPES = (
+        (JOURNAL, u'Журнал'),
+        (CONFERENCE, 'Конференция'),
+    )
+
+    INTERNATIONAL = 'international'
+    NATIONAL = 'national'
+    TYPES_CONF = (
+        (INTERNATIONAL, u'Международная'),
+        (NATIONAL, u'Российская')
+    )
+
+    type = models.CharField(max_length=55, default=JOURNAL, choices=TYPES, verbose_name=u'Тип',
+                            help_text=u'Журнал или конференция')
+    name = models.CharField(max_length=255, verbose_name=u'Название журнала, конференции')
+
+    # Fields for conference
+    conf_type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES_CONF, verbose_name=u'Классификация')
+    date_start = models.DateTimeField(verbose_name=u'Дата и время, начало', null=True, blank=True,
+                                      help_text=u'Начало конференции')
+    date_stop = models.DateTimeField(verbose_name=u'Дата и время, конец', null=True, blank=True,
+                                     help_text=u'Конец конференции')
+    place = models.CharField(max_length=255, blank=True, verbose_name=u'Место проведения',
+                             help_text=u'Например: Страна, город, университет')
+    organizer = models.CharField(max_length=550, blank=True, verbose_name=u'Организатор')
 
     def __unicode__(self):
         return unicode(self.name)
+
+    def get_dates(self):
+        date_start = self.date_start.strftime('%d.%m.%Y') if self.date_start else ''
+        date_stop = self.date_stop.strftime('%d.%m.%Y') if self.date_stop else ''
+
+        result = u'{date_start} - {date_stop}'.format(date_start=date_start,
+                                                      date_stop=date_stop)
+
+        return unicode(result)
+
+    def get_place_dates(self):
+        dates = self.get_dates()
+        place_and_dates = u'{place}, {dates}'.format(place=self.place,
+                                                     dates=dates)
+        return unicode(place_and_dates)
 
     class Meta:
         verbose_name = 'Журнал/Конференция'
@@ -79,12 +120,12 @@ class Author(TimeStampedModel):
                 last_name = self.last_name_en
 
         if short_middle:
-            author_str = u"{}, {}. {}.,".format(last_name,
-                                                short_name,
-                                                short_middle)
+            author_str = u"{}, {}. {}.".format(last_name,
+                                               short_name,
+                                               short_middle)
         else:
-            author_str = u"{}, {}.,".format(last_name,
-                                            short_name)
+            author_str = u"{}, {}.".format(last_name,
+                                           short_name)
         return author_str
 
     class Meta:
@@ -145,11 +186,12 @@ class Publication(TimeStampedModel):
                                           u' от выбранного языка на сайте')
 
     def save(self, *args, **kwargs):
-        language = detect_language_text(self.title[:30])
-        if language == RU:
-            self.language = RU
-        else:
-            self.language = EN
+        if not self.language:
+            language = detect_language_text(self.title[:30])
+            if language == RU:
+                self.language = RU
+            else:
+                self.language = EN
         super(Publication, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -167,24 +209,44 @@ class Publication(TimeStampedModel):
                 date=self.date.strftime('%d.%m.%Y') if self.date else u'-'
             )
         else:
-            journal = '{},'.format(self.journal.name) if self.journal else ''
+            if self.language == RU:
+                journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
+            else:
+                journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
+
+            if self.journal.type == Journal.CONFERENCE:
+                journal = '{journal_name}, {place}, {dates}'.format(journal_name=journal_name,
+                                                                    place=self.journal.place,
+                                                                    dates=self.journal.get_dates())
+            else:
+                journal = '{},'.format(journal_name)
+
             issue = ''
             pages = ''
+            volume = ''
             if self.volume and self.issue:
                 volume = self.volume
                 issue = '({}),'.format(self.issue)
-            else:
-                volume = self.volume
+            elif self.volume:
+                if RU == self.language:
+                    volume = u'Т. {volume},'.format(volume=self.volume)
+                else:
+                    volume = u'vol. {volume},'.format(volume=self.volume)
+            elif self.issue:
+                if RU == self.language:
+                    issue = u'№ {issue},'.format(issue=self.issue)
+                else:
+                    issue = u'no. {issue},'.format(issue=self.issue)
 
             if self.pages:
                 if RU == self.language:
-                    pages = 'С. {pages},'.format(pages=self.pages)
+                    pages = u'С. {pages},'.format(pages=self.pages)
                 else:
-                    pages = 'pp. {pages},'.format(pages=self.pages)
+                    pages = u'pp. {pages},'.format(pages=self.pages)
 
             doi = None
             if self.doi and ('http' not in self.doi or 'https' not in self.doi):
-                doi = 'https://doi.org/' + self.doi
+                doi = u'https://doi.org/' + self.doi
 
             result = format_html(
                 u'''
@@ -196,7 +258,6 @@ class Publication(TimeStampedModel):
                 pages=pages,
                 doi_ref=doi if doi else self.doi,
                 doi=self.doi.replace('https://doi.org/', '') if self.doi else u'-',
-
             )
 
         return result
@@ -228,15 +289,20 @@ class Publication(TimeStampedModel):
                 authors_list = []
                 author_str = ''
                 for index, author in enumerate(authors):
-                    author_str = '{}'.format(author.get_short_name_harvard(lang=self.language))
+                    author_str = '{},'.format(author.get_short_name_harvard(lang=self.language))
                     if index == len_authors:
+                        pre_last_author = authors_list[-1]
+                        # delete last comma
+                        pre_last_author_without_comma = pre_last_author[:-1]
+                        authors_list[-1] = pre_last_author_without_comma
+                        # last author with &
                         author_str = '& {}'.format(author.get_short_name_harvard(lang=self.language))
                     else:
                         authors_list.append(author_str)
 
                 result_authors = ' '.join(authors_list) + author_str
             else:
-                result_authors = '{}'.format(authors.first().get_short_name_harvard(lang=self.language))
+                result_authors = '{},'.format(authors.first().get_short_name_harvard(lang=self.language))
 
         if self.type == self.PATENT or self.type == self.PATENT_BD:
             result = u'{authors} {title}. {type_text} {number} от {date}'
@@ -259,25 +325,43 @@ class Publication(TimeStampedModel):
             result = '{authors} {year}. {title}. {journal} {volume}{issue} {pages} {doi}'
             doi = 'doi: {}'.format(self.doi) if self.doi else ''
 
-            journal = '{},'.format(self.journal.name) if self.journal else ''
-            # set language for title
             if self.language == RU:
-                journal = self.journal.name_ru if self.journal.name_ru else self.journal.name
-            elif self.language == EN:
-                journal = self.journal.name_en if self.journal.name_en else self.journal.name
+                journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
+            else:
+                journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
 
-            volume = ''
+            if self.journal.type == Journal.CONFERENCE:
+                journal = '{journal_name}, {place}, {dates},'.format(journal_name=journal_name,
+                                                                    place=self.journal.place,
+                                                                    dates=self.journal.get_dates())
+            else:
+                journal = '{},'.format(journal_name)
+
             issue = ''
             pages = ''
+            volume = ''
             if self.volume and self.issue:
                 volume = self.volume
                 issue = '({}),'.format(self.issue)
+            elif self.volume:
+                if RU == self.language:
+                    volume = u'Т. {volume},'.format(volume=self.volume)
+                else:
+                    volume = u'vol. {volume},'.format(volume=self.volume)
+            elif self.issue:
+                if RU == self.language:
+                    issue = u'№ {issue},'.format(issue=self.issue)
+                else:
+                    issue = u'no. {issue},'.format(issue=self.issue)
 
             if self.pages:
                 if RU == self.language:
-                    pages = 'С. {pages},'.format(pages=self.pages)
+                    pages = 'С. {pages}'.format(pages=self.pages)
                 else:
-                    pages = 'pp. {pages},'.format(pages=self.pages)
+                    pages = 'pp. {pages}'.format(pages=self.pages)
+
+            if doi and pages:
+                pages = '{}, '.format(pages)
 
             return result.format(authors=result_authors,
                                  year=year,
@@ -308,13 +392,7 @@ class AuthorPublication(models.Model):
 
 
 class Conference(TimeStampedModel):
-    """ Conference """
-    INTERNATIONAL = 'international'
-    NATIONAL = 'national'
-    TYPES = (
-        (INTERNATIONAL, u'Международная'),
-        (NATIONAL, u'Российская')
-    )
+    """ Member of conference """
 
     ORAL = 'oral'
     POSTER = 'poster'
@@ -323,24 +401,20 @@ class Conference(TimeStampedModel):
         (POSTER, u'Постер')
     )
 
-    type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES, verbose_name=u'Классификация')
     form = models.CharField(max_length=25, default=ORAL, choices=TYPES_FORMS, verbose_name=u'Форма доклада')
     publication = models.OneToOneField(Publication, related_name=u'conference', verbose_name=u'Публикация',
                                        help_text=u'Отсюда берётся название доклада и название конференции: '
                                                  u'статья в сборниках трудов конференции или тезисы конференции')
     author = models.ForeignKey(Author, verbose_name=u'Докладчик')
-    organizer = models.CharField(max_length=550, blank=True, verbose_name=u'Организатор')
-    date_start = models.DateTimeField(verbose_name=u'Дата и время, начало', help_text=u'Начало конференции')
-    date_stop = models.DateTimeField(verbose_name=u'Дата и время, конец', help_text=u'Конец конференции')
-    place = models.CharField(max_length=255, verbose_name=u'Место проведения',
-                             help_text=u'Например: Страна, город, университет')
 
     def __unicode__(self):
-        return unicode(self.publication.title)
+        result = u'{}'.format(self.publication.journal,
+                              self.publication.journal.place,)
+        return unicode(result)
 
     def name_conference(self):
         return unicode(self.publication.journal)
 
     class Meta:
-        verbose_name = 'Конференция'
-        verbose_name_plural = 'Конференции'
+        verbose_name = 'Участие в конференции'
+        verbose_name_plural = 'Участие в конференциях'

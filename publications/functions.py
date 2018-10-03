@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Q
 from docx import Document
-from docx.shared import Inches
-from publications.models import Publication, Conference
+from publications.models import Publication, Journal
 
 
 def export_publication_to_doc(queryset):
@@ -46,10 +45,10 @@ def export_publication_to_doc(queryset):
         )
 
     document.add_heading(u'Учебно-методические материалы:', level=2)
-    confs = queryset.filter(type=Publication.TEACHING_MATERIALS)
-    for c in confs:
+    teach_materials = queryset.filter(type=Publication.TEACHING_MATERIALS)
+    for t in teach_materials:
         document.add_paragraph(
-            c.get_harvard(), style='List Number'
+            t.get_harvard(), style='List Number'
         )
 
     document.add_heading(u'Прочие статьи:', level=2)
@@ -86,7 +85,7 @@ def export_conference_to_doc(queryset):
     document = Document()
     document.add_heading(u'Экспорт конференций', 0)
 
-    national_conferences = queryset.filter(type=Conference.NATIONAL)
+    national_conferences = queryset.filter(publication__journal__conf_type=Journal.NATIONAL)
     national_count = national_conferences.count()
     if national_conferences:
         document.add_heading(u'Отечественные мероприятия:', level=2)
@@ -99,18 +98,12 @@ def export_conference_to_doc(queryset):
         hdr_cells[1].text = u'Место и время проведения'
         hdr_cells[2].text = u'Название доклада'
         for conf in national_conferences:
-            date_start = conf.date_start.strftime('%d.%m.%Y') if conf.date_start else ''
-            date_stop = conf.date_stop.strftime('%d.%m.%Y') if conf.date_start else ''
-            place_and_dates = u'{place}, {date_start} - {date_stop}'.format(place=conf.place,
-                                                                           date_start=date_start,
-                                                                           date_stop=date_stop)
-
             row_cells = table.add_row().cells
-            row_cells[0].text = conf.publication.journal.name
-            row_cells[1].text = place_and_dates
+            row_cells[0].text = conf.publication.journal.name_ru
+            row_cells[1].text = conf.publication.journal.get_place_dates()
             row_cells[2].text = conf.publication.title
 
-    international_conferences = queryset.filter(type=Conference.INTERNATIONAL)
+    international_conferences = queryset.filter(publication__journal__conf_type=Journal.INTERNATIONAL)
     inter_count = international_conferences.count()
     if international_conferences:
         document.add_heading(u'Зарубежные мероприятия:', level=2)
@@ -123,15 +116,9 @@ def export_conference_to_doc(queryset):
         hdr_cells[1].text = u'Место и время проведения'
         hdr_cells[2].text = u'Название доклада'
         for conf in international_conferences:
-            date_start = conf.date_start.strftime('%d.%m.%Y') if conf.date_start else ''
-            date_stop = conf.date_stop.strftime('%d.%m.%Y') if conf.date_start else ''
-            place_and_dates = u'{place}, {date_start} - {date_stop}'.format(place=conf.place,
-                                                                            date_start=date_start,
-                                                                            date_stop=date_stop)
-
             row_cells = table.add_row().cells
-            row_cells[0].text = conf.publication.journal.name
-            row_cells[1].text = place_and_dates
+            row_cells[0].text = conf.publication.journal.name_ru
+            row_cells[1].text = conf.publication.journal.get_place_dates()
             row_cells[2].text = conf.publication.title
 
     return document

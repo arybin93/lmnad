@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
-from django.forms import ModelForm
+from django.forms import ModelForm, forms
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -44,16 +44,11 @@ class AuthorInline(MixinModelAdmin, StackedInline):
 class ConferenceInline(MixinModelAdmin, DateTimeSelectMixin, StackedInline):
     model = Conference
     fields = [
-        'type',
         'form',
         'author',
-        'place',
-        'date_start',
-        'date_stop',
-        'organizer',
     ]
-    verbose_name = 'Конференция'
-    verbose_name_plural = 'Конференция'
+    verbose_name = u'Участие в конференции'
+    verbose_name_plural = u'Участие в конференции'
     max_num = 1
     extra = 1
 
@@ -203,25 +198,39 @@ class AuthorAdmin(MixinModelAdmin, TabbedTranslationAdmin):
 admin.site.register(Author, AuthorAdmin)
 
 
+class JournalForm(ModelForm):
+    def clean(self):
+        if self.cleaned_data['type'] == Journal.CONFERENCE:
+            if 'date_start' in self.cleaned_data or 'date_stop' in self.cleaned_data:
+                if not self.cleaned_data['date_start'] or not self.cleaned_data['date_stop']:
+                    raise forms.ValidationError(u'Выберите даты проведения конференции')
+
+            if 'place' in self.cleaned_data:
+                if not self.cleaned_data['place']:
+                    raise forms.ValidationError(u'Введите место проведения конференции')
+
+        return super(JournalForm, self).clean()
+
+    class Media:
+        js = ('admin/journals.js',)
+
+
 class JournalAdmin(TabbedTranslationAdmin):
     list_display = ['name']
+    list_filter = ['type', 'conf_type']
     search_fields = ['name_ru', 'name_en']
+    form = JournalForm
 
 admin.site.register(Journal, JournalAdmin)
 
 
-class RecordForm(ModelForm):
+class ConferenceForm(ModelForm):
     class Meta:
         model = Conference
         fields = [
-            'type',
             'form',
             'publication',
             'author',
-            'place',
-            'date_start',
-            'date_stop',
-            'organizer',
         ]
         widgets = {
             'date_start': SuitSplitDateTimeWidget(),
@@ -230,15 +239,21 @@ class RecordForm(ModelForm):
 
 
 class ConferenceAdmin(MixinModelAdmin, admin.ModelAdmin):
-    list_display = ['get_name_conference', 'type', 'publication', 'author', 'place', 'date_start', 'date_stop']
-    list_filter = ['type', 'form', ('date_start', RowDateRangeFilter)]
+    list_display = [
+        'get_name_conference',
+        'get_conf_type',
+        'publication',
+        'author',
+        'get_dates'
+    ]
+    list_filter = ['form', ('publication__journal__date_start', RowDateRangeFilter)]
     search_fields = [
         'author__last_name_ru',
         'author__last_name_en',
         'publication__journal__name_ru',
         'publication__journal__name_en'
     ]
-    form = RecordForm
+    form = ConferenceForm
     change_list_template = "admin/change_list_export.html"
 
     def get_urls(self):
@@ -252,6 +267,18 @@ class ConferenceAdmin(MixinModelAdmin, admin.ModelAdmin):
     def get_name_conference(self, obj):
         return obj.publication.journal
     get_name_conference.short_description = u'Название конференции'
+
+    def get_dates(self, obj):
+        return obj.publication.journal.get_dates()
+    get_dates.short_description = u'Даты'
+
+    def get_conf_type(self, obj):
+        return obj.publication.journal.get_conf_type_display()
+    get_conf_type.short_description = u'Тип конференции'
+
+    def get_place(self, obj):
+        return obj.publication.journal.place
+    get_place.short_description = u'Место'
 
     def export_to_doc(self, request, **kwargs):
         ChangeList = self.get_changelist(request)
