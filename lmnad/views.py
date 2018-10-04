@@ -435,8 +435,8 @@ def edit_profile(request):
                 "is_subscribe": is_subscribe,
                 "text_ru": text_ru,
                 "text_en": text_en,
-                "cv": current_user.account.cv_file,
-                "photo": current_user.account.photo.file
+                "cv": current_user.account.cv_file if current_user.account.cv_file else '',
+                "photo": current_user.account.photo if current_user.account.photo.file else ''
             }
 
         form = EditProfileForm(initial=init)
