@@ -376,33 +376,50 @@ class EditProfileForm(forms.Form):
     is_subscribe = forms.BooleanField(label=u'Подписка на рассылку', required=False)
     text_ru = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы (ru)')
     text_en = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы (en)')
+    photo = forms.ImageField(required=False, label=u'Фото в профиле')
+    cv = forms.FileField(required=False, label=u'CV')
 
 
 def edit_profile(request):
     current_user = request.user
     if request.method == 'POST':
-        form = EditProfileForm(request.POST)
+        form = EditProfileForm(request.POST, request.FILES)
         if form.is_valid():
             email = form.cleaned_data['email']
             is_subscribe = form.cleaned_data['is_subscribe']
             text_ru = form.cleaned_data['text_ru']
             text_en = form.cleaned_data['text_en']
-
             current_user.email = email
+
+            photo = None
+            cv = None
+            if 'photo' in request.FILES:
+                # save or update photo
+                photo = Images.objects.create(file=['photo'])
+            if 'cv' in request.FILES:
+                # save or update cv
+                cv = request.FILES['cv']
+
             try:
                 Account.objects.get(user_id=current_user.id)
             except Account.DoesNotExist:
                 Account.objects.create(is_subscribe=is_subscribe,
                                        text_ru=text_ru,
                                        text_en=text_en,
-                                       user_id=current_user.id)
+                                       user_id=current_user.id,
+                                       photo=photo,
+                                       cv_file=cv)
             else:
                 current_user.account.is_subscribe = is_subscribe
                 current_user.account.text_ru = text_ru
                 current_user.account.text_en = text_en
+                if photo:
+                    current_user.account.photo = photo
+                if cv:
+                    current_user.account.cv_file = cv
                 current_user.account.save()
+                current_user.save()
 
-            current_user.save()
             return redirect(profile, current_user)
     else:
         try:
@@ -417,7 +434,9 @@ def edit_profile(request):
                 "email": current_user.email,
                 "is_subscribe": is_subscribe,
                 "text_ru": text_ru,
-                "text_en": text_en
+                "text_en": text_en,
+                "cv": current_user.account.cv_file,
+                "photo": current_user.account.photo.file
             }
 
         form = EditProfileForm(initial=init)
