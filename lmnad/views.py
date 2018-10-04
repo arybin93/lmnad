@@ -395,7 +395,7 @@ def edit_profile(request):
             cv = None
             if 'photo' in request.FILES:
                 # save or update photo
-                photo = Images.objects.create(file=['photo'])
+                photo = Images.objects.create(file=request.FILES['photo'])
             if 'cv' in request.FILES:
                 # save or update cv
                 cv = request.FILES['cv']
