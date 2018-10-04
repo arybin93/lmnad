@@ -4,8 +4,9 @@ from docx import Document
 from publications.models import Publication, Journal
 
 
-def export_publication_to_doc(queryset):
-    document = Document()
+def export_publication_to_doc(queryset, document=None):
+    if not document:
+        document = Document()
     document.add_heading(u'Экспорт публикаций', 0)
     document.add_heading(u'Статьи в изданиях, рекомендованных ВАК и/или входящих'
                          u' в международные базы цитирования WoS и Scopus:', level=2)
@@ -69,8 +70,9 @@ def export_publication_to_doc(queryset):
     return document
 
 
-def export_grants_to_doc(queryset):
-    document = Document()
+def export_grants_to_doc(queryset, document=None):
+    if not document:
+        document = Document()
     document.add_heading(u'Экспорт грантов', 0)
 
     for grant in queryset:
@@ -81,8 +83,10 @@ def export_grants_to_doc(queryset):
     return document
 
 
-def export_conference_to_doc(queryset):
-    document = Document()
+def export_conference_to_doc(queryset, document=None):
+    if not document:
+        document = Document()
+
     document.add_heading(u'Экспорт конференций', 0)
 
     national_conferences = queryset.filter(publication__journal__conf_type=Journal.NATIONAL)
@@ -124,6 +128,16 @@ def export_conference_to_doc(queryset):
     return document
 
 
-def export_from_profile():
+def export_from_profile(publications, grants_member, grants_head, conference):
     document = Document()
+
+    if publications:
+        document = export_publication_to_doc(publications, document)
+    if grants_member:
+        document = export_grants_to_doc(grants_member, document)
+    if grants_head:
+        document = export_grants_to_doc(grants_head, document)
+    if conference:
+        document = export_conference_to_doc(conference, document)
+
     return document

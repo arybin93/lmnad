@@ -39,6 +39,9 @@ class Account(models.Model):
     def get_absolute_url(self):
         return "/profile/%s/" % self.user.username
 
+    def get_profile_export_url(self):
+        return "/profile_export/%s/" % self.user.username
+
     def is_worker(self):
         try:
             if self.people.status:

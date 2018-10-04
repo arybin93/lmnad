@@ -21,6 +21,7 @@ from constance import config
 
 from publications.functions import export_from_profile
 from publications.models import Publication, Conference
+from datetime import datetime
 
 
 def home(request):
@@ -273,8 +274,6 @@ def profile(request, username):
         'conferences': conferences.count(),
     }
 
-    export_file = export_from_profile()
-
     context = {
         'profile': user,
         'publications': publications,
@@ -282,9 +281,93 @@ def profile(request, username):
         'grants_head': grants_head,
         'conferences': conferences,
         'stats': stats,
-        'export_to_doc': export_file
     }
     return render(request, 'lmnad/profile.html', context)
+
+
+def profile_export(request, username):
+    user = get_object_or_404(User, username=username)
+
+    year_from = request.GET.get('year_from', None)
+    year_to = request.GET.get('year_to', None)
+    types = request.GET.getlist('type', [])
+    enable_checkbox = request.GET.get('enable_checkbox', False)
+    rinc = request.GET.get('rinc', False)
+    vak = request.GET.get('vak', False)
+    wos = request.GET.get('wos', False)
+    scopus = request.GET.get('scopus', False)
+
+    publications = Publication.objects.filter(authors__user=user.account, is_show=True).order_by('-year')
+
+    if year_from and year_to:
+        publications = publications.filter(year__gte=int(year_from), year__lte=int(year_to))
+    elif year_to:
+        publications = publications.filter(year__lte=int(year_to))
+    elif year_from:
+        publications = publications.filter(year__gte=int(year_from))
+
+    if types:
+        publications = publications.filter(type__in=types)
+
+    if enable_checkbox == 'on':
+        if rinc and rinc == 'on':
+            is_rinc = True
+        else:
+            is_rinc = False
+
+        if vak and vak == 'on':
+            is_vak = True
+        else:
+            is_vak = False
+
+        if wos and wos == 'on':
+            is_wos = True
+        else:
+            is_wos = False
+
+        if scopus and scopus == 'on':
+            is_scopus = True
+        else:
+            is_scopus = False
+
+        publications = publications.filter(Q(is_rinc=is_rinc) &
+                                           Q(is_vak=is_vak) &
+                                           Q(is_wos=is_wos) &
+                                           Q(is_scopus=is_scopus))
+
+    grants_member = Grant.objects.filter(members__account=user.account).order_by('-date_start')
+    grants_head = Grant.objects.filter(head__account=user.account).order_by('-date_start')
+
+    if year_from and year_to:
+        grants_member = grants_member.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+        grants_head = grants_head.filter(date_start__year__gte=int(year_from), date_end__year__lte=int(year_to))
+    elif year_to:
+        grants_member = grants_member.filter(date_start__year__lte=int(year_to))
+        grants_head = grants_head.filter(date_end__year__lte=int(year_to))
+    elif year_from:
+        grants_member = grants_member.filter(date_end__year__gte=int(year_from))
+        grants_head = grants_head.filter(date_start__year__gte=int(year_from))
+
+    grants_head_ids = grants_head.values('id')
+    grants_member = grants_member.exclude(id__in=grants_head_ids)
+
+    conferences = Conference.objects.filter(author__user=user.account)
+    if year_from and year_to:
+        conferences = conferences.filter(publication__journal__date_start__year__gte=int(year_from),
+                                         publication__journal__date_stop__year__lte=int(year_to))
+    elif year_to:
+        conferences = conferences.filter(publication__journal__date_start__year__lte=int(year_to))
+    elif year_from:
+        conferences = conferences.filter(publication__journal__date_stop__year__lte=int(year_from))
+
+    conferences = conferences.order_by('-publication__journal__date_start')
+
+    export_file = export_from_profile(publications, grants_member, grants_head, conferences)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = 'attachment; filename=export_profile_{}.docx'. \
+        format(datetime.now().strftime('%d-%m-%Y'))
+    export_file.save(response)
+    return response
 
 
 class EditProfileForm(forms.Form):
