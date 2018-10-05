@@ -1,0 +1,12 @@
+{% extends 'lmnad/base.html' %}
+{% load bootstrap_tags %}
+{% load i18n %}
+
+{% block content %}
+<h3 class="page-header">{% trans "Add publication" %}</h3>
+     {{ formset.management_form }}
+     {% for form in formset %}
+         {{ form }}
+     {% endfor %}
+{% endblock %}
+

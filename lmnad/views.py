@@ -19,6 +19,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
+from publications.forms import PublicationForm, PublicationConferenceFormSet
 from publications.functions import export_from_profile
 from publications.models import Publication, Conference
 from datetime import datetime
@@ -370,6 +371,29 @@ def profile_export(request, username):
     return response
 
 
+def profile_add_publication(request, username):
+    user = get_object_or_404(User, username=username)
+
+    if request.method == 'POST':
+        formset = PublicationConferenceFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            pass
+    else:
+        formset = PublicationConferenceFormSet()
+
+    context = {
+        'formset': formset
+    }
+    return render(request, 'lmnad/profile_add_publication.html', context)
+
+
+def profile_edit_publication(request, username):
+    user = get_object_or_404(User, username=username)
+    context = {
+    }
+    return render(request, 'lmnad/profile_edit_publication.html', context)
+
+
 class EditProfileForm(forms.Form):
     email = forms.EmailField(label='Email', max_length=200, required=False,
                              widget=forms.TextInput(attrs = {'class': 'form-control'}))
@@ -390,6 +414,20 @@ def edit_profile(request):
             text_ru = form.cleaned_data['text_ru']
             text_en = form.cleaned_data['text_en']
             current_user.email = email
+
+            try:
+                form.data['photo-clear']
+            except KeyError:
+                photo_clear = False
+            else:
+                photo_clear = True
+
+            try:
+                form.data['cv-clear']
+            except KeyError:
+                cv_clear = False
+            else:
+                cv_clear = True
 
             photo = None
             cv = None
@@ -413,9 +451,9 @@ def edit_profile(request):
                 current_user.account.is_subscribe = is_subscribe
                 current_user.account.text_ru = text_ru
                 current_user.account.text_en = text_en
-                if photo:
+                if photo or photo_clear:
                     current_user.account.photo = photo
-                if cv:
+                if cv or cv_clear:
                     current_user.account.cv_file = cv
                 current_user.account.save()
                 current_user.save()

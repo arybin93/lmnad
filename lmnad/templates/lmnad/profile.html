@@ -22,24 +22,36 @@
         <p>{% trans "No information" %}</p>
     {% endif %}
     </div>
+    {% if publications %}
+        <div class="row">
+            <h3 class="page-header">{% trans "Publication activity" %}:</h3>
+            <p><b>{% trans "Publications" %}:</b> {{ stats.publication_count }} </p>
+            <p><b>{% trans "Conferences" %}:</b> {{ stats.conferences }} </p>
+        </div>
+    {% endif %}
     <div class="row">
-        <h3 class="page-header">{% trans "Publication activity" %}:</h3>
-        <p><b>{% trans "Publications" %}:</b> {{ stats.publication_count }} </p>
-        <p><b>{% trans "Conferences" %}:</b> {{ stats.conferences }} </p>
-    </div>
-    <div class="row">
-    <h3 class="page-header">{% trans "Publications" %}:</h3>
+    <hr>
     {% if user.is_authenticated and user.id == profile.id %}
-            <form class="form-horizontal" role="form" action="{{ profile.account.get_profile_export_url }}" method="get">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter">
-                    {% trans "Filter publications" %}
-                </button>
-                <button type="submit" class="btn btn-default">{% trans "Export to doc" %}</button>
-            </form>
+            <span style="float:left;">
+                <form class="form-horizontal" role="form" action="{{ profile.account.get_profile_export_url }}" method="get">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter">
+                        {% trans "Filter publications" %}
+                    </button>
+                    <button type="submit" class="btn btn-default">{% trans "Export to doc" %}</button>
+                </form>
+            </span>
+        {% if publications %}
+            <span style="float:right;">
+                <form action="{{ profile.account.get_profile_add_pub_url }}">
+                    <button type="submit" class="btn btn-primary">{% trans "Add new publication" %}</button>
+                </form>
+            </span>
+        {% endif %}
     {% endif %}
     </div>
     {% if publications %}
         <div class="row">
+        <h3 class="page-header">{% trans "Publications" %}:</h3>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -129,10 +141,15 @@
                         {% endif %}
                         <a onclick="return showAddAnotherPopup(this);"
                            href="/publications/cite/{{ publication.id }}"
-                           class="btn btn-primary"
+                           class="btn btn-info"
                            style="width: 100px !important"
                            target="_blank">
                             {% trans 'Cite' %}
+                        </a>
+                        <a href="{{ profile.account.get_profile_edit_pub_url }}"
+                           class="btn btn-warning"
+                           style="width: 100px !important">
+                            {% trans 'Edit' %}
                         </a>
                     </td>
                 </tr>

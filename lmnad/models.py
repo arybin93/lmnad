@@ -37,10 +37,16 @@ class Account(models.Model):
             return unicode(self.user)
 
     def get_absolute_url(self):
-        return "/profile/%s/" % self.user.username
+        return "/profile/{}/".format(self.user.username)
 
     def get_profile_export_url(self):
-        return "/profile_export/%s/" % self.user.username
+        return "/user/{}/export/publication/".format(self.user.username)
+
+    def get_profile_add_pub_url(self):
+        return "/user/{}/add/publication/".format(self.user.username)
+
+    def get_profile_edit_pub_url(self):
+        return "/user/{}/edit/publication/".format(self.user.username)
 
     def is_worker(self):
         try:
