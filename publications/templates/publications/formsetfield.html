@@ -1,0 +1,19 @@
+{% load bootstrap_tags %}
+
+<table class="table table-hover">
+    {{ formset.management_form }}
+    <thead>
+    </thead>
+    <tbody>
+        {% for form in formset %}
+        <tr>
+            {% for field in form %}
+                <td>
+                    <div class="form-group">{{ field.label_tag }}</div>
+                    {{ field }}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

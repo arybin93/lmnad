@@ -29,6 +29,7 @@ PREREQ_APPS = [
     'geoposition',
     'django_select2',
     'daterange_filter',
+    'formsetfield'
 ]
 
 PROJECT_APPS = [
@@ -275,6 +276,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25
 }
+
+
+CACHES = {
+    "default": {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        'TIMEOUT': 60*60*24,
+    }
+}
+
+# Set the cache backend to select2
+SELECT2_CACHE_BACKEND = 'default'
+
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',

@@ -19,7 +19,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
-from publications.forms import PublicationForm, PublicationConferenceFormSet
+from publications.forms import PublicationForm
 from publications.functions import export_from_profile
 from publications.models import Publication, Conference
 from datetime import datetime
@@ -372,17 +372,23 @@ def profile_export(request, username):
 
 
 def profile_add_publication(request, username):
-    user = get_object_or_404(User, username=username)
+    current_user = get_object_or_404(User, username=username)
 
     if request.method == 'POST':
-        formset = PublicationConferenceFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            pass
+        form = PublicationForm(request.POST)
+        if form.is_valid():
+            publication = form.save()
+
+            # handler for conference
+            # TODO
+            # handler for authors
+            # TODO
+            return redirect(profile, current_user)
     else:
-        formset = PublicationConferenceFormSet()
+        form = PublicationForm()
 
     context = {
-        'formset': formset
+        'form': form
     }
     return render(request, 'lmnad/profile_add_publication.html', context)
 

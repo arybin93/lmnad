@@ -4,9 +4,14 @@
 
 {% block content %}
 <h3 class="page-header">{% trans "Add publication" %}</h3>
-     {{ formset.management_form }}
-     {% for form in formset %}
-         {{ form }}
-     {% endfor %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form|as_bootstrap }}
+        {{ form.non_field_errors }}
+        <div class="form-actions">
+          <input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/>
+        </div>
+    </form>
 {% endblock %}
 

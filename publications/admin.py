@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.admin import StackedInline
+from django.contrib.admin import TabularInline
 from django.forms import ModelForm, forms
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -33,19 +34,20 @@ class DateTimeSelectMixin:
     }
 
 
-class AuthorInline(MixinModelAdmin, StackedInline):
+class AuthorInline(MixinModelAdmin, TabularInline):
     model = AuthorPublication
+    fields = ['author', 'order_by']
     sortable = 'order_by'
     verbose_name = 'Автор'
     verbose_name_plural = 'Авторы'
     extra = 5
 
 
-class ConferenceInline(MixinModelAdmin, DateTimeSelectMixin, StackedInline):
+class ConferenceInline(MixinModelAdmin, TabularInline):
     model = Conference
     fields = [
-        'form',
         'author',
+        'form',
     ]
     verbose_name = u'Участие в конференции'
     verbose_name_plural = u'Участие в конференции'
