@@ -146,7 +146,7 @@
                            target="_blank">
                             {% trans 'Cite' %}
                         </a>
-                        <a href="{{ profile.account.get_profile_edit_pub_url }}"
+                        <a href="{{ profile.account.get_profile_edit_pub_url }}{{ publication.id }}/"
                            class="btn btn-warning"
                            style="width: 100px !important">
                             {% trans 'Edit' %}

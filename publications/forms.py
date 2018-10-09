@@ -24,7 +24,9 @@ class ConferenceInlineForm(ModelForm):
         model = Conference
         fields = ['form', 'author']
         widgets = {
-            'author': ModelSelect2Widget(model=Author, search_fields=['last_name__icontains'])
+            'author': ModelSelect2Widget(model=Author,
+                                         search_fields=['last_name__icontains'],
+                                         attrs={'class': 'form-control'})
         }
 
 ConferenceAuthorFormSet = formset_factory(ConferenceInlineForm, extra=1, can_delete=True)

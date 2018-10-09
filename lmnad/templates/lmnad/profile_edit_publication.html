@@ -4,5 +4,18 @@
 
 {% block content %}
 <h3 class="page-header">{% trans "Edit publication" %}</h3>
-     {{ form }}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form|as_bootstrap }}
+        {{ form.non_field_errors }}
+        <div class="form-actions">
+          <a href="{{ profile.account.get_profile_cancel_url }}"
+                           class="btn btn-default"
+                           style="width: 100px !important">
+                            {% trans 'Cancel' %}
+          </a>
+          <input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/>
+        </div>
+    </form>
 {% endblock %}

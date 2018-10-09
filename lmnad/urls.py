@@ -24,7 +24,9 @@ urlpatterns = [
     url(r'^profile/(?P<username>.*)?/$', views.profile, name='profile'),
     url(r'^user/(?P<username>[\w-]+)/export/publication/$', views.profile_export, name='export_publication'),
     url(r'^user/(?P<username>[\w-]+)/add/publication/$', views.profile_add_publication, name='add_publication'),
-    url(r'^user/(?P<username>[\w-]+)/edit/publication/$', views.profile_edit_publication, name='edit_publication'),
+    url(r'^user/(?P<username>[\w-]+)/edit/publication/(?P<id>\d+)/$', views.profile_edit_publication,
+        name='edit_publication'),
+    url(r'^user/(?P<username>[\w-]+)/cancel/$', views.profile_cancel, name='profile_cancel'),
     url(r'^edit/$', views.edit_profile, name='edit_profile'),
     url(r'^pages/(?P<name>.*)?$', views.pages, name='pages')
 ]

@@ -19,9 +19,9 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
-from publications.forms import PublicationForm
+from publications.forms import PublicationForm, AuthorFormSet, ConferenceAuthorFormSet
 from publications.functions import export_from_profile
-from publications.models import Publication, Conference
+from publications.models import Publication, Conference, AuthorPublication
 from datetime import datetime
 
 
@@ -378,26 +378,82 @@ def profile_add_publication(request, username):
         form = PublicationForm(request.POST)
         if form.is_valid():
             publication = form.save()
+            authors = form.cleaned_data['authors_order']
+            conference = form.cleaned_data['conference_author']
 
-            # handler for conference
-            # TODO
-            # handler for authors
-            # TODO
+            for obj in authors:
+                try:
+                    if not obj['DELETE']:
+                        AuthorPublication.objects.create(publication=publication,
+                                                         author=obj['author'],
+                                                         order_by=obj['order_by'])
+                except KeyError:
+                    break
+
+            if conference:
+                try:
+                    conference = conference[0]
+                    if not conference['DELETE']:
+                        form = conference['form']
+                        author = conference['author']
+                        Conference.objects.create(publication=publication,
+                                                  author=author,
+                                                  form=form)
+
+                except (KeyError, IndexError):
+                    pass
+
             return redirect(profile, current_user)
     else:
         form = PublicationForm()
 
     context = {
-        'form': form
+        'form': form,
+        'profile': current_user
     }
     return render(request, 'lmnad/profile_add_publication.html', context)
 
 
-def profile_edit_publication(request, username):
-    user = get_object_or_404(User, username=username)
+def profile_edit_publication(request, username, id):
+    current_user = get_object_or_404(User, username=username)
+    publication = get_object_or_404(Publication, id=id)
+
+    if request.method == 'POST':
+        form = PublicationForm(request.POST, instance=publication)
+        if form.is_valid():
+            edit_publication = form.save()
+            authors = form.cleaned_data['authors_order']
+            conference = form.cleaned_data['conference_author']
+
+            for obj in authors:
+                try:
+                    pass
+                except KeyError:
+                    break
+
+            if conference:
+                pass
+
+            return redirect(profile, current_user)
+    else:
+        form = PublicationForm(instance=publication)
+
+        # TODO initial authors_order
+        #form.fields['authors_order'].initial = [publication.authors.all()]
+        # TODO initial conference_author
+        #form.fields['conference_author'].initial = [publication.conference]
+
     context = {
+        'form': form,
+        'profile': current_user
     }
+
     return render(request, 'lmnad/profile_edit_publication.html', context)
+
+
+def profile_cancel(request, username):
+    current_user = get_object_or_404(User, username=username)
+    return redirect(profile, current_user)
 
 
 class EditProfileForm(forms.Form):
