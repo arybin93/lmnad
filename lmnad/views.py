@@ -19,7 +19,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
-from publications.forms import PublicationForm, AuthorFormSet, ConferenceAuthorFormSet
+from publications.forms import PublicationForm, AuthorFormSet
 from publications.functions import export_from_profile
 from publications.models import Publication, Conference, AuthorPublication
 from datetime import datetime
@@ -421,27 +421,79 @@ def profile_edit_publication(request, username, id):
     if request.method == 'POST':
         form = PublicationForm(request.POST, instance=publication)
         if form.is_valid():
-            edit_publication = form.save()
+            form.save()
             authors = form.cleaned_data['authors_order']
             conference = form.cleaned_data['conference_author']
 
+            author_publications = AuthorPublication.objects.filter(publication=publication)
             for obj in authors:
                 try:
-                    pass
+                    if obj['DELETE']:
+                        AuthorPublication.objects.filter(
+                            publication=publication,
+                            author=obj['author']
+                        ).first().delete()
+                    else:
+                        pass
+                        '''
+                        try:
+                            author_publication = AuthorPublication.objects.get(
+                                publication=publication,
+                                author=obj['author']
+                            )
+                        except AuthorPublication.DoesNotExist:
+                            AuthorPublication.objects.create(publication=publication,
+                                                             author=obj['author'],
+                                                             order_by=obj['order_by'])
+                        else:
+                            author_publication.order_by = obj['order_by']
+                            author_publication.save()
+                        '''
                 except KeyError:
                     break
 
             if conference:
-                pass
+                try:
+                    conference = conference[0]
+                    if conference['DELETE']:
+                        publication.conference.delete()
+                    else:
+                        publication.conference.form = conference['form']
+                        publication.conference.author = conference['author']
+                        publication.conference.save()
+                except (KeyError, IndexError):
+                    pass
 
             return redirect(profile, current_user)
     else:
+        existed_authors = []
+        for a in publication.authors.all():
+            try:
+                pub_author = AuthorPublication.objects.get(publication=publication, author=a)
+                order_by = pub_author.order_by
+            except (AuthorPublication.DoesNotExist, AuthorPublication.MultipleObjectsReturned):
+                order_by = AuthorPublication.objects.filter(publication=publication, author=a).first().order_by
+
+            author = {
+                'order_by': order_by,
+                'author': a,
+            }
+            existed_authors.append(author)
+
+        conference = None
+        if publication.conference.author:
+            conference = {
+                'form': publication.conference.form,
+                'author': publication.conference.author
+            }
+
         form = PublicationForm(instance=publication)
 
-        # TODO initial authors_order
-        #form.fields['authors_order'].initial = [publication.authors.all()]
-        # TODO initial conference_author
-        #form.fields['conference_author'].initial = [publication.conference]
+        # set init values for inlines form
+        if existed_authors:
+            form.fields['authors_order'].formset_class_attrs = {"initial": existed_authors}
+        if conference:
+            form.fields['conference_author'].formset_class_attrs = {"initial": [conference]}
 
     context = {
         'form': form,

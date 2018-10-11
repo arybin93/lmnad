@@ -29,13 +29,13 @@ class ConferenceInlineForm(ModelForm):
                                          attrs={'class': 'form-control'})
         }
 
-ConferenceAuthorFormSet = formset_factory(ConferenceInlineForm, extra=1, can_delete=True)
+ConferenceAuthorFormSet = formset_factory(ConferenceInlineForm, extra=1, max_num=1, can_delete=True)
 
 
 class PublicationForm(ModelForm):
     authors_order = FormSetField(formset_class=AuthorFormSet,
-                           label=u'Авторы:',
-                           template='publications/formsetfield.html')
+                                 label=u'Авторы:',
+                                 template='publications/formsetfield.html')
     conference_author = FormSetField(formset_class=ConferenceAuthorFormSet,
                                      label=u'Участие в конференции:',
                                      template='publications/formsetfield.html')
