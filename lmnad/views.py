@@ -434,21 +434,19 @@ def profile_edit_publication(request, username, id):
                             author=obj['author']
                         ).first().delete()
                     else:
-                        pass
-                        '''
-                        try:
+                        if obj['author'] in author_publications:
+                            # update
                             author_publication = AuthorPublication.objects.get(
                                 publication=publication,
                                 author=obj['author']
                             )
-                        except AuthorPublication.DoesNotExist:
+                            author_publication.order_by = obj['order_by']
+                            author_publication.save()
+                        else:
+                            # create
                             AuthorPublication.objects.create(publication=publication,
                                                              author=obj['author'],
                                                              order_by=obj['order_by'])
-                        else:
-                            author_publication.order_by = obj['order_by']
-                            author_publication.save()
-                        '''
                 except KeyError:
                     break
 
