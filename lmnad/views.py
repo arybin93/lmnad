@@ -378,10 +378,22 @@ def profile_add_publication(request, username):
         form = PublicationForm(request.POST)
         if form.is_valid():
             publication = form.save()
+            publication.title_ru = form.cleaned_data['title']
+            publication.save()
             authors = form.cleaned_data['authors_order']
             conference = form.cleaned_data['conference_author']
 
+            unique_authors = []
+            unique_authors_obj = []
             for obj in authors:
+                try:
+                    if not obj['author'] in unique_authors:
+                        unique_authors.append(obj['author'])
+                        unique_authors_obj.append(obj)
+                except KeyError:
+                    pass
+
+            for obj in unique_authors_obj:
                 try:
                     if not obj['DELETE']:
                         AuthorPublication.objects.create(publication=publication,
@@ -421,32 +433,31 @@ def profile_edit_publication(request, username, id):
     if request.method == 'POST':
         form = PublicationForm(request.POST, instance=publication)
         if form.is_valid():
-            form.save()
+            publication.title_ru = form.cleaned_data['title']
+            publication.save()
             authors = form.cleaned_data['authors_order']
             conference = form.cleaned_data['conference_author']
 
-            author_publications = AuthorPublication.objects.filter(publication=publication)
+            # delete old author publication link
+            AuthorPublication.objects.filter(publication=publication).delete()
+
+            unique_authors = []
+            unique_authors_obj = []
             for obj in authors:
                 try:
-                    if obj['DELETE']:
-                        AuthorPublication.objects.filter(
-                            publication=publication,
-                            author=obj['author']
-                        ).first().delete()
-                    else:
-                        if obj['author'] in author_publications:
-                            # update
-                            author_publication = AuthorPublication.objects.get(
-                                publication=publication,
-                                author=obj['author']
-                            )
-                            author_publication.order_by = obj['order_by']
-                            author_publication.save()
-                        else:
-                            # create
-                            AuthorPublication.objects.create(publication=publication,
-                                                             author=obj['author'],
-                                                             order_by=obj['order_by'])
+                    if not obj['author'] in unique_authors:
+                        unique_authors.append(obj['author'])
+                        unique_authors_obj.append(obj)
+                except KeyError:
+                    pass
+
+            # create new
+            for obj in unique_authors_obj:
+                try:
+                    if not obj['DELETE']:
+                        AuthorPublication.objects.create(publication=publication,
+                                                         author=obj['author'],
+                                                         order_by=obj['order_by'])
                 except KeyError:
                     break
 
@@ -468,10 +479,10 @@ def profile_edit_publication(request, username, id):
         for a in publication.authors.all():
             try:
                 pub_author = AuthorPublication.objects.get(publication=publication, author=a)
-                order_by = pub_author.order_by
             except (AuthorPublication.DoesNotExist, AuthorPublication.MultipleObjectsReturned):
-                order_by = AuthorPublication.objects.filter(publication=publication, author=a).first().order_by
+                pub_author = AuthorPublication.objects.filter(publication=publication, author=a).first()
 
+            order_by = pub_author.order_by
             author = {
                 'order_by': order_by,
                 'author': a,
