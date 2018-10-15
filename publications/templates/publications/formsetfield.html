@@ -1,5 +1,13 @@
 {% load bootstrap_tags %}
+{% load i18n %}
 
+<a href="{{ profile.account.get_profile_add_author_url }}"
+    class="btn btn-success"
+    style="width: 150px !important"
+    target="_blank"
+    onclick="return showAddAnotherPopup(this);">{% trans 'New Author' %}
+</a>
+<br>
 <table class="table table-hover">
     {{ formset.management_form }}
     <thead>

@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^user/(?P<username>[\w-]+)/edit/publication/(?P<id>\d+)/$', views.profile_edit_publication,
         name='edit_publication'),
     url(r'^user/(?P<username>[\w-]+)/cancel/$', views.profile_cancel, name='profile_cancel'),
+    url(r'^user/(?P<username>[\w-]+)/add/journal/$', views.profile_add_journal, name='add_journal'),
+    url(r'^user/(?P<username>[\w-]+)/add/author/$', views.profile_add_author, name='add_author'),
     url(r'^edit/$', views.edit_profile, name='edit_profile'),
     url(r'^pages/(?P<name>.*)?$', views.pages, name='pages')
 ]

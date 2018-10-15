@@ -51,6 +51,12 @@ class Account(models.Model):
     def get_profile_cancel_url(self):
         return "/user/{}/cancel/".format(self.user.username)
 
+    def get_profile_add_journal_url(self):
+        return "/user/{}/add/journal/".format(self.user.username)
+
+    def get_profile_add_author_url(self):
+        return "/user/{}/add/author/".format(self.user.username)
+
     def is_worker(self):
         try:
             if self.people.status:

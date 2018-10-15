@@ -3,14 +3,8 @@
 {% load i18n %}
 
 {% block content %}
-<h3 class="page-header">{% trans "Edit publication" %}</h3>
+<h3 class="page-header">{% trans "New" %}</h3>
     <form method="post" enctype="multipart/form-data">
-        <a href="{{ profile.account.get_profile_add_journal_url }}"
-            class="btn btn-success"
-            style="width: 150px !important"
-            target="_blank"
-            onclick="return showAddAnotherPopup(this);">{% trans 'New Journal' %}
-        </a>
         {% csrf_token %}
         {{ form.media }}
         {{ form|as_bootstrap }}
@@ -25,3 +19,4 @@
         </div>
     </form>
 {% endblock %}
+

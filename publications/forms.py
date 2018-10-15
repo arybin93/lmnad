@@ -70,3 +70,27 @@ class PublicationForm(ModelForm):
 
     class Media:
         js = ('publications/publications.js',)
+
+
+class AddAuthorForm(ModelForm):
+    class Meta:
+        model = Author
+        fields = [
+            'last_name_ru',
+            'name_ru',
+            'middle_name_ru'
+        ]
+
+
+class AddJournalForm(ModelForm):
+    class Meta:
+        model = Journal
+        fields = [
+            'type',
+            'name_ru',
+            'conf_type',
+            'date_start',
+            'date_stop',
+            'place',
+            'organizer'
+        ]

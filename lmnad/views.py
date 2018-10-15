@@ -19,7 +19,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from constance import config
 
-from publications.forms import PublicationForm, AuthorFormSet
+from publications.forms import PublicationForm, AddJournalForm, AddAuthorForm
 from publications.functions import export_from_profile
 from publications.models import Publication, Conference, AuthorPublication
 from datetime import datetime
@@ -515,6 +515,45 @@ def profile_edit_publication(request, username, id):
 def profile_cancel(request, username):
     current_user = get_object_or_404(User, username=username)
     return redirect(profile, current_user)
+
+
+def profile_add_journal(request, username):
+    current_user = get_object_or_404(User, username=username)
+    if request.method == 'POST':
+        form = AddJournalForm(request.POST)
+        if form.is_valid():
+            # TODO check if already exist
+            form.save()
+
+            # TODO redirect to success page
+            redirect(profile, current_user)
+    else:
+        form = AddJournalForm()
+
+    context = {
+        'form': form,
+        'profile': current_user
+    }
+    return render(request, 'lmnad/profile_add.html', context)
+
+
+def profile_add_author(request, username):
+    current_user = get_object_or_404(User, username=username)
+    if request.method == 'POST':
+        form = AddAuthorForm(request.POST)
+        if form.is_valid():
+            # TODO check if already exist
+            form.save()
+            # TODO redirect to success page
+            redirect(profile, current_user)
+    else:
+        form = AddAuthorForm()
+
+    context = {
+        'form': form,
+        'profile': current_user
+    }
+    return render(request, 'lmnad/profile_add.html', context)
 
 
 class EditProfileForm(forms.Form):
