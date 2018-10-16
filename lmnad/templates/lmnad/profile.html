@@ -135,20 +135,20 @@
                         {% if publication.is_can_download and publication.file %}
                             <a href="{{ publication.file.url }}"
                                class="btn btn-success"
-                               style="width: 100px !important">
+                               style="width: 150px !important">
                                 {% trans 'Download' %}
                             </a>
                         {% endif %}
                         <a onclick="return showAddAnotherPopup(this);"
                            href="/publications/cite/{{ publication.id }}"
                            class="btn btn-info"
-                           style="width: 100px !important"
+                           style="width: 150px !important"
                            target="_blank">
                             {% trans 'Cite' %}
                         </a>
                         <a href="{{ profile.account.get_profile_edit_pub_url }}{{ publication.id }}/"
                            class="btn btn-warning"
-                           style="width: 100px !important">
+                           style="width: 150px !important">
                             {% trans 'Edit' %}
                         </a>
                     </td>

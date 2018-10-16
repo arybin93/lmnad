@@ -501,8 +501,10 @@ def profile_edit_publication(request, username, id):
         # set init values for inlines form
         if existed_authors:
             form.fields['authors_order'].formset_class_attrs = {"initial": existed_authors}
+            form.fields['authors_order'].template_context = {"profile": current_user}
         if conference:
             form.fields['conference_author'].formset_class_attrs = {"initial": [conference]}
+            form.fields['conference_author'].template_context = {"profile": current_user}
 
     context = {
         'form': form,

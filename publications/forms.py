@@ -12,7 +12,7 @@ class AuthorInlineForm(ModelForm):
         fields = ['order_by', 'author']
         widgets = {
             'author': ModelSelect2Widget(model=Author,
-                                         search_fields=['last_name__icontains'],
+                                         search_fields=['last_name_ru__icontains', 'last_name_en__icontains'],
                                          attrs={'class': 'form-control'})
         }
 
@@ -25,7 +25,7 @@ class ConferenceInlineForm(ModelForm):
         fields = ['form', 'author']
         widgets = {
             'author': ModelSelect2Widget(model=Author,
-                                         search_fields=['last_name__icontains'],
+                                         search_fields=['last_name_ru__icontains', 'last_name_en__icontains'],
                                          attrs={'class': 'form-control'})
         }
 
@@ -94,3 +94,6 @@ class AddJournalForm(ModelForm):
             'place',
             'organizer'
         ]
+
+    class Media:
+        js = ('publications/journals.js',)
