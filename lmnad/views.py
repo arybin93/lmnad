@@ -21,7 +21,7 @@ from constance import config
 
 from publications.forms import PublicationForm, AddJournalForm, AddAuthorForm
 from publications.functions import export_from_profile
-from publications.models import Publication, Conference, AuthorPublication
+from publications.models import Publication, Conference, AuthorPublication, Journal, Author
 from datetime import datetime
 
 
@@ -522,11 +522,15 @@ def profile_add_journal(request, username):
     if request.method == 'POST':
         form = AddJournalForm(request.POST)
         if form.is_valid():
-            # TODO check if already exist
-            form.save()
-
-            # TODO redirect to success page
-            redirect(profile, current_user)
+            journal_type = form.cleaned_data['type']
+            name_ru = form.cleaned_data['name_ru']
+            try:
+                Journal.objects.get(type=journal_type, name_ru=name_ru)
+            except Journal.DoesNotExist:
+                form.save()
+                return render(request, 'lmnad/profile_add_success.html', {})
+            else:
+                messages.error(request, 'This Journal already exist')
     else:
         form = AddJournalForm()
 
@@ -542,10 +546,15 @@ def profile_add_author(request, username):
     if request.method == 'POST':
         form = AddAuthorForm(request.POST)
         if form.is_valid():
-            # TODO check if already exist
-            form.save()
-            # TODO redirect to success page
-            redirect(profile, current_user)
+            last_name_ru = form.cleaned_data['last_name_ru']
+            name_ru = form.cleaned_data['name_ru']
+            try:
+                Author.objects.get(last_name_ru=last_name_ru, name_ru=name_ru)
+            except Author.DoesNotExist:
+                form.save()
+                return render(request, 'lmnad/profile_add_success.html', {})
+            else:
+                messages.error(request, 'This Author already exist')
     else:
         form = AddAuthorForm()
 
