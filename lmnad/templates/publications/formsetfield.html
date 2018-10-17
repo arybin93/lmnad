@@ -1,0 +1,28 @@
+{% load bootstrap_tags %}
+{% load i18n %}
+<div>
+<a href="{{ context.profile.account.get_profile_add_author_url }}"
+    class="btn btn-success"
+    style="width: 150px !important"
+    target="_blank"
+    onclick="return showAddAnotherPopup(this);">{% trans 'New Author' %}
+</a>
+</div>
+<br>
+<table class="table table-hover">
+    {{ formset.management_form }}
+    <thead>
+    </thead>
+    <tbody>
+        {% for form in formset %}
+        <tr>
+            {% for field in form %}
+                <td>
+                    <div class="form-group">{{ field.label_tag }}</div>
+                    <div style="width: 300px">{{ field }}</div>
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
