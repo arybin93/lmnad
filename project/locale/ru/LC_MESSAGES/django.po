@@ -503,7 +503,7 @@ msgstr "Информация не добавлена"
 
 #: .\lmnad\templates\lmnad\profile.html:27
 msgid "Publication activity"
-msgstr "Публикации"
+msgstr "Публикационная активность"
 
 #: .\lmnad\templates\lmnad\profile.html:29
 #: .\lmnad\templates\lmnad\profile.html:248
