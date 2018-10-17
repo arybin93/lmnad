@@ -418,6 +418,8 @@ def profile_add_publication(request, username):
             return redirect(profile, current_user)
     else:
         form = PublicationForm()
+        form.fields['authors_order'].template_context = {"profile": current_user}
+        form.fields['conference_author'].template_context = {"profile": current_user}
 
     context = {
         'form': form,
