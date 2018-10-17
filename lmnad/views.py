@@ -491,12 +491,14 @@ def profile_edit_publication(request, username, id):
             }
             existed_authors.append(author)
 
-        conference = None
-        if publication.conference.author:
-            conference = {
-                'form': publication.conference.form,
-                'author': publication.conference.author
-            }
+        try:
+            if publication.conference.author:
+                conference = {
+                    'form': publication.conference.form,
+                    'author': publication.conference.author
+                }
+        except Conference.DoesNotExist:
+            conference = None
 
         form = PublicationForm(instance=publication)
 
