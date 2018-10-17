@@ -146,11 +146,13 @@
                            target="_blank">
                             {% trans 'Cite' %}
                         </a>
+                        {% if user.is_authenticated and user.id == profile.id %}
                         <a href="{{ profile.account.get_profile_edit_pub_url }}{{ publication.id }}/"
                            class="btn btn-warning"
                            style="width: 150px !important">
                             {% trans 'Edit' %}
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
