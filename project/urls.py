@@ -16,13 +16,12 @@ router.register('records', RecordsViewSet, base_name='records')
 router.register('sources', SourceViewSet, base_name='sources')
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 urlpatterns += i18n_patterns(
-    path('admin/', RedirectView.as_view(url='lmnad/event/')),
-    path('admin/', admin.site.urls),
     path('', include('lmnad.urls')),
     path('', include('igwatlas.urls')),
     path('', include('igwcoeffs.urls')),
