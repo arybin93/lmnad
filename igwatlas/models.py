@@ -68,7 +68,7 @@ class Record(models.Model):
     data = models.FileField(upload_to='uploads/igwatlas/data', null=True, blank=True,
                             verbose_name=u'Оцифрованные данные', help_text=u'Если есть')
     text = models.TextField(blank=True, null=True, verbose_name=u'Описание для наблюдения')
-    file = models.ForeignKey(File, blank=True, null=True, verbose_name=u'Файл, источник изображения',
+    file = models.ForeignKey(File, on_delete=models.CASCADE, blank=True, null=True, verbose_name=u'Файл, источник изображения',
                              help_text=u'Если источник представлен одним файлом, данное поле можно не заполнять')
 
     class Meta:

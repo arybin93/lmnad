@@ -1,10 +1,8 @@
-from django.conf.urls import url, include
-from rest_framework import routers
-from igwcoeffs.views import *
+from django.urls import path
+from igwcoeffs.views import igwcoeffs, igwcoeffs_about
 
 
 urlpatterns = [
-    url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^igwcoeffs/', igwcoeffs, name='igwcoeffs'),
-    url(r'^igwcoeffs_about/', igwcoeffs_about, name='igwcoeffs_about')
+    path('igwcoeffs/', igwcoeffs, name='igwcoeffs'),
+    path('igwcoeffs_about/', igwcoeffs_about, name='igwcoeffs_about')
 ]

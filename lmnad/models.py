@@ -6,7 +6,6 @@ from constance import config
 from django.core.mail import send_mail
 from django.template.loader import get_template
 from django_extensions.db.models import TimeStampedModel
-from filebrowser.fields import FileBrowseField
 
 
 class Images(TimeStampedModel):
@@ -25,7 +24,7 @@ class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True, verbose_name=u'Персональная страница',
                             help_text=u'В произвольной форме')
-    photo = models.ForeignKey(Images, null=True, blank=True, verbose_name=u'Фото')
+    photo = models.ForeignKey(Images, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=u'Фото')
     cv_file = models.FileField(upload_to='uploads/users/cv/', null=True, blank=True, verbose_name=u'Файл CV',
                                help_text=u'Прикрепить существующее CV')
     is_subscribe = models.BooleanField(default=True, verbose_name=u'Подписка на email оповещения')
@@ -91,7 +90,7 @@ class People(models.Model):
     degree = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Степень')
     rank = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Учёное звание')
     position = models.CharField(max_length=50, verbose_name=u'Должность')
-    account = models.OneToOneField(Account, blank=True, null=True, verbose_name=u'Аккаунт сотрудника',
+    account = models.OneToOneField(Account, models.SET_NULL, blank=True, null=True, verbose_name=u'Аккаунт сотрудника',
                                    related_name='people', help_text=u'Если есть')
     science_index = models.TextField(max_length=500, null=True, blank=True, verbose_name=u'Научный индекс')
     status = models.BooleanField(default=True, verbose_name=u'Работает')

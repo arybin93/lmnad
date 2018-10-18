@@ -17,11 +17,10 @@ class Command(BaseCommand):
             id = result[0]
             date = result[3].strip('\n')
 
-            print id
             try:
                 record = Record.objects.get(pk=id)
             except Record.DoesNotExist:
-                print 'DoesNotExist'
+                print('DoesNotExist')
             else:
                 date = datetime.datetime.strptime(date, "%m/%d/%Y")
                 date = date.replace(hour=0, minute=0, second=0)

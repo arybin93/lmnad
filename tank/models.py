@@ -36,7 +36,7 @@ class Experiment(TimeStampedModel):
 
 class Movie(TimeStampedModel):
     file = models.FileField(upload_to='uploads/tank/movies', verbose_name=u'Запись', help_text=u'Видео, гифка')
-    experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='movies')
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name=u'Эксперимент', related_name='movies')
 
     class Meta:
         verbose_name = u'Видео'
@@ -50,7 +50,7 @@ class Images(TimeStampedModel):
     """ Store restaurant images """
     file = models.ImageField(upload_to='uploads/tank/images', max_length=255, verbose_name=u'Фото')
     is_schema = models.BooleanField(default=False, verbose_name=u'Cхема эксперимента', help_text=u'Да, нет')
-    experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='images')
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name=u'Эксперимент', related_name='images')
 
     class Meta:
         verbose_name = u'Фото'
@@ -65,7 +65,7 @@ class Images(TimeStampedModel):
 
 class Data(TimeStampedModel):
     file = models.FileField(upload_to='uploads/tank/data', verbose_name=u'Данные')
-    experiment = models.ForeignKey(Experiment, verbose_name=u'Эксперимент', related_name='data')
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name=u'Эксперимент', related_name='data')
 
     class Meta:
         verbose_name = u'Данные'
@@ -76,5 +76,4 @@ class Data(TimeStampedModel):
 
     @classmethod
     def name(self):
-        print self.file.name.split('/')[-1]
         return self.file.name.split('/')[-1]

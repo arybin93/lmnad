@@ -165,7 +165,7 @@ def calc_coeffs_point(z_down, n_freq, num_mode=0, max_mode=1):
     alpha1 = np.zeros(2)
     for i in range(num_mode, max_mode):
         current_mode = i + 1
-        print 'Current mode {}'.format(current_mode)
+        print('Current mode {}'.format(current_mode))
         c[i] = max_bvf * max_depth / PI / current_mode
         dc = c[i]
 
@@ -187,7 +187,7 @@ def calc_coeffs_point(z_down, n_freq, num_mode=0, max_mode=1):
             z_zer_phi = z_zer[i]
 
             if np.abs(phi[-1] / np.max(phi)) <= epsilon_f:
-                print 'c finished'
+                print('c finished')
                 break
             elif dc < 1e-10:
                 raise RuntimeError("Could not integrate")
@@ -257,7 +257,7 @@ def calc_coeffs_point(z_down, n_freq, num_mode=0, max_mode=1):
                 epsilon_t = epsilot_t_exact
 
             if np.abs(t_end - t_end_prev) <= epsilon_t or (np.abs(t_end / np.max(np.abs(t_z_phi))) <= epsilon_t):
-                print 'Tn or F finished'
+                print('Tn or F finished')
                 break
 
             init_cond = [0, dt_1]

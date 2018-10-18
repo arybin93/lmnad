@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^publications/$', views.publications, name='publications'),
-    url(r'^publications_search/$', views.publications_search, name='publications_search'),
-    url(r'^publications/cite/(?P<obj_id>.*)?$', views.cite_view, name='cite'),
+    path('publications/', views.publications, name='publications'),
+    path('publications_search/', views.publications_search, name='publications_search'),
+    path('publications/cite/<int:obj_id>', views.cite_view, name='cite'),
 ]

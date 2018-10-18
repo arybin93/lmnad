@@ -1,12 +1,14 @@
-from django.conf.urls import url, include
-from rest_framework import routers
-from igwatlas.views import igwatlas, yandex_map, source, about, RecordsViewSet, SourceViewSet
+from django.urls import path
+from igwatlas.views import igwatlas, yandex_map, source, about
+from rest_framework_swagger.views import get_swagger_view
 
+
+swagger_docs_view = get_swagger_view(title='LMNAD API')
 
 urlpatterns = [
-    url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^igwatlas/$', igwatlas, name='igwatlas'),
-    url(r'^igwatlas_map/$', yandex_map , name='map'),
-    url(r'^igwatlas_source/$', source, name='source'),
-    url(r'^igwatlas_about/$', about, name='about'),
+    path('docs/', swagger_docs_view),
+    path('igwatlas/', igwatlas, name='igwatlas'),
+    path('igwatlas_map/', yandex_map , name='map'),
+    path('igwatlas_source/', source, name='source'),
+    path('igwatlas_about/', about, name='about'),
 ]

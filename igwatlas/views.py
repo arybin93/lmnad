@@ -12,15 +12,12 @@ from django.shortcuts import render
 
 # Third-party app imports
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, File, PageData
-from api_serializers import RecordSerializer, FileSerializer, SourceSerializer
-from django.conf import settings
-
+from igwatlas.models import Record, Source, PageData
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer
 from lmnad.models import Project
 
 

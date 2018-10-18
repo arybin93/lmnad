@@ -8,17 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lmnad', '0009_remove_project_image_initialdir'),
+        ('lmnad', '0007_people_order_by'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
             name='account',
             options={'verbose_name': '\u041f\u0435\u0440\u0441\u043e\u043d\u0430\u043b\u044c\u043d\u0430\u044f \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0430', 'verbose_name_plural': '\u041f\u0435\u0440\u0441\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b'},
-        ),
-        migrations.RemoveField(
-            model_name='project',
-            name='image',
         ),
         migrations.AlterField(
             model_name='account',

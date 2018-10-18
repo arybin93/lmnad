@@ -75,7 +75,8 @@ class Author(TimeStampedModel):
     name = models.CharField(max_length=55, verbose_name=u'Имя')
     last_name = models.CharField(max_length=55, verbose_name=u'Фамилия')
     middle_name = models.CharField(max_length=55, blank=True, verbose_name=u'Отчество')
-    user = models.ForeignKey(Account, blank=True, null=True, related_name='author',
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, blank=True, null=True,
+                             related_name='author',
                              verbose_name=u'Пользователь',
                              help_text=u'Если есть аккаунт')
 
@@ -158,7 +159,7 @@ class Publication(TimeStampedModel):
     type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
     title = models.CharField(max_length=200, db_index=True, verbose_name=u'Название')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
-    journal = models.ForeignKey(Journal, blank=True, null=True, verbose_name=u'Журнал, конференция')
+    journal = models.ForeignKey(Journal, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=u'Журнал, конференция')
     year = models.IntegerField(verbose_name=u'Год')
     date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
     volume = models.CharField(max_length=55, blank=True, verbose_name='Том')
@@ -402,10 +403,10 @@ class Conference(TimeStampedModel):
     )
 
     form = models.CharField(max_length=25, default=ORAL, choices=TYPES_FORMS, verbose_name=u'Форма доклада')
-    publication = models.OneToOneField(Publication, related_name=u'conference', verbose_name=u'Публикация',
+    publication = models.OneToOneField(Publication, on_delete=models.CASCADE, related_name=u'conference', verbose_name=u'Публикация',
                                        help_text=u'Отсюда берётся название доклада и название конференции: '
                                                  u'статья в сборниках трудов конференции или тезисы конференции')
-    author = models.ForeignKey(Author, verbose_name=u'Докладчик')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name=u'Докладчик')
 
     def __unicode__(self):
         result = u'{}'.format(self.publication.journal,

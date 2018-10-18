@@ -9,7 +9,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PREREQ_APPS = [
     'suit',
     'modeltranslation',
-    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -193,11 +192,6 @@ ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/profile/%s/" % u.username,
 }
 
-# file browser
-FILEBROWSER_SUIT_TEMPLATE = True
-FILEBROWSER_DIRECTORY = 'uploads/'
-FILEBROWSER_MAX_UPLOAD_SIZE = 104857600
-
 CKEDITOR_UPLOAD_PATH = "uploads/users/photo"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_RESTRICT_BY_USER = True
@@ -257,7 +251,7 @@ CKEDITOR_CONFIGS = {
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCLumlxQ35v472UxtM0RupR3cXkxm4nW0I'
 
-
+'''
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -276,7 +270,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25
 }
-
+'''
 
 CACHES = {
     "default": {
