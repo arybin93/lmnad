@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Stdlib imports
-from __future__ import unicode_literals
-import os
-
 # Core Django imports
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
@@ -275,7 +269,7 @@ def about(request):
     try:
         igwatlas_about = PageData.objects.get(type=PageData.ABOUT_TEXT)
     except PageData.DoesNotExist:
-        context['error'] = u'Создайте данные для страницы'
+        context['error'] = 'Создайте данные для страницы'
     else:
         context['igwatlas_about'] = igwatlas_about
         context['project'] = Project.objects.get(name='igwatlas_online')

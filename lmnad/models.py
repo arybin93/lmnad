@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from constance import config
@@ -10,30 +8,30 @@ from django_extensions.db.models import TimeStampedModel
 
 class Images(TimeStampedModel):
     """ Store restaurant images """
-    file = models.ImageField(upload_to='uploads/images', max_length=255, verbose_name=u'Изображение')
+    file = models.ImageField(upload_to='uploads/images', max_length=255, verbose_name='Изображение')
 
     class Meta:
-        verbose_name = u'Изображение'
-        verbose_name_plural = u'Изображение'
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображение'
 
-    def __unicode__(self):
-        return unicode(self.file)
+    def __str__(self):
+        return self.file
 
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    text = models.TextField(null=True, blank=True, verbose_name=u'Персональная страница',
-                            help_text=u'В произвольной форме')
+    text = models.TextField(null=True, blank=True, verbose_name='Персональная страница',
+                            help_text='В произвольной форме')
     photo = models.ForeignKey(Images, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=u'Фото')
     cv_file = models.FileField(upload_to='uploads/users/cv/', null=True, blank=True, verbose_name=u'Файл CV',
                                help_text=u'Прикрепить существующее CV')
     is_subscribe = models.BooleanField(default=True, verbose_name=u'Подписка на email оповещения')
 
-    def __unicode__(self):
+    def __str__(self):
         if self.user.get_full_name():
-            return unicode(self.user.get_full_name())
+            return self.user.get_full_name()
         else:
-            return unicode(self.user)
+            return self.user
 
     def get_absolute_url(self):
         return "/profile/{}/".format(self.user.username)
@@ -86,17 +84,17 @@ class Account(models.Model):
 
 
 class People(models.Model):
-    fullname = models.CharField(max_length=200, verbose_name=u'ФИО')
-    degree = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Степень')
-    rank = models.CharField(max_length=50, null=True, blank=True, verbose_name=u'Учёное звание')
-    position = models.CharField(max_length=50, verbose_name=u'Должность')
-    account = models.OneToOneField(Account, models.SET_NULL, blank=True, null=True, verbose_name=u'Аккаунт сотрудника',
-                                   related_name='people', help_text=u'Если есть')
-    science_index = models.TextField(max_length=500, null=True, blank=True, verbose_name=u'Научный индекс')
-    status = models.BooleanField(default=True, verbose_name=u'Работает')
-    date_start = models.DateField(blank=True, null=True, verbose_name=u'Дата начала работы')
-    date_end = models.DateField(blank=True, null=True, verbose_name=u'Дата конца работы')
-    order_by = models.PositiveIntegerField(verbose_name=u'Сортировать', default=0)
+    fullname = models.CharField(max_length=200, verbose_name='ФИО')
+    degree = models.CharField(max_length=50, null=True, blank=True, verbose_name='Степень')
+    rank = models.CharField(max_length=50, null=True, blank=True, verbose_name='Учёное звание')
+    position = models.CharField(max_length=50, verbose_name='Должность')
+    account = models.OneToOneField(Account, models.SET_NULL, blank=True, null=True, verbose_name='Аккаунт сотрудника',
+                                   related_name='people', help_text='Если есть')
+    science_index = models.TextField(max_length=500, null=True, blank=True, verbose_name='Научный индекс')
+    status = models.BooleanField(default=True, verbose_name='Работает')
+    date_start = models.DateField(blank=True, null=True, verbose_name='Дата начала работы')
+    date_end = models.DateField(blank=True, null=True, verbose_name='Дата конца работы')
+    order_by = models.PositiveIntegerField(verbose_name='Сортировать', default=0)
 
     class MPTTMeta:
         order_insertion_by = ['order_by']
@@ -105,8 +103,8 @@ class People(models.Model):
         if self.account:
             return "/profile/%s/" % self.account.user.username
 
-    def __unicode__(self):
-        return unicode(self.fullname)
+    def __str__(self):
+        return self.fullname
 
     class Meta:
         verbose_name = 'Сотрудник'
@@ -114,11 +112,11 @@ class People(models.Model):
 
 
 class Protection(models.Model):
-    author = models.CharField(max_length=100, verbose_name=u'Автор')
-    title = models.CharField(max_length=200, verbose_name=u'Название работы')
-    message = models.TextField(verbose_name=u'Текст')
-    date = models.DateField(blank=True, verbose_name=u'Дата')
-    is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
+    author = models.CharField(max_length=100, verbose_name='Автор')
+    title = models.CharField(max_length=200, verbose_name='Название работы')
+    message = models.TextField(verbose_name='Текст')
+    date = models.DateField(blank=True, verbose_name='Дата')
+    is_send_email = models.BooleanField(default=False, verbose_name='Сделать рассылку')
 
     def save(self, *args, **kwargs):
         if self.is_send_email:
@@ -142,8 +140,8 @@ class Protection(models.Model):
 
         super(Protection, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Защита'
@@ -151,12 +149,12 @@ class Protection(models.Model):
 
 
 class Page(models.Model):
-    name = models.CharField(max_length=50, verbose_name=u'Название страницы на английском')
-    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(verbose_name=u'Текст')
+    name = models.CharField(max_length=50, verbose_name='Название страницы на английском')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    text = models.TextField(verbose_name='Текст')
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Страница'
@@ -164,16 +162,16 @@ class Page(models.Model):
 
 
 class Grant(models.Model):
-    type = models.CharField(max_length=50, verbose_name=u'Тип')
-    number = models.CharField(max_length=50, verbose_name=u'Номер')
-    name = models.CharField(max_length=500, verbose_name=u'Текст')
-    head = models.ManyToManyField(People, related_name='head', verbose_name=u'Руководители')
-    members = models.ManyToManyField(People, related_name='members', verbose_name=u'Участники')
-    date_start = models.DateField(verbose_name=u'Дата начала')
-    date_end = models.DateField(verbose_name=u'Дата конца')
-    abstract = models.TextField(blank=True, verbose_name=u'Аннотация')
-    reference = models.CharField(max_length=500, blank=True, verbose_name=u'Ссылка на грант')
-    reference_result = models.CharField(max_length=500, blank=True, verbose_name=u'Cсылка на результаты конкурса')
+    type = models.CharField(max_length=50, verbose_name='Тип')
+    number = models.CharField(max_length=50, verbose_name='Номер')
+    name = models.CharField(max_length=500, verbose_name='Текст')
+    head = models.ManyToManyField(People, related_name='head', verbose_name='Руководители')
+    members = models.ManyToManyField(People, related_name='members', verbose_name='Участники')
+    date_start = models.DateField(verbose_name='Дата начала')
+    date_end = models.DateField(verbose_name='Дата конца')
+    abstract = models.TextField(blank=True, verbose_name='Аннотация')
+    reference = models.CharField(max_length=500, blank=True, verbose_name='Ссылка на грант')
+    reference_result = models.CharField(max_length=500, blank=True, verbose_name='Cсылка на результаты конкурса')
 
     def get_absolute_url(self):
         return "/grants/%s/" % self.number
@@ -196,8 +194,8 @@ class Grant(models.Model):
                                                                              date_end=date_end)
         return result
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Грант'
@@ -205,14 +203,14 @@ class Grant(models.Model):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=50, verbose_name=u'Название проекта на английском',
-                            help_text=u'Используется для перехода на страницу')
-    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    short_text = models.TextField(blank=True, null=True, verbose_name=u'Короткое описание')
-    text = models.TextField(verbose_name=u'Текст')
-    link = models.CharField(max_length=100, blank=True, verbose_name=u'Ссылка на проект')
-    is_only_user = models.BooleanField(default=False, verbose_name=u'Доступно зарегистрированным пользователям')
-    order_by = models.PositiveIntegerField(verbose_name=u'Сортировать', default=0)
+    name = models.CharField(max_length=50, verbose_name='Название проекта на английском',
+                            help_text='Используется для перехода на страницу')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    short_text = models.TextField(blank=True, null=True, verbose_name='Короткое описание')
+    text = models.TextField(verbose_name='Текст')
+    link = models.CharField(max_length=100, blank=True, verbose_name='Ссылка на проект')
+    is_only_user = models.BooleanField(default=False, verbose_name='Доступно зарегистрированным пользователям')
+    order_by = models.PositiveIntegerField(verbose_name='Сортировать', default=0)
 
     class MPTTMeta:
         order_insertion_by = ['order_by']
@@ -220,8 +218,8 @@ class Project(models.Model):
     def get_absolute_url(self):
         return "%s/" % self.name
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Проект'
@@ -229,12 +227,12 @@ class Project(models.Model):
 
 
 class Event(models.Model):
-    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(verbose_name=u'Краткое описание')
-    full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
-    date = models.DateTimeField(verbose_name=u'Дата и время')
-    is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
-    images = models.ManyToManyField(Images, blank=True, verbose_name=u'Изображения')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    text = models.TextField(verbose_name='Краткое описание')
+    full_text = models.TextField(blank=True, verbose_name='Полный текст, отчёт')
+    date = models.DateTimeField(verbose_name='Дата и время')
+    is_send_email = models.BooleanField(default=False, verbose_name='Сделать рассылку')
+    images = models.ManyToManyField(Images, blank=True, verbose_name='Изображения')
 
     def save(self, *args, **kwargs):
         if self.is_send_email:
@@ -244,8 +242,8 @@ class Event(models.Model):
     def get_absolute_url(self):
         return "%s/" % self.pk
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Событие'
@@ -253,11 +251,11 @@ class Event(models.Model):
 
 
 class Seminar(models.Model):
-    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(verbose_name=u'Краткое описание')
-    full_text = models.TextField(blank=True, verbose_name=u'Полный текст, отчёт')
-    date = models.DateTimeField(verbose_name=u'Дата и время')
-    is_send_email = models.BooleanField(default=False, verbose_name=u'Сделать рассылку')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    text = models.TextField(verbose_name='Краткое описание')
+    full_text = models.TextField(blank=True, verbose_name='Полный текст, отчёт')
+    date = models.DateTimeField(verbose_name='Дата и время')
+    is_send_email = models.BooleanField(default=False, verbose_name='Сделать рассылку')
 
     def save(self, *args, **kwargs):
         if self.is_send_email:
@@ -267,8 +265,8 @@ class Seminar(models.Model):
     def get_absolute_url(self):
         return "%s/" % self.pk
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Семинар'
@@ -276,17 +274,17 @@ class Seminar(models.Model):
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=200, verbose_name=u'Название')
-    authors = models.CharField(max_length=200, verbose_name=u'Авторы')
-    abstract = models.TextField(max_length=2000, null=True, blank=True, verbose_name=u'Аннотация')
+    title = models.CharField(max_length=200, verbose_name='Название')
+    authors = models.CharField(max_length=200, verbose_name='Авторы')
+    abstract = models.TextField(max_length=2000, null=True, blank=True, verbose_name='Аннотация')
     file = models.FileField(upload_to='uploads/articles/', null=True, blank=True, verbose_name="Файл с тектом статьи")
-    link = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Ссылка')
-    source = models.CharField(max_length=200, null=True, blank=True, verbose_name=u'Журнал, страницы')
-    date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
-    year = models.IntegerField(verbose_name=u'Год')
+    link = models.CharField(max_length=200, null=True, blank=True, verbose_name='Ссылка')
+    source = models.CharField(max_length=200, null=True, blank=True, verbose_name='Журнал, страницы')
+    date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время')
+    year = models.IntegerField(verbose_name='Год')
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = '(Old) Статья'
@@ -294,12 +292,12 @@ class Article(models.Model):
 
 
 class Wiki(models.Model):
-    title = models.CharField(max_length=200, verbose_name=u'Заголовок')
-    text = models.TextField(max_length=5000, verbose_name=u'Текст')
-    link = models.CharField(max_length=255, blank=True, verbose_name=u'Ссылка')
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    text = models.TextField(max_length=5000, verbose_name='Текст')
+    link = models.CharField(max_length=255, blank=True, verbose_name='Ссылка')
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = u'Wiki'

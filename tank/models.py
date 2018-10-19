@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import os
-
 from django.db import models
 
 
@@ -19,60 +15,63 @@ class TimeStampedModel(models.Model):
 
 
 class Experiment(TimeStampedModel):
-    name = models.CharField(max_length=255, verbose_name=u'Название')
-    description = models.TextField(blank=True, verbose_name=u'Описание')
-    date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
+    name = models.CharField(max_length=255, verbose_name='Название')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время')
 
     class Meta:
-        verbose_name = u'Эксперимент'
-        verbose_name_plural = u'Эксперименты'
+        verbose_name = 'Эксперимент'
+        verbose_name_plural = 'Эксперименты'
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     def get_absolute_url(self):
         return "/tank_exp/%s/" % self.id
 
 
 class Movie(TimeStampedModel):
-    file = models.FileField(upload_to='uploads/tank/movies', verbose_name=u'Запись', help_text=u'Видео, гифка')
-    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name=u'Эксперимент', related_name='movies')
+    file = models.FileField(upload_to='uploads/tank/movies', verbose_name='Запись', help_text='Видео, гифка')
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name='Эксперимент',
+                                   related_name='movies')
 
     class Meta:
-        verbose_name = u'Видео'
-        verbose_name_plural = u'Видео'
+        verbose_name = 'Видео'
+        verbose_name_plural = 'Видео'
 
-    def __unicode__(self):
-        return unicode(self.file)
+    def __str__(self):
+        return self.file
 
 
 class Images(TimeStampedModel):
     """ Store restaurant images """
-    file = models.ImageField(upload_to='uploads/tank/images', max_length=255, verbose_name=u'Фото')
-    is_schema = models.BooleanField(default=False, verbose_name=u'Cхема эксперимента', help_text=u'Да, нет')
-    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name=u'Эксперимент', related_name='images')
+    file = models.ImageField(upload_to='uploads/tank/images', max_length=255, verbose_name='Фото')
+    is_schema = models.BooleanField(default=False, verbose_name='Cхема эксперимента', help_text='Да, нет')
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name='Эксперимент',
+                                   related_name='images')
 
     class Meta:
-        verbose_name = u'Фото'
-        verbose_name_plural = u'Фото'
+        verbose_name = 'Фото'
+        verbose_name_plural = 'Фото'
 
-    def __unicode__(self):
-        return unicode(self.file)
+    def __str__(self):
+        return self.file
 
     def filename(self):
         return os.path.basename(self.file.name)
 
 
 class Data(TimeStampedModel):
-    file = models.FileField(upload_to='uploads/tank/data', verbose_name=u'Данные')
-    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name=u'Эксперимент', related_name='data')
+    file = models.FileField(upload_to='uploads/tank/data', verbose_name='Данные')
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, verbose_name='Эксперимент',
+                                   related_name='data')
 
     class Meta:
-        verbose_name = u'Данные'
-        verbose_name_plural = u'Данные'
+        verbose_name = 'Данные'
+        verbose_name_plural = 'Данные'
 
-    def __unicode__(self):
-        return unicode(self.file)
+    def __str__(self):
+        return self.file
 
     @classmethod
     def name(self):
