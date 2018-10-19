@@ -101,9 +101,13 @@ class RecordsViewSet(viewsets.ViewSet):
 
                 img = ''
                 if record.image:
-                    img = ('<a target="_blank" href="%s">'
-                           '<img src="%s" style="height: 50px;" /></a><br/> '
-                           % (record.image.url, record.image.url))
+                    img = (
+                        '<a target="_blank" href="{}">'
+                        '<img src="{}" style="height: 50px;" /></a><br/> '.format(
+                            record.image.url,
+                            record.image.url
+                        )
+                    )
 
                 obj = {
                     'type': 'Feature',

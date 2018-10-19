@@ -574,11 +574,11 @@ def profile_add_author(request, username):
 class EditProfileForm(forms.Form):
     email = forms.EmailField(label='Email', max_length=200, required=False,
                              widget=forms.TextInput(attrs = {'class': 'form-control'}))
-    is_subscribe = forms.BooleanField(label=u'Подписка на рассылку', required=False)
-    text_ru = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы (ru)')
-    text_en = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label=u'Текст страницы (en)')
-    photo = forms.ImageField(required=False, label=u'Фото в профиле')
-    cv = forms.FileField(required=False, label=u'CV')
+    is_subscribe = forms.BooleanField(label='Подписка на рассылку', required=False)
+    text_ru = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label='Текст страницы (ru)')
+    text_en = forms.CharField(widget=CKEditorUploadingWidget(), required=False, label='Текст страницы (en)')
+    photo = forms.ImageField(required=False, label='Фото в профиле')
+    cv = forms.FileField(required=False, label='CV')
 
 
 def edit_profile(request):
@@ -696,13 +696,13 @@ class LoginFormView(FormView):
 
 
 class ContactForm(forms.Form):
-    subject = forms.CharField(max_length=100, label=u'Тема:',
+    subject = forms.CharField(max_length=100, label='Тема:',
                               widget = forms.TextInput(attrs = {'class': 'form-control'}))
-    sender = forms.EmailField(label=u'Отправитель:',
+    sender = forms.EmailField(label='Отправитель:',
                               widget = forms.TextInput(attrs = {'class': 'form-control'}))
-    message = forms.CharField(label=u'Текст:',
+    message = forms.CharField(label='Текст:',
                               widget=forms.Textarea(attrs={'class': 'form-control'}))
-    copy = forms.BooleanField(required=False, label=u'Отправить копию себе:')
+    copy = forms.BooleanField(required=False, label='Отправить копию себе:')
 
 
 def contacts(request):
@@ -772,8 +772,8 @@ def reset_password(request):
                 user.set_password(new_password)
                 user.save()
 
-                subject = u'LMNAD, временный пароль'
-                message = u'Ваш временный пароль для входа: ' + new_password
+                subject = 'LMNAD, временный пароль'
+                message = 'Ваш временный пароль для входа: ' + new_password
                 try:
                     send_mail(subject, message, 'lmnad@nntu.ru', [email])
                 except BadHeaderError:

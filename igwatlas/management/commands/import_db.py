@@ -77,7 +77,7 @@ class Command(BaseCommand):
                         record.save()
 
                     # get source
-                    query = "SELECT * FROM relation INNER JOIN sources on SourceID=id where recID=%s;" % id
+                    query = "SELECT * FROM relation INNER JOIN sources on SourceID=id where recID={};".format(id)
                     cursor_source = conn.execute(query)
 
                     for row_source in cursor_source:

@@ -2,7 +2,6 @@
 from django.conf.urls.i18n import i18n_patterns
 from django.urls import include, path
 from django.contrib import admin
-from django.views.generic.base import RedirectView
 from rest_framework import routers
 
 from igwatlas.views import RecordsViewSet, SourceViewSet

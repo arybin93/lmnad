@@ -129,15 +129,14 @@ SUIT_CONFIG = {
     'SEARCH_URL': '',
     'MENU': (
         {
-            'label': u'Настройки',
+            'label': 'Настройки',
             'models': [
-                {'label': u'Основные настройки', 'url': '/admin/constance/config/'},
-                {'label': u'Редактирование страниц', 'url': 'lmnad.page'},
-                #{'label': u'Файловый менеджер', 'url': '/admin/filebrowser/browse/'},
-                {'label': u'Персональные страницы', 'url': 'lmnad.account'}
+                {'label': 'Основные настройки', 'url': '/admin/constance/config/'},
+                {'label': 'Редактирование страниц', 'url': 'lmnad.page'},
+                {'label': 'Персональные страницы', 'url': 'lmnad.account'}
             ]
         },
-        {'app': 'lmnad', 'label': u'Основные разделы',
+        {'app': 'lmnad', 'label': 'Основные разделы',
             'models': [
                 'event',
                 'seminar',
@@ -146,36 +145,36 @@ SUIT_CONFIG = {
                 'grant',
                 'project',
         ]},
-        {'app': 'publications', 'label': u'Менеджер публикаций', 'models': [
+        {'app': 'publications', 'label': 'Менеджер публикаций', 'models': [
             'publication',
             'conference',
             'author',
             'journal'
         ]},
-        {'app': 'tank', 'label': u'Эксперименты', 'models': [
+        {'app': 'tank', 'label': 'Эксперименты', 'models': [
             'experiment',
         ]},
-        {'app': 'igwcoeffs', 'label': u'IGW Калькулятор', 'models': [
+        {'app': 'igwcoeffs', 'label': 'IGW Калькулятор', 'models': [
             'calculation',
         ]},
-        {'app': 'igwatlas', 'label': u'IGW Atlas', 'models': [
+        {'app': 'igwatlas', 'label': 'IGW Atlas', 'models': [
             'record',
             'source',
             'file',
             'pageData'
         ]},
-        {'app': 'lmnad', 'label': u'Wiki', 'models': [
+        {'app': 'lmnad', 'label': 'Wiki', 'models': [
             'wiki',
         ]},
-        {'app': 'auth', 'label': u'Пользователи', 'icon': 'icon-lock'}
+        {'app': 'auth', 'label': 'Пользователи', 'icon': 'icon-lock'}
     )
 }
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_CONFIG = {
-    'FEEDBACK_EMAIL': ('lmnad@nntu.ru', u'email для обратной связи', str),
-    'LIST_EMAILS': ('arybin93@gmail.com', u'Список для рассылки', str),
-    'API_KEY_IGWATLAS': ('d837d31970deb03ee35c416c5a66be1bba9f56d3', u'Ключ для доступа к API IGWAtlas', str)
+    'FEEDBACK_EMAIL': ('lmnad@nntu.ru', 'email для обратной связи', str),
+    'LIST_EMAILS': ('arybin93@gmail.com', 'Список для рассылки', str),
+    'API_KEY_IGWATLAS': ('d837d31970deb03ee35c416c5a66be1bba9f56d3', 'Ключ для доступа к API IGWAtlas', str)
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -189,7 +188,7 @@ SERVER_EMAIL = 'lmnad@nntu.ru'
 ADMINS = [('Admin', 'arybin93@gmail.com')]
 
 ABSOLUTE_URL_OVERRIDES = {
-    'auth.user': lambda u: "/profile/%s/" % u.username,
+    'auth.user': lambda u: "/profile/{}/".format(u.username),
 }
 
 CKEDITOR_UPLOAD_PATH = "uploads/users/photo"

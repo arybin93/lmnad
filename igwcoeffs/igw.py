@@ -114,7 +114,7 @@ def handle_file(file, separator, max_row=None):
     if result:
         return True, result[:max_row], len(data)
     else:
-        return False, 'EMPTY_FILE, 'u'Пустой файл'
+        return False, 'EMPTY_FILE', 'Пустой файл'
 
 
 def read_file(filename, skip_rows=0, delimiter=None):
@@ -385,7 +385,7 @@ def run_calculation(id):
 
         # send email with attachments
         if calc.email:
-            send_result_by_email(calc.id, calc.result_file, calc.email, u'Результат расчёта # {}'.format(calc.id))
+            send_result_by_email(calc.id, calc.result_file, calc.email, 'Результат расчёта # {}'.format(calc.id))
 
         return True, calc.result_file.url
     elif calc.types == Calculation.TYPE_SECTION:

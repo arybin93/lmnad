@@ -27,7 +27,7 @@ class Experiment(TimeStampedModel):
         return self.name
 
     def get_absolute_url(self):
-        return "/tank_exp/%s/" % self.id
+        return "/tank_exp/{}/".format(self.id)
 
 
 class Movie(TimeStampedModel):

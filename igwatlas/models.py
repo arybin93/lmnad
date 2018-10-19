@@ -63,7 +63,7 @@ class Record(models.Model):
     source = models.ManyToManyField(Source, verbose_name='Источник')
     page = models.CharField(max_length=15, blank=True, null=True, verbose_name='Страницы из источника')
     data = models.FileField(upload_to='uploads/igwatlas/data', null=True, blank=True,
-                            verbose_name='Оцифрованные данные', help_text=u'Если есть')
+                            verbose_name='Оцифрованные данные', help_text='Если есть')
     text = models.TextField(blank=True, null=True, verbose_name='Описание для наблюдения')
     file = models.ForeignKey(File, on_delete=models.CASCADE, blank=True, null=True,
                              verbose_name='Файл, источник изображения',

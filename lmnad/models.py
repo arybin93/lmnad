@@ -101,7 +101,7 @@ class People(models.Model):
 
     def get_absolute_url(self):
         if self.account:
-            return "/profile/%s/" % self.account.user.username
+            return "/profile/{}/".format(self.account.user.username)
 
     def __str__(self):
         return self.fullname
@@ -174,7 +174,7 @@ class Grant(models.Model):
     reference_result = models.CharField(max_length=500, blank=True, verbose_name='Cсылка на результаты конкурса')
 
     def get_absolute_url(self):
-        return "/grants/%s/" % self.number
+        return "/grants/{}/".format(self.number)
 
     def get_name_head(self):
         try:
@@ -216,7 +216,7 @@ class Project(models.Model):
         order_insertion_by = ['order_by']
 
     def get_absolute_url(self):
-        return "%s/" % self.name
+        return "{}/".format(self.name)
 
     def __str__(self):
         return self.title
@@ -240,7 +240,7 @@ class Event(models.Model):
         super(Event, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return "%s/" % self.pk
+        return "{}/".format(self.pk)
 
     def __str__(self):
         return self.title
@@ -263,7 +263,7 @@ class Seminar(models.Model):
         super(Seminar, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return "%s/" % self.pk
+        return "{}/".format(self.pk)
 
     def __str__(self):
         return self.title
@@ -300,8 +300,8 @@ class Wiki(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = u'Wiki'
-        verbose_name_plural = u'Wiki'
+        verbose_name = 'Wiki'
+        verbose_name_plural = 'Wiki'
 
 
 def send_email(title, text, date):

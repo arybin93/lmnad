@@ -29,16 +29,17 @@ class AdminImageWidget(forms.ClearableFileInput):
     def render(self, name, value, attrs=None):
         output = []
         if value and hasattr(value, "url"):
-            output.append(('<a target="_blank" href="%s">'
-                           '<img src="%s" style="height: 50px;" /></a><br/> '
-                           % (value.url, value.url)))
+            output.append(('<a target="_blank" href="{}">'
+                           '<img src="{}" style="height: 50px;" /></a><br/> '.format(value.url, value.url)
+                           ))
         output.append(super(AdminImageWidget, self).render(name, value, attrs))
-        return mark_safe(u''.join(output))
+        return mark_safe(''.join(output))
 
 
 class RecordForm(ModelForm):
     types = forms.MultipleChoiceField(widget=Select2MultipleWidget, choices=Record.TYPES,
-                                         label=u'Тип', required=True)
+                                      label='Тип', required=True)
+
     class Meta:
         model = Record
         fields = '__all__'
@@ -75,11 +76,11 @@ class RecordTypeFilter(admin.SimpleListFilter):
         RECORD = 3
         TABLE = 4
         return (
-            (MAP, u'Карта'),
-            (GRAPHIC, u'График'),
-            (SATELLITE, u'Спутниковый снимок'),
-            (RECORD, u'Запись'),
-            (TABLE, u'Таблица')
+            (MAP, 'Карта'),
+            (GRAPHIC, 'График'),
+            (SATELLITE, 'Спутниковый снимок'),
+            (RECORD, 'Запись'),
+            (TABLE, 'Таблица')
         )
 
     def queryset(self, request, queryset):
@@ -100,7 +101,7 @@ class RecordAdmin(admin.ModelAdmin):
 
     def get_types(self, obj):
         return obj.get_text_types()
-    get_types.short_description = u'Типы наблюдений'
+    get_types.short_description = 'Типы наблюдений'
 
     def get_source(self, obj):
         sources = format_html_join(
@@ -108,15 +109,15 @@ class RecordAdmin(admin.ModelAdmin):
             ((source_obj.source,) for source_obj in obj.source.all())
         )
         return sources
-    get_source.short_description = u'Источники'
+    get_source.short_description = 'Источники'
 
     def image_field(self, obj):
         if obj.image and os.path.isfile(obj.image.path):
-            img = u'<img src="{0}/{1}" style="max-height: 100px;"/>'.format(settings.MEDIA_URL, obj.image)
+            img = '<img src="{0}/{1}" style="max-height: 100px;"/>'.format(settings.MEDIA_URL, obj.image)
             return img
         else:
             return obj.image
-    image_field.short_description = u'Изображение'
+    image_field.short_description = 'Изображение'
     image_field.allow_tags = True
 
 admin.site.register(Record, RecordAdmin)

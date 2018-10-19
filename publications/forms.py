@@ -34,10 +34,10 @@ ConferenceAuthorFormSet = formset_factory(ConferenceInlineForm, extra=1, max_num
 
 class PublicationForm(ModelForm):
     authors_order = FormSetField(formset_class=AuthorFormSet,
-                                 label=u'Авторы:',
+                                 label='Авторы:',
                                  template='publications/formsetfield.html')
     conference_author = FormSetField(formset_class=ConferenceAuthorFormSet,
-                                     label=u'Участие в конференции:',
+                                     label='Участие в конференции:',
                                      template='publications/formsetfield.html')
 
     class Meta:
