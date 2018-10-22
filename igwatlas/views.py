@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Stdlib imports
-from __future__ import unicode_literals
-import os
-
 # Core Django imports
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
@@ -12,15 +6,12 @@ from django.shortcuts import render
 
 # Third-party app imports
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, File, PageData
-from api_serializers import RecordSerializer, FileSerializer, SourceSerializer
-from django.conf import settings
-
+from igwatlas.models import Record, Source, PageData
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer
 from lmnad.models import Project
 
 
@@ -110,9 +101,13 @@ class RecordsViewSet(viewsets.ViewSet):
 
                 img = ''
                 if record.image:
-                    img = ('<a target="_blank" href="%s">'
-                           '<img src="%s" style="height: 50px;" /></a><br/> '
-                           % (record.image.url, record.image.url))
+                    img = (
+                        '<a target="_blank" href="{}">'
+                        '<img src="{}" style="height: 50px;" /></a><br/> '.format(
+                            record.image.url,
+                            record.image.url
+                        )
+                    )
 
                 obj = {
                     'type': 'Feature',
@@ -278,7 +273,7 @@ def about(request):
     try:
         igwatlas_about = PageData.objects.get(type=PageData.ABOUT_TEXT)
     except PageData.DoesNotExist:
-        context['error'] = u'Создайте данные для страницы'
+        context['error'] = 'Создайте данные для страницы'
     else:
         context['igwatlas_about'] = igwatlas_about
         context['project'] = Project.objects.get(name='igwatlas_online')

@@ -43,7 +43,7 @@ class AccountAdmin(TabbedTranslationAdmin):
 
     def full_name(self, obj):
         return obj.get_full_name()
-    full_name.short_description = u'Пользователь'
+    full_name.short_description = 'Пользователь'
 
     def is_worker(self, obj):
         if obj.is_worker():
@@ -51,7 +51,7 @@ class AccountAdmin(TabbedTranslationAdmin):
         else:
             result = format_html('<img src = "/static/admin/img/icon-no.svg" alt="False">')
         return result
-    is_worker.short_description = u'Является сотрудником'
+    is_worker.short_description = 'Является сотрудником'
 
     def is_author(self, obj):
         if obj.is_author():
@@ -59,11 +59,11 @@ class AccountAdmin(TabbedTranslationAdmin):
         else:
             result = format_html('<img src = "/static/admin/img/icon-no.svg" alt="False">')
         return result
-    is_author.short_description = u'Является автором'
+    is_author.short_description = 'Является автором'
 
     def thumbnail(self, obj):
         if obj.image:
-            return '<img src="%s" />' % obj.image.url_thumbnail
+            return '<img src="{}" />'.format(obj.image.url_thumbnail)
         else:
             return ""
     thumbnail.allow_tags = True
@@ -88,7 +88,7 @@ class ProtectionAdmin(TranslationAdmin):
 
     def thumbnail(self, obj):
         if obj.image:
-            return '<img src="%s" />' % obj.image.url_thumbnail
+            return '<img src="{}" />'.format(obj.image.url_thumbnail)
         else:
             return ""
 
@@ -111,7 +111,7 @@ class PageAdmin(TabbedTranslationAdmin):
 
     def thumbnail(self, obj):
         if obj.image:
-            return '<img src="%s" />' % obj.image.url_thumbnail
+            return '<img src="{}" />'.format(obj.image.url_thumbnail)
         else:
             return ""
 
@@ -141,7 +141,7 @@ class EventAdmin(TabbedTranslationAdmin):
 
     def thumbnail(self, obj):
         if obj.image:
-            return '<img src="%s" />' % obj.image.url_thumbnail
+            return '<img src="{}" />'.format(obj.image.url_thumbnail)
         else:
             return ""
 
@@ -170,7 +170,7 @@ class SeminarAdmin(TabbedTranslationAdmin):
 
     def thumbnail(self, obj):
         if obj.image:
-            return '<img src="%s" />' % obj.image.url_thumbnail
+            return '<img src="{}" />'.formtat(obj.image.url_thumbnail)
         else:
             return ""
 
@@ -251,9 +251,9 @@ class GrantAdmin(TabbedTranslationAdmin):
 
     def get_urls(self):
         urls = super(GrantAdmin, self).get_urls()
-        info = self.model._meta.app_label, self.model._meta.model_name
         my_urls = [
-            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc), name='%s_%s_export' % info)
+            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc),
+                name='{}_{}_export'.format(self.model._meta.app_label, self.model._meta.model_name))
         ]
         return my_urls + urls
 
@@ -263,7 +263,7 @@ class GrantAdmin(TabbedTranslationAdmin):
             ((head,) for head in obj.head.all())
         )
         return result
-    heads.short_description = u'Руководители'
+    heads.short_description = 'Руководители'
 
     def export_to_doc(self, request, **kwargs):
         ChangeList = self.get_changelist(request)
@@ -310,7 +310,7 @@ class ProjectAdmin(TabbedTranslationAdmin, SortableModelAdmin):
 
     def thumbnail(self, obj):
         if obj.image:
-            return '<img src="%s" />' % obj.image.url_thumbnail
+            return '<img src="{}" />'.format(obj.image.url_thumbnail)
         else:
             return ""
     thumbnail.allow_tags = True
@@ -331,9 +331,4 @@ class WikiAdmin(admin.ModelAdmin):
     form = WikiForm
 
 admin.site.register(Wiki, WikiAdmin)
-
-class WikiAdmin(admin.ModelAdmin):
-    list_display = ['title']
-    search_fields = ['title']
-    form = WikiForm
 admin.site.register(Images)

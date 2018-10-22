@@ -71,11 +71,11 @@ class CalculationViewSet(viewsets.ViewSet):
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
-                                                  'message': u'Не достаточно параметров'}).data)
+                                                  'message': 'Не достаточно параметров'}).data)
         else:
             return Response(CommonSerializer({"success": False,
                                               "reason": 'WRONG_API_KEY',
-                                              'message': u'Неправильный API KEY'}).data)
+                                              'message': 'Неправильный API KEY'}).data)
 
     @list_route(methods=['post'])
     def parse_file(self, request):
@@ -121,7 +121,7 @@ class CalculationViewSet(viewsets.ViewSet):
                 except Calculation.DoesNotExist:
                     return Response(CommonSerializer({"success": False,
                                                       "reason": 'CALCULATION_NOT_FOUND',
-                                                      'message': u'Расчёт не найден'}).data)
+                                                      'message': 'Расчёт не найден'}).data)
                 else:
                     calculation.parse_start_from = parse_from
                     calculation.parse_file_fields = parse_field
@@ -130,11 +130,11 @@ class CalculationViewSet(viewsets.ViewSet):
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
-                                                  'message': u'Не достаточно параметров'}).data)
+                                                  'message': 'Не достаточно параметров'}).data)
         else:
             return Response(CommonSerializer({"success": False,
                                               "reason": 'WRONG_API_KEY',
-                                              "message": u'Неправильный API KEY'}).data)
+                                              "message": 'Неправильный API KEY'}).data)
 
     @list_route(methods=['post'])
     def start_calculation(self, request):
@@ -180,7 +180,7 @@ class CalculationViewSet(viewsets.ViewSet):
                 except Calculation.DoesNotExist:
                     return Response(CommonSerializer({"success": False,
                                                       "reason": 'CALCULATION_NOT_FOUND',
-                                                      'message': u'Расчёт не найден'}).data)
+                                                      'message': 'Расчёт не найден'}).data)
                 else:
                     if email:
                         calculation.email = email
@@ -194,11 +194,11 @@ class CalculationViewSet(viewsets.ViewSet):
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
-                                                  'message': u'Не достаточно параметров'}).data)
+                                                  'message': 'Не достаточно параметров'}).data)
         else:
             return Response(CommonSerializer({"success": False,
                                               "reason": 'WRONG_API_KEY',
-                                              "message": u'Неправильный API KEY'}).data)
+                                              "message": 'Неправильный API KEY'}).data)
 
     @list_route(methods=['get'])
     def status(self, request):
@@ -233,19 +233,19 @@ class CalculationViewSet(viewsets.ViewSet):
                     else:
                         return Response(CommonSerializer({"success": False,
                                                           "reason": 'CALCULATION_ERROR',
-                                                          "message": u'Ошибка при расчёте'}).data)
+                                                          "message": 'Ошибка при расчёте'}).data)
                 elif res.status == 'FAILURE':
-                    return Response({"success": False, "reason": 'ERROR', "message": u'Ошибка'})
+                    return Response({"success": False, "reason": 'ERROR', "message": 'Ошибка'})
                 else:
-                    return Response({"success": False, "reason": 'IN_PROCESS', "message": u'Расчёт выполняется'})
+                    return Response({"success": False, "reason": 'IN_PROCESS', "message": 'Расчёт выполняется'})
             else:
                 return Response(CommonSerializer({"success": False,
                                                   "reason": 'NOT_ENOUGH_PARAMS',
-                                                  'message': u'Не достаточно параметров'}).data)
+                                                  'message': 'Не достаточно параметров'}).data)
         else:
             return Response(CommonSerializer({"success": False,
                                               "reason": 'WRONG_API_KEY',
-                                              "message": u'Неправильный API KEY'}).data)
+                                              "message": 'Неправильный API KEY'}).data)
 
 
 def igwcoeffs(request):

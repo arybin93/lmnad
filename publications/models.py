@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from django.db import models
 from django.utils.html import format_html
 
@@ -12,8 +10,8 @@ RU = 'ru'
 EN = 'en'
 
 LANGUAGES = (
-    (RU, u'Русский'),
-    (EN, u'Английкий')
+    (RU, 'Русский'),
+    (EN, 'Английкий')
 )
 
 
@@ -22,48 +20,48 @@ class Journal(TimeStampedModel):
     JOURNAL = 'journal'
     CONFERENCE = 'conference'
     TYPES = (
-        (JOURNAL, u'Журнал'),
+        (JOURNAL, 'Журнал'),
         (CONFERENCE, 'Конференция'),
     )
 
     INTERNATIONAL = 'international'
     NATIONAL = 'national'
     TYPES_CONF = (
-        (INTERNATIONAL, u'Международная'),
-        (NATIONAL, u'Российская')
+        (INTERNATIONAL, 'Международная'),
+        (NATIONAL, 'Российская')
     )
 
-    type = models.CharField(max_length=55, default=JOURNAL, choices=TYPES, verbose_name=u'Тип',
-                            help_text=u'Журнал или конференция')
-    name = models.CharField(max_length=255, verbose_name=u'Название журнала, конференции')
+    type = models.CharField(max_length=55, default=JOURNAL, choices=TYPES, verbose_name='Тип',
+                            help_text='Журнал или конференция')
+    name = models.CharField(max_length=255, verbose_name='Название журнала, конференции')
 
     # Fields for conference
-    conf_type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES_CONF, verbose_name=u'Классификация')
-    date_start = models.DateTimeField(verbose_name=u'Дата и время, начало', null=True, blank=True,
-                                      help_text=u'Начало конференции')
-    date_stop = models.DateTimeField(verbose_name=u'Дата и время, конец', null=True, blank=True,
-                                     help_text=u'Конец конференции')
-    place = models.CharField(max_length=255, blank=True, verbose_name=u'Место проведения',
-                             help_text=u'Например: Страна, город, университет')
-    organizer = models.CharField(max_length=550, blank=True, verbose_name=u'Организатор')
+    conf_type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES_CONF, verbose_name='Классификация')
+    date_start = models.DateTimeField(verbose_name='Дата и время, начало', null=True, blank=True,
+                                      help_text='Начало конференции')
+    date_stop = models.DateTimeField(verbose_name='Дата и время, конец', null=True, blank=True,
+                                     help_text='Конец конференции')
+    place = models.CharField(max_length=255, blank=True, verbose_name='Место проведения',
+                             help_text='Например: Страна, город, университет')
+    organizer = models.CharField(max_length=550, blank=True, verbose_name='Организатор')
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name
 
     def get_dates(self):
         date_start = self.date_start.strftime('%d.%m.%Y') if self.date_start else ''
         date_stop = self.date_stop.strftime('%d.%m.%Y') if self.date_stop else ''
 
-        result = u'{date_start} - {date_stop}'.format(date_start=date_start,
+        result = '{date_start} - {date_stop}'.format(date_start=date_start,
                                                       date_stop=date_stop)
 
-        return unicode(result)
+        return result
 
     def get_place_dates(self):
         dates = self.get_dates()
-        place_and_dates = u'{place}, {dates}'.format(place=self.place,
+        place_and_dates = '{place}, {dates}'.format(place=self.place,
                                                      dates=dates)
-        return unicode(place_and_dates)
+        return place_and_dates
 
     class Meta:
         verbose_name = 'Журнал/Конференция'
@@ -72,33 +70,34 @@ class Journal(TimeStampedModel):
 
 class Author(TimeStampedModel):
     """ Author """
-    name = models.CharField(max_length=55, verbose_name=u'Имя')
-    last_name = models.CharField(max_length=55, verbose_name=u'Фамилия')
-    middle_name = models.CharField(max_length=55, blank=True, verbose_name=u'Отчество')
-    user = models.ForeignKey(Account, blank=True, null=True, related_name='author',
-                             verbose_name=u'Пользователь',
-                             help_text=u'Если есть аккаунт')
+    name = models.CharField(max_length=55, verbose_name='Имя')
+    last_name = models.CharField(max_length=55, verbose_name='Фамилия')
+    middle_name = models.CharField(max_length=55, blank=True, verbose_name='Отчество')
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, blank=True, null=True,
+                             related_name='author',
+                             verbose_name='Пользователь',
+                             help_text='Если есть аккаунт')
 
-    def __unicode__(self):
+    def __str__(self):
         full_name = '{} {}'.format(self.last_name, self.name)
-        return unicode(full_name)
+        return full_name
 
     def get_full_name(self):
         if self.middle_name:
             full_name = '{} {} {}'.format(self.last_name, self.name, self.middle_name)
         else:
             full_name = '{} {}'.format(self.last_name, self.name)
-        return unicode(full_name)
+        return full_name
 
     def get_short_name(self):
         short_name = self.name[0]
         if self.middle_name:
             short_middle = self.middle_name[0]
-            author_str = u"{} {}. {}.".format(self.last_name,
+            author_str = "{} {}. {}.".format(self.last_name,
                                               short_name,
                                               short_middle)
         else:
-            author_str = u"{} {}.".format(self.last_name,
+            author_str = "{} {}.".format(self.last_name,
                                           short_name)
         return author_str
 
@@ -120,12 +119,12 @@ class Author(TimeStampedModel):
                 last_name = self.last_name_en
 
         if short_middle:
-            author_str = u"{}, {}. {}.".format(last_name,
-                                               short_name,
-                                               short_middle)
+            author_str = "{}, {}. {}.".format(last_name,
+                                              short_name,
+                                              short_middle)
         else:
-            author_str = u"{}, {}.".format(last_name,
-                                           short_name)
+            author_str = "{}, {}.".format(last_name,
+                                          short_name)
         return author_str
 
     class Meta:
@@ -145,45 +144,45 @@ class Publication(TimeStampedModel):
     PATENT_BD = 'Patent_BD'
 
     TYPE = (
-        (ARTICLE, u'Статья в периодическом издании'),
-        (MONOGRAPH, u'Авторская монография'),
-        (GROUP_MONOGRAPH, u'Глава в коллективной монографии'),
-        (PROCEEDINGS, u'Статья в сборнике трудов конференции'),
-        (THESES_CONFERENCE, u'Тезисы конференции'),
-        (TEACHING_MATERIALS, u'Учебно-методические материалы'),
-        (PATENT, u'Свидетельство о регистрации права на программный продукт'),
-        (PATENT_BD, u'Свидетельство о регистрации права на базу данных')
+        (ARTICLE, 'Статья в периодическом издании'),
+        (MONOGRAPH, 'Авторская монография'),
+        (GROUP_MONOGRAPH, 'Глава в коллективной монографии'),
+        (PROCEEDINGS, 'Статья в сборнике трудов конференции'),
+        (THESES_CONFERENCE, 'Тезисы конференции'),
+        (TEACHING_MATERIALS, 'Учебно-методические материалы'),
+        (PATENT, 'Свидетельство о регистрации права на программный продукт'),
+        (PATENT_BD, 'Свидетельство о регистрации права на базу данных')
     )
 
-    type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name=u'Тип публикации')
-    title = models.CharField(max_length=200, db_index=True, verbose_name=u'Название')
-    authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name=u'Авторы')
-    journal = models.ForeignKey(Journal, blank=True, null=True, verbose_name=u'Журнал, конференция')
-    year = models.IntegerField(verbose_name=u'Год')
-    date = models.DateTimeField(blank=True, null=True, verbose_name=u'Дата и время')
+    type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name='Тип публикации')
+    title = models.CharField(max_length=200, db_index=True, verbose_name='Название')
+    authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name='Авторы')
+    journal = models.ForeignKey(Journal, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Журнал, конференция')
+    year = models.IntegerField(verbose_name='Год')
+    date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время')
     volume = models.CharField(max_length=55, blank=True, verbose_name='Том')
-    issue = models.CharField(max_length=55, blank=True, verbose_name=u'Номер журнала/конференции')
+    issue = models.CharField(max_length=55, blank=True, verbose_name='Номер журнала/конференции')
     pages = models.CharField(max_length=55, blank=True, verbose_name='Страницы')
-    number = models.CharField(max_length=55, blank=True, null=True, verbose_name=u'Номер свидетельства')
-    link = models.CharField(max_length=200, blank=True, verbose_name=u'Ссылка', help_text=u'Если есть')
-    doi = models.CharField(max_length=200, blank=True, verbose_name=u'DOI', help_text=u'Если есть')
-    is_rinc = models.BooleanField(default=False, verbose_name=u'Входит в РИНЦ',
-                                  help_text=u'Отметьте галочку, если публикация входит в РИНЦ')
-    is_vak = models.BooleanField(default=False, verbose_name=u'Входит в ВАК',
-                                 help_text=u'Отметьте галочку, если публикация входит в ВАК')
-    is_wos = models.BooleanField(default=False, verbose_name=u'Входит в WOS',
-                                    help_text=u'Отметьте галочку, если публикация входит в Web of Science')
-    is_scopus = models.BooleanField(default=False, verbose_name=u'Входит в Scopus',
-                                    help_text=u'Отметьте галочку, если публикация входит в Scopus')
-    is_other_db = models.BooleanField(default=False, verbose_name=u'Входит в другие базы данных')
+    number = models.CharField(max_length=55, blank=True, null=True, verbose_name='Номер свидетельства')
+    link = models.CharField(max_length=200, blank=True, verbose_name='Ссылка', help_text='Если есть')
+    doi = models.CharField(max_length=200, blank=True, verbose_name='DOI', help_text='Если есть')
+    is_rinc = models.BooleanField(default=False, verbose_name='Входит в РИНЦ',
+                                  help_text='Отметьте галочку, если публикация входит в РИНЦ')
+    is_vak = models.BooleanField(default=False, verbose_name='Входит в ВАК',
+                                 help_text='Отметьте галочку, если публикация входит в ВАК')
+    is_wos = models.BooleanField(default=False, verbose_name='Входит в WOS',
+                                 help_text='Отметьте галочку, если публикация входит в Web of Science')
+    is_scopus = models.BooleanField(default=False, verbose_name='Входит в Scopus',
+                                    help_text='Отметьте галочку, если публикация входит в Scopus')
+    is_other_db = models.BooleanField(default=False, verbose_name='Входит в другие базы данных')
     file = models.FileField(upload_to='uploads/articles/', null=True, blank=True, verbose_name="Файл с тектом статьи")
-    is_can_download = models.BooleanField(default=False, verbose_name=u'Можно скачать',
-                                          help_text=u'Отметьте галочку, если файл доступен для скачивания')
-    is_show = models.BooleanField(default=True, verbose_name=u'Показывать на сайте',
-                                  help_text = u'Отметьте галочку, чтобы публикация была доступна на сайте')
-    language = models.CharField(default=RU, max_length=10, choices=LANGUAGES, verbose_name=u'Основной язык публикации',
-                                help_text=u'Используется для экпорта/цитирования на сайте в независимости'
-                                          u' от выбранного языка на сайте')
+    is_can_download = models.BooleanField(default=False, verbose_name='Можно скачать',
+                                          help_text='Отметьте галочку, если файл доступен для скачивания')
+    is_show = models.BooleanField(default=True, verbose_name='Показывать на сайте',
+                                  help_text = 'Отметьте галочку, чтобы публикация была доступна на сайте')
+    language = models.CharField(default=RU, max_length=10, choices=LANGUAGES, verbose_name='Основной язык публикации',
+                                help_text='Используется для экпорта/цитирования на сайте в независимости'
+                                          ' от выбранного языка на сайте')
 
     def save(self, *args, **kwargs):
         if not self.language:
@@ -194,19 +193,19 @@ class Publication(TimeStampedModel):
                 self.language = EN
         super(Publication, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return self.title
 
     def information(self):
         """ Get information for publication, use in template """
 
         if self.type == self.PATENT or self.type == self.PATENT_BD:
             result = format_html(
-                u'''
+                '''
                 <strong>Номер свидетельства №: </strong> {number} От: {date}
                 ''',
                 number=self.number,
-                date=self.date.strftime('%d.%m.%Y') if self.date else u'-'
+                date=self.date.strftime('%d.%m.%Y') if self.date else '-'
             )
         else:
             if self.language == RU:
@@ -229,27 +228,27 @@ class Publication(TimeStampedModel):
                 issue = '({}),'.format(self.issue)
             elif self.volume:
                 if RU == self.language:
-                    volume = u'Т. {volume},'.format(volume=self.volume)
+                    volume = 'Т. {volume},'.format(volume=self.volume)
                 else:
-                    volume = u'vol. {volume},'.format(volume=self.volume)
+                    volume = 'vol. {volume},'.format(volume=self.volume)
             elif self.issue:
                 if RU == self.language:
-                    issue = u'№ {issue},'.format(issue=self.issue)
+                    issue = '№ {issue},'.format(issue=self.issue)
                 else:
-                    issue = u'no. {issue},'.format(issue=self.issue)
+                    issue = 'no. {issue},'.format(issue=self.issue)
 
             if self.pages:
                 if RU == self.language:
-                    pages = u'С. {pages},'.format(pages=self.pages)
+                    pages = 'С. {pages},'.format(pages=self.pages)
                 else:
-                    pages = u'pp. {pages},'.format(pages=self.pages)
+                    pages = 'pp. {pages},'.format(pages=self.pages)
 
             doi = None
             if self.doi and ('http' not in self.doi or 'https' not in self.doi):
-                doi = u'https://doi.org/' + self.doi
+                doi = 'https://doi.org/' + self.doi
 
             result = format_html(
-                u'''
+                '''
                 {journal} {volume}{issue} {pages} <strong>DOI: </strong> <a href="{doi_ref}">{doi}</a>
                 ''',
                 journal=journal,
@@ -257,7 +256,7 @@ class Publication(TimeStampedModel):
                 issue=issue,
                 pages=pages,
                 doi_ref=doi if doi else self.doi,
-                doi=self.doi.replace('https://doi.org/', '') if self.doi else u'-',
+                doi=self.doi.replace('https://doi.org/', '') if self.doi else '-',
             )
 
         return result
@@ -305,14 +304,14 @@ class Publication(TimeStampedModel):
                 result_authors = '{},'.format(authors.first().get_short_name_harvard(lang=self.language))
 
         if self.type == self.PATENT or self.type == self.PATENT_BD:
-            result = u'{authors} {title}. {type_text} {number} от {date}'
+            result = '{authors} {title}. {type_text} {number} от {date}'
 
             number = self.number if self.number else ''
 
             if self.type == self.PATENT:
-                type_text = u'Свидетельство о государственной регистрации программы для ЭВМ №'
+                type_text = 'Свидетельство о государственной регистрации программы для ЭВМ №'
             else:
-                type_text = u'Свидетельство о государственной регистрации базы данных №'
+                type_text = 'Свидетельство о государственной регистрации базы данных №'
 
             date = self.date.strftime('%d.%m.%Y') if self.date else ''
 
@@ -332,8 +331,8 @@ class Publication(TimeStampedModel):
 
             if self.journal.type == Journal.CONFERENCE:
                 journal = '{journal_name}, {place}, {dates},'.format(journal_name=journal_name,
-                                                                    place=self.journal.place,
-                                                                    dates=self.journal.get_dates())
+                                                                     place=self.journal.place,
+                                                                     dates=self.journal.get_dates())
             else:
                 journal = '{},'.format(journal_name)
 
@@ -345,14 +344,14 @@ class Publication(TimeStampedModel):
                 issue = '({}),'.format(self.issue)
             elif self.volume:
                 if RU == self.language:
-                    volume = u'Т. {volume},'.format(volume=self.volume)
+                    volume = 'Т. {volume},'.format(volume=self.volume)
                 else:
-                    volume = u'vol. {volume},'.format(volume=self.volume)
+                    volume = 'vol. {volume},'.format(volume=self.volume)
             elif self.issue:
                 if RU == self.language:
-                    issue = u'№ {issue},'.format(issue=self.issue)
+                    issue = '№ {issue},'.format(issue=self.issue)
                 else:
-                    issue = u'no. {issue},'.format(issue=self.issue)
+                    issue = 'no. {issue},'.format(issue=self.issue)
 
             if self.pages:
                 if RU == self.language:
@@ -379,12 +378,12 @@ class Publication(TimeStampedModel):
 
 class AuthorPublication(models.Model):
     """ Author Publication connection """
-    author = models.ForeignKey(Author, related_name='authors', on_delete=models.CASCADE, verbose_name=u'Автор')
-    publication = models.ForeignKey(Publication, related_name='publications', on_delete=models.CASCADE, verbose_name=u'Публикация')
-    order_by = models.PositiveIntegerField(default=0, verbose_name=u'Порядок отображения', help_text=u'От 0 - 100')
+    author = models.ForeignKey(Author, related_name='authors', on_delete=models.CASCADE, verbose_name='Автор')
+    publication = models.ForeignKey(Publication, related_name='publications', on_delete=models.CASCADE, verbose_name='Публикация')
+    order_by = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения', help_text='От 0 - 100')
 
-    def __unicode__(self):
-        return unicode(self.author.last_name)
+    def __str__(self):
+        return self.author.last_name
 
     class Meta:
         verbose_name = 'Автор'
@@ -397,25 +396,23 @@ class Conference(TimeStampedModel):
     ORAL = 'oral'
     POSTER = 'poster'
     TYPES_FORMS = (
-        (ORAL, u'Устная'),
-        (POSTER, u'Постер')
+        (ORAL, 'Устная'),
+        (POSTER, 'Постер')
     )
 
-    form = models.CharField(max_length=25, default=ORAL, choices=TYPES_FORMS, verbose_name=u'Форма доклада')
-    publication = models.OneToOneField(Publication, related_name=u'conference', verbose_name=u'Публикация',
-                                       help_text=u'Отсюда берётся название доклада и название конференции: '
-                                                 u'статья в сборниках трудов конференции или тезисы конференции')
-    author = models.ForeignKey(Author, verbose_name=u'Докладчик')
+    form = models.CharField(max_length=25, default=ORAL, choices=TYPES_FORMS, verbose_name='Форма доклада')
+    publication = models.OneToOneField(Publication, on_delete=models.CASCADE, related_name='conference', verbose_name='Публикация',
+                                       help_text='Отсюда берётся название доклада и название конференции: '
+                                                 'статья в сборниках трудов конференции или тезисы конференции')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Докладчик')
 
-    def __unicode__(self):
-        result = u'{}'.format(self.publication.journal,
+    def __str__(self):
+        result = '{}'.format(self.publication.journal,
                               self.publication.journal.place,)
-        return unicode(result)
+        return result
 
     def name_conference(self):
-        return unicode(self.publication.journal)
-
-
+        return self.publication.journal
 
     class Meta:
         verbose_name = 'Участие в конференции'

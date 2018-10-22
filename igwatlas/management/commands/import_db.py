@@ -8,6 +8,7 @@ class Command(BaseCommand):
     help = 'Import Data base from SQLite DB'
 
     def handle(self, *args, **options):
+        conn = None
         try:
             # save data to db
             is_save = True
@@ -76,11 +77,10 @@ class Command(BaseCommand):
                         record.save()
 
                     # get source
-                    query = "SELECT * FROM relation INNER JOIN sources on SourceID=id where recID=%s;" % id
+                    query = "SELECT * FROM relation INNER JOIN sources on SourceID=id where recID={};".format(id)
                     cursor_source = conn.execute(query)
 
                     for row_source in cursor_source:
-                        print row_source
                         id_source = row_source[2]
                         source_text = row_source[3]
                         source_short_text = row_source[4]
@@ -102,8 +102,7 @@ class Command(BaseCommand):
 
                         record.save()
             self.stdout.write(self.style.SUCCESS('Successfully import db'))
-        except sqlite3.Error, e:
-            print "Error %s:" % e.args[0]
+        except sqlite3.Error as e:
             if conn:
                 conn.close()
         finally:

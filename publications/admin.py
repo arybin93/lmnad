@@ -49,8 +49,8 @@ class ConferenceInline(MixinModelAdmin, TabularInline):
         'author',
         'form',
     ]
-    verbose_name = u'Участие в конференции'
-    verbose_name_plural = u'Участие в конференции'
+    verbose_name = 'Участие в конференции'
+    verbose_name_plural = 'Участие в конференции'
     max_num = 1
     extra = 1
 
@@ -96,32 +96,32 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
 
     def get_urls(self):
         urls = super(PublicationAdmin, self).get_urls()
-        info = self.model._meta.app_label, self.model._meta.model_name
         my_urls = [
             url(r'^(.+)/cite/$',
                 self.admin_site.admin_view(cite_view),
-                name='%s_%s_cite' % info),
-            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc), name='%s_%s_export' % info)
+                name='{}_{}_cite'.format(self.model._meta.app_label, self.model._meta.model_name)),
+            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc),
+                name='{}_{}_export'.format(self.model._meta.app_label, self.model._meta.model_name))
         ]
         return my_urls + urls
 
     def get_authors(self, obj):
         result = format_html_join(
-            '\n', u"""<li>{}</li>""",
+            '\n', """<li>{}</li>""",
             ((author.get_short_name(),) for author in obj.authors.all())
         )
         return result
-    get_authors.short_description = u'Авторы'
+    get_authors.short_description = 'Авторы'
 
     def get_information(self, obj):
         if obj.type == Publication.PATENT or obj.type == Publication.PATENT_BD:
             result = format_html(
-                u'''
+                '''
                 <strong>Номер свидетельства №: </strong> {} <br>
                 <strong>От: </strong> {} <br>
                 ''',
                 obj.number,
-                obj.date.strftime('%d.%m.%Y') if obj.date else u'-'
+                obj.date.strftime('%d.%m.%Y') if obj.date else '-'
             )
         else:
             doi = None
@@ -129,7 +129,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
                 doi = 'https://doi.org/' + obj.doi
 
             result = format_html(
-                u'''
+                '''
                 <strong>Журнал/Конференция: </strong> {} <br>
                 <strong>Том: </strong> {} <br>
                 <strong>Номер журнала: </strong> {} <br>
@@ -137,15 +137,15 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
                 <strong>DOI: </strong> <a href="{}">{}</a> <br>
                 ''',
                 obj.journal,
-                obj.volume if obj.volume else u'-',
-                obj.issue if obj.issue else u'-',
-                obj.pages if obj.pages else u'-',
+                obj.volume if obj.volume else '-',
+                obj.issue if obj.issue else '-',
+                obj.pages if obj.pages else '-',
                 doi if doi else obj.doi,
-                obj.doi.replace('https://doi.org/', '') if obj.doi else u'',
+                obj.doi.replace('https://doi.org/', '') if obj.doi else '',
             )
 
         return result
-    get_information.short_description = u'Источник'
+    get_information.short_description = 'Источник'
 
     def cite(self, obj):
         result = format_html(
@@ -157,7 +157,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
             obj.id
         )
         return result
-    cite.short_description = u'Ссылка'
+    cite.short_description = 'Ссылка'
 
     def export_to_doc(self, request, **kwargs):
         ChangeList = self.get_changelist(request)
@@ -195,7 +195,7 @@ class AuthorAdmin(MixinModelAdmin, TabbedTranslationAdmin):
 
     def get_count(self, obj):
         return obj.publication_set.count()
-    get_count.short_description = u'Число публикаций'
+    get_count.short_description = 'Число публикаций'
 
 admin.site.register(Author, AuthorAdmin)
 
@@ -205,11 +205,11 @@ class JournalForm(ModelForm):
         if self.cleaned_data['type'] == Journal.CONFERENCE:
             if 'date_start' in self.cleaned_data or 'date_stop' in self.cleaned_data:
                 if not self.cleaned_data['date_start'] or not self.cleaned_data['date_stop']:
-                    raise forms.ValidationError(u'Выберите даты проведения конференции')
+                    raise forms.ValidationError('Выберите даты проведения конференции')
 
             if 'place' in self.cleaned_data:
                 if not self.cleaned_data['place']:
-                    raise forms.ValidationError(u'Введите место проведения конференции')
+                    raise forms.ValidationError('Введите место проведения конференции')
 
         return super(JournalForm, self).clean()
 
@@ -260,27 +260,27 @@ class ConferenceAdmin(MixinModelAdmin, admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(ConferenceAdmin, self).get_urls()
-        info = self.model._meta.app_label, self.model._meta.model_name
         my_urls = [
-            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc), name='%s_%s_export' % info)
+            url(r'^export/$', self.admin_site.admin_view(self.export_to_doc),
+                name='{}_{}_export'.format(self.model._meta.app_label, self.model._meta.model_name))
         ]
         return my_urls + urls
 
     def get_name_conference(self, obj):
         return obj.publication.journal
-    get_name_conference.short_description = u'Название конференции'
+    get_name_conference.short_description = 'Название конференции'
 
     def get_dates(self, obj):
         return obj.publication.journal.get_dates()
-    get_dates.short_description = u'Даты'
+    get_dates.short_description = 'Даты'
 
     def get_conf_type(self, obj):
         return obj.publication.journal.get_conf_type_display()
-    get_conf_type.short_description = u'Тип конференции'
+    get_conf_type.short_description = 'Тип конференции'
 
     def get_place(self, obj):
         return obj.publication.journal.place
-    get_place.short_description = u'Место'
+    get_place.short_description = 'Место'
 
     def export_to_doc(self, request, **kwargs):
         ChangeList = self.get_changelist(request)
