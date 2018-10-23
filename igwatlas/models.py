@@ -15,7 +15,7 @@ class File(models.Model):
 
     def __str__(self):
         if self.file:
-            return self.file
+            return self.file.name
         else:
             return self.path
 
@@ -74,7 +74,7 @@ class Record(models.Model):
         verbose_name_plural = 'Наблюдения'
 
     def __str__(self):
-        return self.position
+        return self.image.name
 
     def get_text_types(self):
         text = ''

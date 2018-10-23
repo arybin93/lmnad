@@ -15,7 +15,7 @@ class Images(TimeStampedModel):
         verbose_name_plural = 'Изображение'
 
     def __str__(self):
-        return self.file
+        return self.file.name
 
 
 class Account(models.Model):
@@ -31,7 +31,7 @@ class Account(models.Model):
         if self.user.get_full_name():
             return self.user.get_full_name()
         else:
-            return self.user
+            return self.user.first_name
 
     def get_absolute_url(self):
         return "/profile/{}/".format(self.user.username)

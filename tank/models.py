@@ -40,7 +40,7 @@ class Movie(TimeStampedModel):
         verbose_name_plural = 'Видео'
 
     def __str__(self):
-        return self.file
+        return self.file.name
 
 
 class Images(TimeStampedModel):
@@ -55,7 +55,7 @@ class Images(TimeStampedModel):
         verbose_name_plural = 'Фото'
 
     def __str__(self):
-        return self.file
+        return self.file.name
 
     def filename(self):
         return os.path.basename(self.file.name)
@@ -71,7 +71,7 @@ class Data(TimeStampedModel):
         verbose_name_plural = 'Данные'
 
     def __str__(self):
-        return self.file
+        return self.file.name
 
     @classmethod
     def name(self):
