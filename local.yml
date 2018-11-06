@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    container_name: lmnad_local_django
+    image: lmnad_local_django
+    tty: true
+    volumes:
+      - .:/var/www/lmnad
+    depends_on:
+      - db
+    command: /start
+
+  db:
+    container_name: lmnad_local_mysql
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=lmnad_db
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./compose/local/mysql/data/:/data/
+
+  nginx:
+    image: "nginx:latest"
+    container_name: lmnad_local_nginx
+    volumes:
+      - ./project/media/:/media/
+      - ./static/:/static/
+      - ./compose/local/nginx/dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - django
