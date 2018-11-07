@@ -27,6 +27,40 @@ services:
     volumes:
       - ./compose/local/mysql/data/:/data/
 
+  celery:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    container_name: lmnad_local_celery
+    command: ["celery", "worker", "-A", "project"]
+    environment:
+      - CELERY_BROKER=amqp://guest:guest@broker:5672
+      - CELERY_RESULT_BACKEND=rpc://
+    volumes:
+      - .:/var/www/lmnad
+    depends_on:
+      - broker
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    command: ["celery", "flower", "-A", "project", "--url_prefix=flower"]
+    container_name: lmnad_local_flower
+    environment:
+      - CELERY_BROKER=amqp://guest:guest@broker:5672
+      - CELERY_RESULT_BACKEND=rpc://
+    ports:
+      - "5555:5555"
+    depends_on:
+      - broker
+
+  broker:
+    image: rabbitmq:3
+    container_name: lmnad_local_rabbitmq
+    ports:
+      - "5672:5672"
+
   nginx:
     image: "nginx:latest"
     container_name: lmnad_local_nginx
@@ -36,5 +70,6 @@ services:
       - ./compose/local/nginx/dev.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
+    restart: always
     depends_on:
       - django
