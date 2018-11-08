@@ -1,5 +1,5 @@
 *.pyc
-*.log
+/project/log/*
 /media/*
 /.idea/*
 /static/*

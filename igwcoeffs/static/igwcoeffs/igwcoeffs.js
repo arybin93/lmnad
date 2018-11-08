@@ -52,6 +52,7 @@ function generate_parse_form(data) {
 
 function send(job_id) {
     var resultRow = $('#result-row');
+    console.log('get_status ' + job_id);
     $.ajax({
         url: MAIN_URL + 'calculation/status/',
         type: "get",
@@ -61,11 +62,16 @@ function send(job_id) {
         },
         success:function(data)
         {
-            if (data['success']) {
+            if (data['success'] == true) {
+                console.log('success');
                 $('#in_process').hide();
                 $('#result-description').show();
                 resultRow.append('<a href="'+ window.location.protocol + "//" + window.location.host + data['result']+ '">Файл с результатом</a>');
                 clearTimeout(timer);
+            } else {
+                timer = setTimeout(function(){
+                    send(job_id);
+                }, 5000);
             }
         }
     });
@@ -262,15 +268,12 @@ function getCookie(name) {
 
 $(document).ready(function() {
     console.log('ready');
-    // class = "active"
-    // class = "disable"
     var loadTab = $('#load-file-tab');
     var parseTab = $('#parse-file-tab');
     var startTab = $('#start-tab');
     var resultsTab = $('#results-tab');
 
     var csrftoken = getCookie('csrftoken');
-    console.log(csrftoken);
 
     function csrfSafeMethod(method) {
         // these HTTP methods do not require CSRF protection

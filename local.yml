@@ -11,11 +11,15 @@ services:
     volumes:
       - .:/var/www/lmnad
     environment:
+      - CELERY_BROKER=amqp://guest:guest@broker:5672
+      - CELERY_RESULT_BACKEND=rpc://
       - DB_HOST=db
       - DB_USER=dev
       - DB_PASSWORD=dev
     depends_on:
       - db
+      - broker
+      - celery
     command: /start
 
   db:
@@ -23,6 +27,7 @@ services:
     image: mysql:5.7
     environment:
       - MYSQL_DATABASE=lmnad_db
+      - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=dev
       - MYSQL_PASSWORD=dev
@@ -47,6 +52,7 @@ services:
       - .:/var/www/lmnad
     depends_on:
       - broker
+      - db
 
   flower:
     build:
@@ -64,6 +70,7 @@ services:
       - "5555:5555"
     depends_on:
       - broker
+      - db
 
   broker:
     image: rabbitmq:3
