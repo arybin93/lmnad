@@ -10,6 +10,10 @@ services:
     tty: true
     volumes:
       - .:/var/www/lmnad
+    environment:
+      - DB_HOST=db
+      - DB_USER=dev
+      - DB_PASSWORD=dev
     depends_on:
       - db
     command: /start
@@ -32,10 +36,13 @@ services:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     container_name: lmnad_local_celery
-    command: ["celery", "worker", "-A", "project"]
+    command: ["celery", "worker", "-A", "project", "-l", "info"]
     environment:
       - CELERY_BROKER=amqp://guest:guest@broker:5672
       - CELERY_RESULT_BACKEND=rpc://
+      - DB_HOST=db
+      - DB_USER=dev
+      - DB_PASSWORD=dev
     volumes:
       - .:/var/www/lmnad
     depends_on:
@@ -50,6 +57,9 @@ services:
     environment:
       - CELERY_BROKER=amqp://guest:guest@broker:5672
       - CELERY_RESULT_BACKEND=rpc://
+      - DB_HOST=db
+      - DB_USER=dev
+      - DB_PASSWORD=dev
     ports:
       - "5555:5555"
     depends_on:
@@ -65,11 +75,10 @@ services:
     image: "nginx:latest"
     container_name: lmnad_local_nginx
     volumes:
-      - ./project/media/:/media/
+      - ./media/:/media/
       - ./static/:/static/
       - ./compose/local/nginx/dev.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
-    restart: always
     depends_on:
       - django

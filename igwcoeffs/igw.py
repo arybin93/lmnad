@@ -15,7 +15,7 @@ from django.core.files import File
 
 # acceleration of gravity
 from igwcoeffs.models import Calculation
-from project.celery import app
+from celery import shared_task
 
 GG = constants.g
 PI = constants.pi
@@ -301,7 +301,7 @@ def sys_phi_new(z, y, c, N):
     return dy
 
 
-@app.task()
+@shared_task()
 def run_calculation(id):
     try:
         calc = Calculation.objects.get(id=id)

@@ -242,6 +242,23 @@ function update_page(current_state, data) {
     }
 }
 
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 
 $(document).ready(function() {
     console.log('ready');
@@ -251,6 +268,21 @@ $(document).ready(function() {
     var parseTab = $('#parse-file-tab');
     var startTab = $('#start-tab');
     var resultsTab = $('#results-tab');
+
+    var csrftoken = getCookie('csrftoken');
+    console.log(csrftoken);
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
 
     loadTab.click(function(event) {
         event.preventDefault();

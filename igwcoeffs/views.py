@@ -2,7 +2,7 @@
 from celery.result import AsyncResult
 from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from igwcoeffs.api_serializers import CommonSerializer
@@ -18,7 +18,7 @@ class CalculationViewSet(viewsets.ViewSet):
     queryset = Calculation.objects.all()
     serializer_class = CommonSerializer
 
-    @list_route(methods=['post'])
+    @action(detail=False, methods=['post'])
     def load_file(self, request):
         """
         Load file
@@ -77,7 +77,7 @@ class CalculationViewSet(viewsets.ViewSet):
                                               "reason": 'WRONG_API_KEY',
                                               'message': 'Неправильный API KEY'}).data)
 
-    @list_route(methods=['post'])
+    @action(detail=False, methods=['post'])
     def parse_file(self, request):
         """
         Load file
@@ -136,7 +136,7 @@ class CalculationViewSet(viewsets.ViewSet):
                                               "reason": 'WRONG_API_KEY',
                                               "message": 'Неправильный API KEY'}).data)
 
-    @list_route(methods=['post'])
+    @action(detail=False, methods=['post'])
     def start_calculation(self, request):
         """
         Start calculation
@@ -200,7 +200,7 @@ class CalculationViewSet(viewsets.ViewSet):
                                               "reason": 'WRONG_API_KEY',
                                               "message": 'Неправильный API KEY'}).data)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def status(self, request):
         """
         Get status of calculation

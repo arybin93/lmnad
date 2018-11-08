@@ -49,7 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware'
+    'django.middleware.locale.LocaleMiddleware',
+    'request_logging.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -250,26 +251,13 @@ CKEDITOR_CONFIGS = {
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCLumlxQ35v472UxtM0RupR3cXkxm4nW0I'
 
-'''
+
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 25
 }
-'''
 
 CACHES = {
     "default": {
@@ -282,6 +270,38 @@ CACHES = {
 # Set the cache backend to select2
 SELECT2_CACHE_BACKEND = 'default'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s: %(module)s: %(funcName)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler'
+        },
+        'request': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '{}/log/request.log'.format(BASE_DIR),
+            'formatter': 'verbose',
+            'maxBytes': 1024*1024*10,  # 10MB
+            'backupCount': 10
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['request', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
