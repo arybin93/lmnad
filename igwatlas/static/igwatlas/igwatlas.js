@@ -14,7 +14,7 @@ function init () {
             type: 'yandex#satellite',
             controls: ['zoomControl', 'fullscreenControl']
         }
-    );
+     );
 
      var objectManager = new ymaps.ObjectManager({
          clusterize: true,

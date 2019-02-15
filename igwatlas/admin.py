@@ -15,41 +15,25 @@ from django.conf import settings
 from suit_redactor.widgets import RedactorWidget
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 from suit_ckeditor.widgets import CKEditorWidget
-
-
-# widgets
-class AdminImageWidget(forms.ClearableFileInput):
-    """
-    A ImageField Widget for admin that shows a thumbnail.
-    """
-
-    def __init__(self, attrs={}):
-        super(AdminImageWidget, self).__init__(attrs)
-
-    def render(self, name, value, attrs=None):
-        output = []
-        if value and hasattr(value, "url"):
-            output.append(('<a target="_blank" href="{}">'
-                           '<img src="{}" style="height: 50px;" /></a><br/> '.format(value.url, value.url)
-                           ))
-        output.append(super(AdminImageWidget, self).render(name, value, attrs))
-        return mark_safe(''.join(output))
+from django import forms
 
 
 class RecordForm(ModelForm):
-    types = forms.MultipleChoiceField(widget=Select2MultipleWidget, choices=Record.TYPES,
-                                      label='Тип', required=True)
+    #new_types = forms.MultipleChoiceField(widget=Select2MultipleWidget, choices=Record.TYPES, label='Тип', required=True)
 
     class Meta:
         model = Record
-        fields = '__all__'
+        exclude = [
+            'text',
+            'types'    # old types
+        ]
         widgets = {
             'date': SuitSplitDateTimeWidget(),
             'date_start': SuitSplitDateTimeWidget(),
             'date_stop': SuitSplitDateTimeWidget(),
             'source': Select2MultipleWidget,
             'file': Select2Widget,
-            'image': AdminImageWidget
+            'new_types': Select2MultipleWidget
         }
 
 
@@ -65,42 +49,20 @@ class RowDateRangeFilter(DateRangeFilter):
         }
 
 
-class RecordTypeFilter(admin.SimpleListFilter):
-    title = 'Тип наблюдения'
-    parameter_name = 'type'
-
-    def lookups(self, request, model_admin):
-        MAP = 0
-        GRAPHIC = 1
-        SATELLITE = 2
-        RECORD = 3
-        TABLE = 4
-        return (
-            (MAP, 'Карта'),
-            (GRAPHIC, 'График'),
-            (SATELLITE, 'Спутниковый снимок'),
-            (RECORD, 'Запись'),
-            (TABLE, 'Таблица')
-        )
-
-    def queryset(self, request, queryset):
-        Record.objects.filter()
-        if self.value():
-            queryset = queryset.filter(types__icontains=self.value())
-
-        return queryset
-
-
 # IGWAtlas
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'image_field', 'position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source']
+    list_display = ['id', 'image_field','position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source']
     form = RecordForm
-    search_fields = ['position', 'image', 'source__source_short', 'source__source']
-    list_filter = [RecordTypeFilter, ('date', RowDateRangeFilter)]
+    search_fields = ['id', 'position', 'image', 'source__source_short', 'source__source']
+    list_filter = ['new_types', ('date', RowDateRangeFilter)]
     list_display_links = ['position', 'image_field']
 
     def get_types(self, obj):
-        return obj.get_text_types()
+        types = format_html_join(
+            '', u"""{}<br>""",
+            ((type,) for type in obj.new_types.all())
+        )
+        return types
     get_types.short_description = 'Типы наблюдений'
 
     def get_source(self, obj):
@@ -112,13 +74,11 @@ class RecordAdmin(admin.ModelAdmin):
     get_source.short_description = 'Источники'
 
     def image_field(self, obj):
-        if obj.image and os.path.isfile(obj.image.path):
-            img = '<img src="{0}/{1}" style="max-height: 100px;"/>'.format(settings.MEDIA_URL, obj.image)
-            return img
-        else:
-            return obj.image
+        return mark_safe("""
+            <a target="_blank" href="{}">
+            <img src="{}" style="height: 50px;" /></a><br/>
+        """.format(obj.image.url, obj.image.url))
     image_field.short_description = 'Изображение'
-    image_field.allow_tags = True
 
 admin.site.register(Record, RecordAdmin)
 

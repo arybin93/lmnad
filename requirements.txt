@@ -1,5 +1,5 @@
 celery==4.2.1
-Django==2.0
+Django==2.0.10
 django-picklefield==1.1.0
 django-ckeditor==5.6.1
 django-constance==2.3.1
@@ -8,11 +8,9 @@ django-extensions==2.1.3
 django-favicon==0.1.3
 django-filter==2.0.0
 django-forms-bootstrap==3.1.0
-django-geoposition==0.3.0
 django-media-manager==3.4.2
 django-mptt==0.9.1
 django-rest-swagger==2.2.0
-django-select2==6.3.1
 django-suit==0.2.26
 django-suit-ckeditor==0.0.2
 django-suit-redactor==0.0.4
@@ -30,3 +28,5 @@ scipy==1.1.0
 yandex.translate==0.3.5
 -e git+https://github.com/arybin93/django-formsetfield.git#egg=django_formsetfield
 -e git+https://github.com/deschler/django-modeltranslation.git#egg=django-modeltranslation
+-e git+https://github.com/philippbosch/django-geoposition/archive/django-1.11.zip#egg=django-geoposition
+-e git+https://github.com/applegrew/django-select2.git@82859121a6285d212d6d42ec8a9b65cf02ee5991#egg=django-select2
