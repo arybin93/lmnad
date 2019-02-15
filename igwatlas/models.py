@@ -37,6 +37,14 @@ class Source(models.Model):
         return self.source_short
 
 
+class RecordType(models.Model):
+    name = models.CharField(max_length=55, unique=True, verbose_name='Название типа записи')
+    value = models.PositiveIntegerField(default=0, unique=True, verbose_name=u'Цифровое значение для типа')
+
+    def __str__(self):
+        return self.name
+
+
 class Record(models.Model):
     MAP = 0
     GRAPHIC = 1
@@ -53,7 +61,9 @@ class Record(models.Model):
     )
 
     position = GeopositionField(verbose_name='Координаты')
-    types = models.TextField(verbose_name='Тип', help_text='Поддерживается несколько типов')
+    new_types = models.ManyToManyField(RecordType, verbose_name='Тип', help_text='Поддерживается несколько типов')
+    types = models.TextField(verbose_name='Тип', blank=True, null=True, choices=TYPES,
+                             help_text='Поддерживается несколько типов')
     date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время наблюдения')
     date_start = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время начала наблюдений',
                                       help_text='Если есть')
@@ -78,28 +88,9 @@ class Record(models.Model):
 
     def get_text_types(self):
         text = ''
-        # numbers
-        reg_number = re.compile(r'(\d+)')
-        types_list = []
-        for r in reg_number.findall(self.types):
-            types_list.append(r)
-
-        type_dict = self.get_types()
-
-        for type in types_list:
-            index = int(type)
-            text = text + type_dict[index] + '; '
-
+        for type in self.new_types.all():
+            text += type.name + '; '
         return text
-
-    @staticmethod
-    def get_types():
-        types = {}
-        for i in Record.TYPES:
-            types.update({
-                i[0]: i[1]
-            })
-        return types
 
 
 class PageData(models.Model):

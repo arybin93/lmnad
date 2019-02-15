@@ -61,12 +61,14 @@ class RecordsViewSet(viewsets.ViewSet):
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         source_text = request.GET.get('source_text', None)
+        # TODO: params for rectangle zone: two points
 
         if api_key and api_key == config.API_KEY_IGWATLAS:
             records = Record.objects.all()
 
             if types:
-                records = records.filter(types__icontains=types)
+                types_lst = types.rstrip(',').split(',')
+                records = records.filter(new_types__value__in=types_lst)
 
             if date_from and date_to:
                 records = records.filter(Q(date__gte=date_from) & Q(date__lte=date_to))
