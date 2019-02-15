@@ -24,8 +24,7 @@ function init () {
      myMap.geoObjects.add(objectManager);
 
      $.ajax({
-        //url: "https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
-         url: "http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
+        url: "https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
      }).done(function(data) {
         objectManager.add(data);
      });
@@ -54,8 +53,7 @@ function init () {
 
         // send request with params
         $.ajax({
-            //url: "https://lmnad.nntu.ru/api/v1/records/?api_key=",
-            url: "http://localhost:8000/api/v1/records/?api_key=",
+            url: "https://lmnad.nntu.ru/api/v1/records/?api_key=",
             type: 'get',
             data: {
                 api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
@@ -92,7 +90,7 @@ function init () {
 
     function reset_request() {
         $.ajax({
-            url: "http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
+            url: "https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
         }).done(function(data) {
             myMap.geoObjects.removeAll();
             objectManager.removeAll();
