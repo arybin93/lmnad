@@ -3,6 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
 from django.db.models import Q
 from django.shortcuts import render
+from rest_framework.authtoken.models import Token
 
 # Third-party app imports
 from rest_framework import viewsets
@@ -11,8 +12,26 @@ from constance import config
 
 # Imports from our apps
 from igwatlas.models import Record, Source, PageData
-from igwatlas.api_serializers import RecordSerializer, SourceSerializer
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
 from lmnad.models import Project
+
+
+class YandexObject:
+    def __init__(self, type, features):
+        self.type = type
+        self.features = features
+
+
+def authenticate(api_key=None):
+    if not api_key:
+        return
+
+    try:
+        token = Token.objects.get(key=api_key)
+    except Token.DoesNotExist:
+        return
+
+    return token.user
 
 
 class RecordsViewSet(viewsets.ViewSet):
@@ -21,7 +40,7 @@ class RecordsViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """
-        List of records objects for Yandex map
+        List of records
         ---
         parameters_strategy: merge
         parameters:
@@ -31,6 +50,12 @@ class RecordsViewSet(viewsets.ViewSet):
               description: api key access to API
               paramType: query
               type: string
+            - name: is_yandex_map
+              required: false
+              defaultValue: 1
+              description: return objects for yandex map
+              paramType: query
+              type: boolean
             - name: types
               required: false
               defaultValue: 0,1,2
@@ -57,13 +82,15 @@ class RecordsViewSet(viewsets.ViewSet):
               type: string
         """
         api_key = request.GET.get('api_key', None)
+        is_yandex_map = int(request.GET.get('is_yandex_map', 1))
         types = request.GET.get('types', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         source_text = request.GET.get('source_text', None)
         # TODO: params for rectangle zone: two points
 
-        if api_key and api_key == config.API_KEY_IGWATLAS:
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
             records = Record.objects.all()
 
             if types:
@@ -80,55 +107,13 @@ class RecordsViewSet(viewsets.ViewSet):
             if source_text:
                 records = records.filter(source__source__icontains=source_text)
 
-            result_object = {
-                'type': 'FeatureCollection',
-                'features': []
-            }
-            for record in records:
-                lat = record.position.latitude
-                lon = record.position.longitude
+            # TODO: pagination
+            if is_yandex_map:
+                result = RecordYandexSerializer(YandexObject(type='FeatureCollection', features=records)).data
+            else:
+                result = RecordSerializer(records, many=True, context={'request': request}).data
 
-                short_text_source = ''
-                full_text_source = ''
-                link_text_source = ''
-                for source in record.source.all():
-                    short_text_source += source.source_short + ';'
-                    full_text_source += source.source + ';'
-                    if source.link:
-                        link_text_source += source.link + ';'
-
-                date = ''
-                if record.date:
-                    date = record.date.strftime('%d-%m-%Y')
-
-                img = ''
-                if record.image:
-                    img = (
-                        '<a target="_blank" href="{}">'
-                        '<img src="{}" style="height: 50px;" /></a><br/> '.format(
-                            record.image.url,
-                            record.image.url
-                        )
-                    )
-
-                obj = {
-                    'type': 'Feature',
-                    'id': record.id,
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': [lat, lon]
-                    },
-                    'properties': {
-                        'hintContent': short_text_source + str(record.position),
-                        'balloonContentHeader': record.get_text_types(),
-                        'balloonContentBody': full_text_source + "<br>" + img + "<br>" + str(record.position),
-                        'balloonContentFooter': link_text_source + ' ' + date,
-                        'clusterCaption': record.get_text_types()
-                    }
-                }
-                result_object['features'].append(obj)
-
-            return Response(result_object)
+            return Response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
