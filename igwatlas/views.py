@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 # Third-party app imports
 from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from constance import config
 
@@ -37,6 +38,7 @@ def authenticate(api_key=None):
 class RecordsViewSet(viewsets.ViewSet):
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
+    pagination_class = LimitOffsetPagination
 
     def list(self, request):
         """
@@ -80,6 +82,18 @@ class RecordsViewSet(viewsets.ViewSet):
               description: get records by source
               paramType: query
               type: string
+            - name: limit
+              required: false
+              defaultValue: 100
+              description: limit for records
+              paramType: query
+              type: integer
+            - name: offset
+              required: false
+              defaultValue: 0
+              description: offset for records
+              paramType: query
+              type: integer
         """
         api_key = request.GET.get('api_key', None)
         is_yandex_map = int(request.GET.get('is_yandex_map', 1))
@@ -107,15 +121,46 @@ class RecordsViewSet(viewsets.ViewSet):
             if source_text:
                 records = records.filter(source__source__icontains=source_text)
 
-            # TODO: pagination
-            if is_yandex_map:
-                result = RecordYandexSerializer(YandexObject(type='FeatureCollection', features=records)).data
-            else:
-                result = RecordSerializer(records, many=True, context={'request': request}).data
+            page_records = self.paginate_queryset(records)
+            if page_records is None:
+                page_records = records
 
-            return Response(result)
+            if is_yandex_map:
+                result = RecordYandexSerializer(YandexObject(type='FeatureCollection', features=page_records)).data
+            else:
+                result = RecordSerializer(page_records, many=True, context={'request': request}).data
+
+            return self.get_paginated_response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
 
 
 class SourceViewSet(viewsets.ModelViewSet):
