@@ -121,6 +121,7 @@ class Protection(models.Model):
     def save(self, *args, **kwargs):
         if self.is_send_email:
             template_text = get_template('lmnad/send_protection_email.txt')
+            template_html_text = get_template('lmnad/send_protection_email.html')
             context = {
                 'title': self.title,
                 'author': self.author,
@@ -130,12 +131,14 @@ class Protection(models.Model):
 
             recipient_list = config.LIST_EMAILS.split(',')
             body_text = template_text.render(context)
+            body_html_text = template_html_text.render(context)
             send_mail(
                 self.title,
                 body_text,
                 from_email='lmnad@nntu.ru',
                 recipient_list=recipient_list,
-                fail_silently=True
+                fail_silently=True,
+                html_message=body_html_text
             )
 
         super(Protection, self).save(*args, **kwargs)
@@ -306,6 +309,7 @@ class Wiki(models.Model):
 
 def send_email(title, text, date):
     template_text = get_template('lmnad/send_email.txt')
+    template_html_text = get_template('lmnad/send_email.html')
     context = {
         'title': title,
         'text': text,
@@ -314,11 +318,12 @@ def send_email(title, text, date):
 
     recipient_list = config.LIST_EMAILS.split(',')
     body_text = template_text.render(context)
+    body_html_text = template_html_text.render(context)
     send_mail(
         title,
         body_text,
         from_email='lmnad@nntu.ru',
         recipient_list=recipient_list,
         fail_silently=True,
-        html_message=body_text
+        html_message=body_html_text
     )

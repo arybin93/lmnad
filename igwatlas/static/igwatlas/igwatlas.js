@@ -1,9 +1,11 @@
 "use strict";
 
 var myMap;
+var RECORDS_URL = 'https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
+
 
 function init () {
      myMap = new ymaps.Map(
@@ -23,11 +25,7 @@ function init () {
      });
      myMap.geoObjects.add(objectManager);
 
-     $.ajax({
-        url: "https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
-     }).done(function(data) {
-        objectManager.add(data);
-     });
+     fetchData(objectManager, RECORDS_URL);
 
      // search form
      $('.datepicker').datepicker();
@@ -51,25 +49,32 @@ function init () {
             }
         }
 
-        // send request with params
-        $.ajax({
-            url: "https://lmnad.nntu.ru/api/v1/records/?api_key=",
-            type: 'get',
-            data: {
-                api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
-                types: types,
-                date_from: $('#date_from').val(),
-                date_to: $('#date_to').val(),
-                source_text: source_value.val()
-            }
-        }).done(function(data) {
-            console.log('done');
-            myMap.geoObjects.removeAll();
-            objectManager.removeAll();
-            console.log(data);
-            myMap.geoObjects.add(objectManager);
-            objectManager.add(data);
-        });
+        myMap.geoObjects.removeAll();
+        objectManager.removeAll();
+        myMap.geoObjects.add(objectManager);
+
+        function fetchSearchData(url) {
+            // send request with params
+            $.ajax({
+                url: url,
+                type: 'get',
+                data: {
+                    api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
+                    types: types,
+                    date_from: $('#date_from').val(),
+                    date_to: $('#date_to').val(),
+                    source_text: source_value.val()
+                }
+            }).done(function(data) {
+                objectManager.add(data['results']);
+                console.log(data);
+                if (data['next']) {
+                    fetchSearchData(data['next'])
+                }
+            });
+        }
+
+        fetchSearchData('https://lmnad.nntu.ru/api/v1/records/?api_key=');
 
         event.preventDefault();
     });
@@ -89,13 +94,21 @@ function init () {
     });
 
     function reset_request() {
+        myMap.geoObjects.removeAll();
+        objectManager.removeAll();
+        myMap.geoObjects.add(objectManager);
+        fetchData(objectManager, RECORDS_URL);
+    }
+
+    function fetchData(objectManager, url) {
         $.ajax({
-            url: "https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3"
+            url: url
         }).done(function(data) {
-            myMap.geoObjects.removeAll();
-            objectManager.removeAll();
-            myMap.geoObjects.add(objectManager);
-            objectManager.add(data);
+            objectManager.add(data['results']);
+            console.log(data);
+            if (data['next']) {
+                fetchData(objectManager, data['next'])
+            }
         });
     }
 }

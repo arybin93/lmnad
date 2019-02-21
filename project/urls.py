@@ -17,6 +17,7 @@ router.register('sources', SourceViewSet, base_name='sources')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
+    path('api/v1/rest-auth/', include('rest_auth.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 

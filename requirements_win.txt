@@ -25,6 +25,7 @@ PyYAML==3.13
 requests==2.19.1
 scipy==1.1.0
 yandex.translate==0.3.5
+django-rest-auth
 -e git+https://github.com/arybin93/django-formsetfield.git#egg=django_formsetfield
 -e git+https://github.com/deschler/django-modeltranslation.git#egg=django-modeltranslation
 -e git+https://github.com/applegrew/django-select2.git@82859121a6285d212d6d42ec8a9b65cf02ee5991#egg=django-select2
