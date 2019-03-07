@@ -16,6 +16,8 @@ PREREQ_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
     'rest_framework_swagger',
     'suit_redactor',
     'suit_ckeditor',
@@ -251,12 +253,12 @@ CKEDITOR_CONFIGS = {
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCLumlxQ35v472UxtM0RupR3cXkxm4nW0I'
 
-
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
+    'PAGE_SIZE': 100
 }
 
 CACHES = {

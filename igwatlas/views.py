@@ -3,25 +3,46 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
 from django.db.models import Q
 from django.shortcuts import render
+from rest_framework.authtoken.models import Token
 
 # Third-party app imports
 from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
 from igwatlas.models import Record, Source, PageData
-from igwatlas.api_serializers import RecordSerializer, SourceSerializer
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
 from lmnad.models import Project
+
+
+class YandexObject:
+    def __init__(self, type, features):
+        self.type = type
+        self.features = features
+
+
+def authenticate(api_key=None):
+    if not api_key:
+        return
+
+    try:
+        token = Token.objects.get(key=api_key)
+    except Token.DoesNotExist:
+        return
+
+    return token.user
 
 
 class RecordsViewSet(viewsets.ViewSet):
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
+    pagination_class = LimitOffsetPagination
 
     def list(self, request):
         """
-        List of records objects for Yandex map
+        List of records
         ---
         parameters_strategy: merge
         parameters:
@@ -31,6 +52,12 @@ class RecordsViewSet(viewsets.ViewSet):
               description: api key access to API
               paramType: query
               type: string
+            - name: is_yandex_map
+              required: false
+              defaultValue: 1
+              description: return objects for yandex map
+              paramType: query
+              type: boolean
             - name: types
               required: false
               defaultValue: 0,1,2
@@ -55,15 +82,29 @@ class RecordsViewSet(viewsets.ViewSet):
               description: get records by source
               paramType: query
               type: string
+            - name: limit
+              required: false
+              defaultValue: 100
+              description: limit for records
+              paramType: query
+              type: integer
+            - name: offset
+              required: false
+              defaultValue: 0
+              description: offset for records
+              paramType: query
+              type: integer
         """
         api_key = request.GET.get('api_key', None)
+        is_yandex_map = int(request.GET.get('is_yandex_map', 1))
         types = request.GET.get('types', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         source_text = request.GET.get('source_text', None)
         # TODO: params for rectangle zone: two points
 
-        if api_key and api_key == config.API_KEY_IGWATLAS:
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
             records = Record.objects.all()
 
             if types:
@@ -80,57 +121,46 @@ class RecordsViewSet(viewsets.ViewSet):
             if source_text:
                 records = records.filter(source__source__icontains=source_text)
 
-            result_object = {
-                'type': 'FeatureCollection',
-                'features': []
-            }
-            for record in records:
-                lat = record.position.latitude
-                lon = record.position.longitude
+            page_records = self.paginate_queryset(records)
+            if page_records is None:
+                page_records = records
 
-                short_text_source = ''
-                full_text_source = ''
-                link_text_source = ''
-                for source in record.source.all():
-                    short_text_source += source.source_short + ';'
-                    full_text_source += source.source + ';'
-                    if source.link:
-                        link_text_source += source.link + ';'
+            if is_yandex_map:
+                result = RecordYandexSerializer(YandexObject(type='FeatureCollection', features=page_records)).data
+            else:
+                result = RecordSerializer(page_records, many=True, context={'request': request}).data
 
-                date = ''
-                if record.date:
-                    date = record.date.strftime('%d-%m-%Y')
-
-                img = ''
-                if record.image:
-                    img = (
-                        '<a target="_blank" href="{}">'
-                        '<img src="{}" style="height: 50px;" /></a><br/> '.format(
-                            record.image.url,
-                            record.image.url
-                        )
-                    )
-
-                obj = {
-                    'type': 'Feature',
-                    'id': record.id,
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': [lat, lon]
-                    },
-                    'properties': {
-                        'hintContent': short_text_source + str(record.position),
-                        'balloonContentHeader': record.get_text_types(),
-                        'balloonContentBody': full_text_source + "<br>" + img + "<br>" + str(record.position),
-                        'balloonContentFooter': link_text_source + ' ' + date,
-                        'clusterCaption': record.get_text_types()
-                    }
-                }
-                result_object['features'].append(obj)
-
-            return Response(result_object)
+            return self.get_paginated_response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
 
 
 class SourceViewSet(viewsets.ModelViewSet):
