@@ -17,6 +17,8 @@ from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 from suit_ckeditor.widgets import CKEditorWidget
 from django import forms
 
+from lmnad.models import Account
+
 
 class RecordForm(ModelForm):
     #new_types = forms.MultipleChoiceField(widget=Select2MultipleWidget, choices=Record.TYPES, label='Тип', required=True)
@@ -33,7 +35,8 @@ class RecordForm(ModelForm):
             'date_stop': SuitSplitDateTimeWidget(),
             'source': Select2MultipleWidget,
             'file': Select2Widget,
-            'new_types': Select2MultipleWidget
+            'new_types': Select2MultipleWidget,
+            'user': Select2Widget
         }
 
 
@@ -51,10 +54,12 @@ class RowDateRangeFilter(DateRangeFilter):
 
 # IGWAtlas
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'image_field','position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source']
+    list_display = ['id', 'image_field','position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source',
+                    'is_verified']
+    list_editable = ['is_verified']
     form = RecordForm
     search_fields = ['id', 'position', 'image', 'source__source_short', 'source__source']
-    list_filter = ['new_types', ('date', RowDateRangeFilter)]
+    list_filter = ['is_verified', 'new_types', ('date', RowDateRangeFilter)]
     list_display_links = ['position', 'image_field']
 
     def get_types(self, obj):
@@ -79,6 +84,10 @@ class RecordAdmin(admin.ModelAdmin):
             <img src="{}" style="height: 50px;" /></a><br/>
         """.format(obj.image.url, obj.image.url))
     image_field.short_description = 'Изображение'
+
+    def save_model(self, request, obj, form, change):
+        obj.user = Account.objects.get(user = request.user)
+        super().save_model(request, obj, form, change)
 
 admin.site.register(Record, RecordAdmin)
 

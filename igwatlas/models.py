@@ -1,6 +1,10 @@
 from django.db import models
 from geoposition.fields import GeopositionField
+from igwcoeffs.models import TimeStampedModel
+
 import re
+
+from lmnad.models import Account
 
 
 class File(models.Model):
@@ -45,7 +49,7 @@ class RecordType(models.Model):
         return self.name
 
 
-class Record(models.Model):
+class Record(TimeStampedModel):
     MAP = 0
     GRAPHIC = 1
     SATELLITE = 2
@@ -79,6 +83,12 @@ class Record(models.Model):
                              verbose_name='Файл, источник изображения',
                              help_text='Если источник представлен одним файлом, данное поле можно не заполнять')
 
+    is_verified = models.BooleanField(default=True, verbose_name='Проверено',
+                                      help_text='Поставьте галочку, если запись проверена')
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, blank=True, null=True,
+                             related_name='records',
+                             verbose_name='Пользователь')
+
     class Meta:
         verbose_name = 'Наблюдение'
         verbose_name_plural = 'Наблюдения'
@@ -91,7 +101,6 @@ class Record(models.Model):
         for type in self.new_types.all():
             text += type.name + '; '
         return text
-
 
 class PageData(models.Model):
     MAP_TEXT = 0
