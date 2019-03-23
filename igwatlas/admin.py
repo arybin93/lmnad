@@ -56,7 +56,6 @@ class RowDateRangeFilter(DateRangeFilter):
 class RecordAdmin(admin.ModelAdmin):
     list_display = ['id', 'image_field','position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source',
                     'is_verified']
-    list_editable = ['is_verified']
     form = RecordForm
     search_fields = ['id', 'position', 'image', 'source__source_short', 'source__source']
     list_filter = ['is_verified', 'new_types', ('date', RowDateRangeFilter)]
@@ -102,9 +101,14 @@ class SourceForm(ModelForm):
 
 
 class SourceAdmin(admin.ModelAdmin):
-    list_display = ['source_short', 'link']
+    list_display = ['source_short', 'link', 'is_verified']
+    list_filter = ['is_verified']
     search_fields = ['source_short', 'source']
     form = SourceForm
+
+    def save_model(self, request, obj, form, change):
+        obj.user = Account.objects.get(user = request.user)
+        super().save_model(request, obj, form, change)
 
 admin.site.register(Source, SourceAdmin)
 
