@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, PageData
+from igwatlas.models import Record, Source, PageData, RecordType
 from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
 from lmnad.models import Project
 
@@ -133,6 +133,63 @@ class RecordsViewSet(viewsets.ViewSet):
             return self.get_paginated_response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    def create(self, request):
+        api_key = request.POST.get('api_key', None)
+        latitude = request.POST.get('latitude', None)
+        longitude = request.POST.get('longitude', None)
+        types = request.POST.get('types', None)
+        date = request.POST.get('date', None)
+        date_start = request.POST.get('date_start', None)
+        date_stop = request.POST.get('date_stop', None)
+        image = request.FILES.get('image', None)
+        source_id = request.POST.get('source', None)
+        page = request.POST.get('page', None)
+
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+
+            if not latitude and not longitude:
+                return Response({"success": False, 'reason': 'NOT_COORDINATES'})
+
+            if not types:
+                return Response({"success": False, 'reason': 'NOT_TYPE'})
+
+            if not image:
+                return Response({"success": False, 'reason': 'NOT_IMAGE'})
+
+            if not source_id:
+                return Response({"success": False, 'reason': 'NOT_SOURCE'})
+
+            try:
+                source_obj = Source.objects.get(id=source_id)
+            except Source.DoesNotExist:
+                return Response({"success": False, 'reason': 'SOURCE_NOT_FOUND'})
+
+            types_lst = types.split(',')
+            type_list_obj = []
+            for type_str in types_lst:
+                try:
+                    type = RecordType.objects.get(value=type_str)
+                except RecordType.DoesNotExist:
+                    return Response({"success": False, 'reason': 'RECORD_TYPE_NOT_FOUND'})
+                else:
+                    type_list_obj.append(type)
+
+            position = '{}, {}'.format(latitude, longitude)
+            new_record = Record.objects.create(position=position, image=image, page=page, is_verified=False,
+                                               date=date, date_start=date_start, date_stop=date_stop)
+
+            for type in type_list_obj:
+                new_record.new_types.add(type)
+
+            new_record.source.add(source_obj)
+            new_record.save()
+            return Response({"success": True})
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+
 
     @property
     def paginator(self):

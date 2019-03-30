@@ -99,7 +99,6 @@ class SourceForm(ModelForm):
             'files': Select2MultipleWidget,
         }
 
-
 class SourceAdmin(admin.ModelAdmin):
     list_display = ['source_short', 'link', 'is_verified']
     list_filter = ['is_verified']

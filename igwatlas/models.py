@@ -32,7 +32,11 @@ class Source(models.Model):
                                    help_text='Один источник может быть представлен в нескольких файлах')
     link = models.CharField(max_length=200, null=True, blank=True,
                             verbose_name='Ссылка', help_text='Если есть')
-
+    is_verified = models.BooleanField(default=True, verbose_name='Проверено',
+                                      help_text='Поставьте галочку, если источник проверен')
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, blank=True, null=True,
+                             related_name='source',
+                             verbose_name='Пользователь')
     class Meta:
         verbose_name = 'Источник'
         verbose_name_plural = 'Источники'
