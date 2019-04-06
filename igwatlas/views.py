@@ -2,7 +2,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.authtoken.models import Token
 
 # Third-party app imports
@@ -163,9 +163,10 @@ class RecordsViewSet(viewsets.ViewSet):
         return self.paginator.get_paginated_response(data)
 
 
-class SourceViewSet(viewsets.ModelViewSet):
+class SourceViewSet(viewsets.ViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
+    pagination_class = LimitOffsetPagination
 
     def list(self, request):
         """
@@ -196,19 +197,52 @@ class SourceViewSet(viewsets.ModelViewSet):
             else:
                 sources_list = Source.objects.all()
 
-            page = request.GET.get('page', 1)
-            paginator = Paginator(sources_list, 15)
+            page_sources = self.paginate_queryset(sources_list)
+            if page_sources is None:
+                page_sources = sources_list
 
-            try:
-                sources = paginator.page(page)
-            except PageNotAnInteger:
-                sources = paginator.page(1)
-            except EmptyPage:
-                sources = paginator.page(paginator.num_pages)
+            result = SourceSerializer(page_sources, many=True, context={'request': request}).data
 
-            return Response(sources)
+            return self.get_paginated_response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    def retrieve(self, request, pk=None):
+        api_key = request.GET.get('api_key', None)
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+            queryset = Source.objects.all()
+            source = get_object_or_404(queryset, pk=pk)
+            return Response(SourceSerializer(source).data)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
 
 
 def igwatlas(request):
