@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, PageData, RecordType
+from igwatlas.models import Record, Source, PageData, RecordType, File
 from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
 from lmnad.models import Project
 
@@ -178,7 +178,7 @@ class RecordsViewSet(viewsets.ViewSet):
 
             position = '{}, {}'.format(latitude, longitude)
             new_record = Record.objects.create(position=position, image=image, page=page, is_verified=False,
-                                               date=date, date_start=date_start, date_stop=date_stop)
+                                               date=date, date_start=date_start, date_stop=date_stop, user=user)
 
             for type in type_list_obj:
                 new_record.new_types.add(type)
@@ -267,6 +267,38 @@ class SourceViewSet(viewsets.ModelViewSet):
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
+
+    def create(self, request):
+        api_key = request.POST.get('api_key', None)
+        source_short = request.POST.get('source_short', None)
+        source = request.POST.get('source', None)
+        files = request.FILES.getlist('files', None)
+        link = request.POST.get('link', None)
+
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+            if not source_short:
+                return Response({"success": False, 'reason': 'NOT_SHORT_SOURCE'})
+
+            if not source:
+                return Response({"success": False, 'reason': 'NOT_SOURCE'})
+
+            if not files:
+                return Response({"success": False, 'reason': 'NOT_FILE'})
+
+            file_list_obj = []
+            for file in files:
+                new_file = File.objects.create(file=file)
+                file_list_obj.append(new_file)
+
+            new_source = Source.objects.create(source_short=source_short, source=source, is_verified=False,
+                                               link=link, user=user)
+            for new_file in file_list_obj:
+                new_source.files.add(new_file)
+
+            return Response({"success": True, 'source_id': new_source.id})
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
 def igwatlas(request):
     """ IGW Atlas main page """

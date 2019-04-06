@@ -1,7 +1,7 @@
 "use strict";
 
 var myMap;
-var RECORDS_URL = 'https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
+var RECORDS_URL = 'http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
@@ -74,7 +74,7 @@ function init () {
             });
         }
 
-        fetchSearchData('https://lmnad.nntu.ru/api/v1/records/?api_key=');
+        fetchSearchData('http://localhost:8000/api/v1/records/?api_key=');
 
         event.preventDefault();
     });
@@ -111,4 +111,12 @@ function init () {
             }
         });
     }
+
+    //handler right click
+    myMap.events.add('click', function(e){
+        //myMap.hint.open(e.get('coords'), 'Create new record');
+        $("#create").modal();
+
+
+    });
 }

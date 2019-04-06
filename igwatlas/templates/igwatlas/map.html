@@ -83,6 +83,43 @@
                  </div>
              </div>
          </div>
+
+
+         <!--Model form for create record-->
+         <div id="create" class="modal fade" role="dialog">
+                 <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"> {% trans "Create record" %}</h4>
+                      </div>
+                      <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="id_label_types" class="col-sm-2 control-label">
+                                    {% trans 'Select types' %}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select class="types_multiple" id="id_label_types" multiple="multiple" style="width: 100%">
+                                        <option value="0">{% trans "Map" %}</option>
+                                        <option value="1">{% trans "Graphic" %}</option>
+                                        <option value="2">{% trans "Satellite" %}</option>
+                                        <option value="3">{% trans "Record" %}</option>
+                                        <option value="4">{% trans "Table" %}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                          <button id='create_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close and clear" %}</button>
+                          <button id='create_btn' type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Create" %}</button>
+                      </div>
+                    </div>
+                 </div>
+             </div>
          <br>
          <div class="row">
              <div id="map"></div>
