@@ -114,9 +114,47 @@ function init () {
 
     //handler right click
     myMap.events.add('click', function(e){
-        //myMap.hint.open(e.get('coords'), 'Create new record');
+        myMap.hint.open(e.get('coords'), 'Create new record');
         $("#create").modal();
 
 
+
+    $("#add_record_button").click(function (event){
+        var types_value = $('#id_for_types');
+        var date_value = $('#id_for_date');
+        var image_value = $('#id_for_image');
+        var source_id = $('#id_for_source');
+        var page_value = $('#id_for_page');
+
+        var image = image_value[0].files;
+        var formData = new FormData();
+            formData.append('api_key', 'd837d31970deb03ee35c416c5a66be1bba9f56d3');
+            formData.append('latitude', e.get('coords'));
+            formData.append('longitude', '');
+            formData.append('types', types_value.val());
+            formData.append('image', image[0]);
+            formData.append('source', source_id.val());
+            formData.append('page', page_value.val());
+            formData.append('date', date_value.val());
+            if (formData) {
+                $.ajax({
+                    url: 'http://localhost:8000/api/v1/records/',
+                    method: 'post',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    enctype: 'multipart/form-data',
+                    success: function (response) {
+                        alert(response)
+                    }, error: function () {
+                        alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
+                    }
+                });
+            }
+        event.preventDefault();
+
+        });
     });
 }
+
+

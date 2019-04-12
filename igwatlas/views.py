@@ -301,7 +301,6 @@ class SourceViewSet(viewsets.ViewSet):
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
-
     def create(self, request):
         api_key = request.POST.get('api_key', None)
         source_short = request.POST.get('source_short', None)
