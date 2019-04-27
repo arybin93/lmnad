@@ -105,7 +105,7 @@ class RecordsViewSet(viewsets.ViewSet):
 
         user = authenticate(api_key)
         if api_key and (api_key == config.API_KEY_IGWATLAS or user):
-            records = Record.objects.all()
+            records = Record.objects.filter(is_verified=True)
 
             if types:
                 types_lst = types.rstrip(',').split(',')
@@ -175,6 +175,8 @@ class RecordsViewSet(viewsets.ViewSet):
                     return Response({"success": False, 'reason': 'RECORD_TYPE_NOT_FOUND'})
                 else:
                     type_list_obj.append(type)
+            longitude = round(float(longitude), 3)
+            latitude = round(float(latitude), 3)
 
             position = '{}, {}'.format(latitude, longitude)
             new_record = Record.objects.create(position=position, image=image, page=page, is_verified=False,

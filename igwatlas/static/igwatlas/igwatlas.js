@@ -6,6 +6,23 @@ var RECORDS_URL = 'http://localhost:8000/api/v1/records/?api_key=d837d31970deb03
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 
 function init () {
      myMap = new ymaps.Map(
@@ -18,6 +35,20 @@ function init () {
         }
      );
 
+     //set CSRF token
+     var csrftoken = getCookie('csrftoken');
+
+     function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+     }
+     $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+     });
      var objectManager = new ymaps.ObjectManager({
          clusterize: true,
          gridSize: 32,
@@ -129,8 +160,8 @@ function init () {
         var image = image_value[0].files;
         var formData = new FormData();
             formData.append('api_key', 'd837d31970deb03ee35c416c5a66be1bba9f56d3');
-            formData.append('latitude', e.get('coords'));
-            formData.append('longitude', '');
+            formData.append('latitude', e.get('coords')[0]);
+            formData.append('longitude', e.get('coords')[1]);
             formData.append('types', types_value.val());
             formData.append('image', image[0]);
             formData.append('source', source_id.val());
