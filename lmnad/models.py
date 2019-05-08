@@ -18,6 +18,18 @@ class Images(TimeStampedModel):
         return self.file.name
 
 
+class File(models.Model):
+    file = models.FileField(upload_to='uploads/lmnad/files', max_length=500,
+                            blank=True, null=True, verbose_name='Файл')
+
+    class Meta:
+        verbose_name = 'Файл'
+        verbose_name_plural = 'Файлы'
+
+    def __str__(self):
+        return self.file.name
+
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True, verbose_name='Персональная страница',
@@ -209,10 +221,14 @@ class Project(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название проекта на английском',
                             help_text='Используется для перехода на страницу')
     title = models.CharField(max_length=200, verbose_name='Заголовок')
-    short_text = models.TextField(blank=True, null=True, verbose_name='Короткое описание')
+    short_text = models.TextField(blank=True, null=True, verbose_name='Краткое описание')
     text = models.TextField(verbose_name='Текст')
     link = models.CharField(max_length=100, blank=True, verbose_name='Ссылка на проект')
     is_only_user = models.BooleanField(default=False, verbose_name='Доступно зарегистрированным пользователям')
+    images = models.ManyToManyField(Images, blank=True, verbose_name='Изображения',
+                                    help_text='Для отображения на странице проекта')
+    documents = models.ManyToManyField(File, blank=True, verbose_name='Документы',
+                                       help_text='Для доступа на странице проекта')
     order_by = models.PositiveIntegerField(verbose_name='Сортировать', default=0)
 
     class MPTTMeta:

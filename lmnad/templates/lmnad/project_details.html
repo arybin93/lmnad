@@ -1,4 +1,5 @@
 {% extends 'lmnad/base.html' %}
+{% load filename %}
 {% load i18n %}
 
 {% block content %}
@@ -6,5 +7,21 @@
     {{ project.text | safe }}
     {% if project.link %}
         <a href="{{ project.link }}"> {% trans 'Go to project' %} </a>
+    {% endif %}
+    {% if project.documents.all %}
+    <p>
+        {% for doc in project.documents.all %}
+            <a href="{{ doc.file.url }}">{{ doc.file|getfilename }}</a>
+        {% endfor %}
+    </p>
+    {% endif %}
+    {% if project.images.all %}
+        <p>
+            {% for image in project.images.all %}
+                <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                    <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="100">
+                </a>
+            {% endfor %}
+        </p>
     {% endif %}
 {% endblock %}
