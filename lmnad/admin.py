@@ -297,7 +297,9 @@ class ProjectForm(ModelForm):
             'text_ru': CKEditorWidget(),
             'short_text_ru': CKEditorWidget(),
             'text_en': CKEditorWidget(),
-            'short_text_en': CKEditorWidget()
+            'short_text_en': CKEditorWidget(),
+            'images': Select2MultipleWidget(),
+            'documents': Select2MultipleWidget()
         }
 
 
@@ -305,15 +307,8 @@ class ProjectAdmin(TabbedTranslationAdmin, SortableModelAdmin):
     form = ProjectForm
     list_display = ['title', 'order_by']
     search_fields = ['title']
-    fields = ['name', 'title', 'short_text', 'text', 'link', 'is_only_user']
+    fields = ['name', 'title', 'short_text', 'text', 'link', 'is_only_user', 'images', 'documents']
     sortable = 'order_by'
-
-    def thumbnail(self, obj):
-        if obj.image:
-            return '<img src="{}" />'.format(obj.image.url_thumbnail)
-        else:
-            return ""
-    thumbnail.allow_tags = True
 
 admin.site.register(Project, ProjectAdmin)
 
@@ -332,3 +327,4 @@ class WikiAdmin(admin.ModelAdmin):
 
 admin.site.register(Wiki, WikiAdmin)
 admin.site.register(Images)
+admin.site.register(File)
