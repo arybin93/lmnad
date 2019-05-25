@@ -3,105 +3,113 @@
 {% load i18n %}
 
 {% block content %}
-     <div class="container">
-         <br>
-         <div class="row">
-             <div class="col-sm-12">
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
                 <div class="text-center">
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#search" style="width:20%">
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#search"
+                            style="width:20%">
                         {% trans "Search" %}
                     </button>
                 </div>
             </div>
 
-             <!-- Modal -->
-             <div id="search" class="modal fade" role="dialog">
-                 <div class="modal-dialog">
+            <!-- Modal -->
+            <div id="search" class="modal fade" role="dialog">
+                <div class="modal-dialog">
                     <!-- Modal content-->
                     <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title"> {% trans "Search" %}</h4>
-                      </div>
-                      <div class="modal-body">
-                        <form class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <label for="id_label_types" class="col-sm-2 control-label">
-                                    {% trans 'Select types' %}
-                                </label>
-                                <div class="col-sm-10">
-                                    <select class="types_multiple" id="id_label_types" multiple="multiple" style="width: 100%">
-                                        <option value="0">{% trans "Map" %}</option>
-                                        <option value="1">{% trans "Graphic" %}</option>
-                                        <option value="2">{% trans "Satellite" %}</option>
-                                        <option value="3">{% trans "Record" %}</option>
-                                        <option value="4">{% trans "Table" %}</option>
-                                    </select>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"> {% trans "Search" %}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="id_label_types" class="col-sm-2 control-label">
+                                        {% trans 'Select types' %}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <select class="types_multiple" id="id_label_types" multiple="multiple"
+                                                style="width: 100%">
+                                            <option value="0">{% trans "Map" %}</option>
+                                            <option value="1">{% trans "Graphic" %}</option>
+                                            <option value="2">{% trans "Satellite" %}</option>
+                                            <option value="3">{% trans "Record" %}</option>
+                                            <option value="4">{% trans "Table" %}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="date_from" class="col-sm-2 control-label">
-                                    {% trans "Select date from" %}
-                                </label>
-                                <div class="col-sm-10">
-                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-                                        <input id="date_from" type="text" class="form-control">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
+                                <div class="form-group">
+                                    <label for="date_from" class="col-sm-2 control-label">
+                                        {% trans "Select date from" %}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group date" data-provide="datepicker"
+                                             data-date-format="yyyy-mm-dd">
+                                            <input id="date_from" type="text" class="form-control">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="date_to" class="col-sm-2 control-label">
-                                    {% trans "Select date to" %}
-                                </label>
-                                <div class="col-sm-10">
-                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                                <div class="form-group">
+                                    <label for="date_to" class="col-sm-2 control-label">
+                                        {% trans "Select date to" %}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group date" data-provide="datepicker"
+                                             data-date-format="yyyy-mm-dd">
                                             <input id="date_to" type="text" class="form-control">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="id_label_sources" class="col-sm-2 control-label">
-                                    {% trans "Source" %}
-                                </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="id_label_sources" placeholder="{% trans "Source" %} ">
+                                <div class="form-group">
+                                    <label for="id_label_sources" class="col-sm-2 control-label">
+                                        {% trans "Source" %}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="id_label_sources"
+                                               placeholder="{% trans "Source" %} ">
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                      </div>
-                      <div class="modal-footer">
-                          <button id='search_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close and clear" %}</button>
-                          <button id='search_btn' type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Search" %}</button>
-                      </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button id='search_cancel' type="button" class="btn btn-default"
+                                    data-dismiss="modal">{% trans "Close and clear" %}</button>
+                            <button id='search_btn' type="button" class="btn btn-primary"
+                                    data-dismiss="modal">{% trans "Search" %}</button>
+                        </div>
                     </div>
-                 </div>
-             </div>
-         </div>
+                </div>
+            </div>
+        </div>
 
 
-         <!--Model form for create record-->
-         <div id="create" class="modal fade" role="dialog">
-                 <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
+        <!--Model form for create record-->
+        <div id="create" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title"> {% trans "Create record" %}</h4>
-                      </div>
-                      <div class="modal-body">
+                    </div>
+                    <div class="modal-body">
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <label for="id_for_types" class="col-sm-2 control-label">
                                     {% trans 'Select types' %}
                                 </label>
                                 <div class="col-sm-10">
-                                    <select class="types_multiple" id="id_for_types" multiple="multiple" style="width: 100%">
+                                    <select class="types_multiple" id="id_for_types" multiple="multiple"
+                                            style="width: 100%">
                                         <option value="0">{% trans "Map" %}</option>
                                         <option value="1">{% trans "Graphic" %}</option>
                                         <option value="2">{% trans "Satellite" %}</option>
@@ -111,11 +119,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="checkbox_for_date_range" class="col-sm-2 control-label">
+                                    {% trans "Enable checkboxes below for " %}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="checkbox" name="enable_checkbox" class="form-control"
+                                           id="checkbox_for_date_range">
+                                </div>
+                            </div>
+                            <div class="form-group" id="id_control_date">
                                 <label for="id_for_date" class="col-sm-2 control-label">
                                     {% trans "Date of observation" %}
                                 </label>
                                 <div class="col-sm-10">
-                                    <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                                    <div class="input-group datetime" data-provide="datepicker"
+                                         data-date-format="yyyy-mm-dd">
                                         <input id="id_for_date" type="text" class="form-control">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
@@ -123,6 +141,34 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group" id="id_control_date_from">
+                                <label for="id_for_date_from" class="col-sm-2 control-label">
+                                    {% trans "Select date from" %}
+                                </label>
+                                <div class="col-sm-10">
+                                    <div class="input-group date" data-provide="datepicker"
+                                         data-date-format="yyyy-mm-dd">
+                                        <input id="id_for_date_from" type="text" class="form-control">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="id_control_date_to">
+                                    <label for="id_for_date_to" class="col-sm-2 control-label">
+                                        {% trans "Select date to" %}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group date" data-provide="datepicker"
+                                             data-date-format="yyyy-mm-dd">
+                                            <input id="id_for_date_to" type="text" class="form-control">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <div class="form-group">
                                 <label for="id_for_image" class="col-sm-2 control-label">
                                     {% trans "Choose file" %}
@@ -137,7 +183,7 @@
                                     {% trans "Source" %}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="id_for_source" placeholder="{% trans "Source" %} ">
+                                    <select id="id_for_source" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -145,24 +191,35 @@
                                     {% trans "Page" %}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="id_for_page" placeholder="{% trans "Page" %} ">
+                                    <input type="text" class="form-control" id="id_for_page"
+                                           placeholder="{% trans "Page" %} ">
                                 </div>
                             </div>
 
                         </form>
 
-                      </div>
-                      <div class="modal-footer">
-                          <button id='create_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close and clear" %}</button>
-                          <button id='add_record_button' type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Create" %}</button>
-                      </div>
                     </div>
-                 </div>
-             </div>
-         <br>
-         <div class="row">
-             <div id="map"></div>
-         </div>
-         <br>
-     </div>
+
+                    <div class="modal-footer">
+                        <button id='create_cancel' type="button" class="btn btn-default"
+                                data-dismiss="modal">{% trans "Close and clear" %}</button>
+                        <button id='add_record_button' type="button" class="btn btn-primary"
+                                data-dismiss="modal">{% trans "Create" %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-success hidden" id="success-alert">
+            <button type="button" class="close">x</button>
+            <span class="glyphicon glyphicon-ok"></span>
+            <p> Наблюдение успешно добавлено. Благодарим за Ваш вклад в развитие проекта! </p>
+
+        </div>
+        <br>
+        <div class="row">
+            <div id="map"></div>
+        </div>
+        <br>
+    </div>
+
 {% endblock %}
