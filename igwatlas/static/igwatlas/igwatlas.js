@@ -1,8 +1,8 @@
 "use strict";
 
 var myMap;
-var RECORDS_URL = 'http://localhost:8000/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
-var SOURCE_URL = 'http://localhost:8000/api/v1/sources/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
+var RECORDS_URL = 'https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
+var SOURCE_URL = 'https://lmnad.nntu.ru/api/v1/sources/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
 
@@ -119,7 +119,7 @@ function init() {
             });
         }
 
-        fetchSearchData('http://localhost:8000/api/v1/records/?api_key=');
+        fetchSearchData('https://lmnad.nntu.ru/api/v1/records/?api_key=');
 
         event.preventDefault();
     });
@@ -238,7 +238,7 @@ function init() {
 
             if (formData) {
                 $.ajax({
-                    url: 'http://localhost:8000/api/v1/records/',
+                    url: 'https://lmnad.nntu.ru/api/v1/records/',
                     method: 'post',
                     processData: false,
                     contentType: false,
