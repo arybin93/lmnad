@@ -24,22 +24,19 @@ function getCookie(name) {
 
 
 function init() {
-
     $("#checkbox_for_date_range").click(function (event) {
         var date_value = $('#id_control_date');
         var date_from_value = $('#id_control_date_from');
         var date_to_value = $('#id_control_date_to');
-        /*console.log(event.target.checked);
-        console.log(typeof event.target.checked);
-        console.log(event.target.checked == true);
-        if (event.target.checked == true) {
+        if (event.target.checked) {
             date_value.hide();
             date_from_value.show();
             date_to_value.show();
-        }*/
-       date_value.hide();
-       date_from_value.hide();
-       date_to_value.hide();
+        } else {
+            date_value.show();
+            date_from_value.hide();
+            date_to_value.hide();
+        }
     });
     myMap = new ymaps.Map(
         'map',
@@ -160,6 +157,21 @@ function init() {
         });
     }
 
+    function clearFormCreate(){
+        $('#id_for_types').val([]);
+        $('#id_for_types').select2({
+            placeholder: "Select types",
+            allowClear: true
+        });
+        $('#id_for_date').val('');
+        $('#id_for_image').val('');
+        $('#id_for_page').val('');
+        $('#id_for_date_from').val('');
+        $('#id_for_date_to').val('');
+        $('#id_for_source').val('');
+        $('#checkbox_for_date_range').removeAttr('checked');
+    }
+
     //handler right click
     myMap.events.add('click', function (e) {
         myMap.hint.open(e.get('coords'), 'Create new record');
@@ -201,6 +213,9 @@ function init() {
             var date_value = $('#id_for_date');
             var image_value = $('#id_for_image');
             var page_value = $('#id_for_page');
+            var date_from_value = $('#id_for_date_from');
+            var date_to_value = $('#id_for_date_to');
+            var checkbox_value = $('#checkbox_for_date_range');
 
             var source = $('#id_for_source').find(':selected');
 
@@ -213,7 +228,14 @@ function init() {
             formData.append('image', image[0]);
             formData.append('source', source.val());
             formData.append('page', page_value.val());
-            formData.append('date', date_value.val());
+            if (checkbox_value[0].checked) {
+                formData.append('date_start', date_from_value.val());
+                formData.append('date_stop', date_to_value.val());
+            }
+            else {
+                formData.append('date', date_value.val());
+            }
+
             if (formData) {
                 $.ajax({
                     url: 'http://localhost:8000/api/v1/records/',
@@ -223,7 +245,8 @@ function init() {
                     data: formData,
                     enctype: 'multipart/form-data',
                     success: function (response) {
-                        console.log(response)
+                        console.log(response);
+                        clearFormCreate();
                     }, error: function () {
                         alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
                     }
