@@ -2,7 +2,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Max, Min
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.authtoken.models import Token
 
 # Third-party app imports
@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, PageData
+from igwatlas.models import Record, Source, PageData, RecordType, File
 from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
 from lmnad.models import Project
 
@@ -105,7 +105,7 @@ class RecordsViewSet(viewsets.ViewSet):
 
         user = authenticate(api_key)
         if api_key and (api_key == config.API_KEY_IGWATLAS or user):
-            records = Record.objects.all()
+            records = Record.objects.filter(is_verified=True)
 
             if types:
                 types_lst = types.rstrip(',').split(',')
@@ -131,6 +131,147 @@ class RecordsViewSet(viewsets.ViewSet):
                 result = RecordSerializer(page_records, many=True, context={'request': request}).data
 
             return self.get_paginated_response(result)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    def create(self, request):
+        api_key = request.POST.get('api_key', None)
+        latitude = request.POST.get('latitude', None)
+        longitude = request.POST.get('longitude', None)
+        types = request.POST.get('types', None)
+        date = request.POST.get('date', None)
+        date_start = request.POST.get('date_start', None)
+        date_stop = request.POST.get('date_stop', None)
+        image = request.FILES.get('image', None)
+        source_id = request.POST.get('source', None)
+        page = request.POST.get('page', None)
+
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+
+            if not latitude and not longitude:
+                return Response({"success": False, 'reason': 'NOT_COORDINATES'})
+
+            if not types:
+                return Response({"success": False, 'reason': 'NOT_TYPE'})
+
+            if not image:
+                return Response({"success": False, 'reason': 'NOT_IMAGE'})
+
+            if not source_id:
+                return Response({"success": False, 'reason': 'NOT_SOURCE'})
+
+            try:
+                source_obj = Source.objects.get(id=source_id)
+            except Source.DoesNotExist:
+                return Response({"success": False, 'reason': 'SOURCE_NOT_FOUND'})
+
+            types_lst = types.split(',')
+            type_list_obj = []
+            for type_str in types_lst:
+                try:
+                    type = RecordType.objects.get(value=type_str)
+                except RecordType.DoesNotExist:
+                    return Response({"success": False, 'reason': 'RECORD_TYPE_NOT_FOUND'})
+                else:
+                    type_list_obj.append(type)
+            longitude = round(float(longitude), 3)
+            latitude = round(float(latitude), 3)
+
+            position = '{}, {}'.format(latitude, longitude)
+            new_record = Record.objects.create(position=position, image=image, page=page, is_verified=False,
+                                               date=date, date_start=date_start, date_stop=date_stop, user=user)
+
+            for type in type_list_obj:
+                new_record.new_types.add(type)
+
+            new_record.source.add(source_obj)
+            new_record.save()
+            return Response({"success": True})
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+
+
+    @property
+    def paginator(self):
+        """
+        The paginator instance associated with the view, or `None`.
+        """
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        """
+        Return a single page of results, or `None` if pagination is disabled.
+        """
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+    def get_paginated_response(self, data):
+        """
+        Return a paginated style `Response` object for the given output data.
+        """
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+
+
+class SourceViewSet(viewsets.ViewSet):
+    queryset = Source.objects.all()
+    serializer_class = SourceSerializer
+    pagination_class = LimitOffsetPagination
+
+    def list(self, request):
+        """
+        List of records objects for Yandex map
+        ---
+        parameters_strategy: merge
+        parameters:
+            - name: api_key
+              required: true
+              defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+              description: api key access to API
+              paramType: query
+              type: string
+            - name: query
+              required: false
+              defaultValue: Christopher R. Jackson, 2004
+              description: get records by source
+              paramType: query
+              type: string
+        """
+        api_key = request.GET.get('api_key', None)
+        query = request.GET.get('query', None)
+
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+
+            if query:
+                sources_list = Source.objects.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
+            else:
+                sources_list = Source.objects.all()
+
+            page_sources = self.paginate_queryset(sources_list)
+            if page_sources is None:
+                page_sources = sources_list
+
+            result = SourceSerializer(page_sources, many=True, context={'request': request}).data
+
+            return self.get_paginated_response(result)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    def retrieve(self, request, pk=None):
+        api_key = request.GET.get('api_key', None)
+        if api_key and api_key == config.API_KEY_IGWATLAS:
+            queryset = Source.objects.all()
+            source = get_object_or_404(queryset, pk=pk)
+            return Response(SourceSerializer(source).data)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
@@ -162,54 +303,37 @@ class RecordsViewSet(viewsets.ViewSet):
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
+    def create(self, request):
+        api_key = request.POST.get('api_key', None)
+        source_short = request.POST.get('source_short', None)
+        source = request.POST.get('source', None)
+        files = request.FILES.getlist('files', None)
+        link = request.POST.get('link', None)
 
-class SourceViewSet(viewsets.ModelViewSet):
-    queryset = Source.objects.all()
-    serializer_class = SourceSerializer
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+            if not source_short:
+                return Response({"success": False, 'reason': 'NOT_SHORT_SOURCE'})
 
-    def list(self, request):
-        """
-        List of records objects for Yandex map
-        ---
-        parameters_strategy: merge
-        parameters:
-            - name: api_key
-              required: true
-              defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
-              description: api key access to API
-              paramType: query
-              type: string
-            - name: query
-              required: false
-              defaultValue: Christopher R. Jackson, 2004
-              description: get records by source
-              paramType: query
-              type: string
-        """
-        api_key = request.GET.get('api_key', None)
-        query = request.GET.get('query', None)
+            if not source:
+                return Response({"success": False, 'reason': 'NOT_SOURCE'})
 
-        if api_key and api_key == config.API_KEY_IGWATLAS:
+            if not files:
+                return Response({"success": False, 'reason': 'NOT_FILE'})
 
-            if query:
-                sources_list = Source.objects.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
-            else:
-                sources_list = Source.objects.all()
+            file_list_obj = []
+            for file in files:
+                new_file = File.objects.create(file=file)
+                file_list_obj.append(new_file)
 
-            page = request.GET.get('page', 1)
-            paginator = Paginator(sources_list, 15)
+            new_source = Source.objects.create(source_short=source_short, source=source, is_verified=False,
+                                               link=link, user=user)
+            for new_file in file_list_obj:
+                new_source.files.add(new_file)
 
-            try:
-                sources = paginator.page(page)
-            except PageNotAnInteger:
-                sources = paginator.page(1)
-            except EmptyPage:
-                sources = paginator.page(paginator.num_pages)
-
-            return Response(sources)
+            return Response({"success": True, 'source_id': new_source.id})
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
-
 
 def igwatlas(request):
     """ IGW Atlas main page """
