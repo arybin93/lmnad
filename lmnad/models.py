@@ -43,7 +43,7 @@ class Account(models.Model):
         if self.user.get_full_name():
             return self.user.get_full_name()
         else:
-            return self.user.first_name
+            return self.user.username
 
     def get_absolute_url(self):
         return "/profile/{}/".format(self.user.username)
