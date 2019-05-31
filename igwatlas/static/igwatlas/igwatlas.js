@@ -4,6 +4,8 @@ var myMap;
 var RECORDS_URL = 'https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 var SOURCE_URL = 'https://lmnad.nntu.ru/api/v1/sources/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 var ADD_RECORD_URl = 'https://lmnad.nntu.ru/api/v1/records/';
+var current_coordinates = null;
+
 
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
@@ -179,6 +181,7 @@ function init() {
     myMap.events.add('click', function (e) {
         $("#create").modal();
         console.log('Open modal dialog');
+        current_coordinates = e.get('coords');
 
         $('#id_for_source').select2({
             ajax: {
@@ -209,60 +212,61 @@ function init() {
                 }
             }
         });
+    });
 
-        // Handler for Add New Record
-        $("#add_record_button").one('click', function (event) {
-            console.log('Click add record button');
-            event.preventDefault();
-            var types_value = $('#id_for_types');
-            var date_value = $('#id_for_date');
-            var image_value = $('#id_for_image');
-            var page_value = $('#id_for_page');
-            var date_from_value = $('#id_for_date_from');
-            var date_to_value = $('#id_for_date_to');
-            var checkbox_value = $('#checkbox_for_date_range');
+    // Handler for Add New Record
+    $("#add_record_button").click(function (event) {
+        console.log('Click add record button');
+        event.preventDefault();
+        var types_value = $('#id_for_types');
+        var date_value = $('#id_for_date');
+        var image_value = $('#id_for_image');
+        var page_value = $('#id_for_page');
+        var date_from_value = $('#id_for_date_from');
+        var date_to_value = $('#id_for_date_to');
+        var checkbox_value = $('#checkbox_for_date_range');
 
-            var source = $('#id_for_source').find(':selected');
+        var source = $('#id_for_source').find(':selected');
 
-            var image = image_value[0].files;
-            var formData = new FormData();
-            formData.append('api_key', 'd837d31970deb03ee35c416c5a66be1bba9f56d3');
-            formData.append('latitude', e.get('coords')[0]);
-            formData.append('longitude', e.get('coords')[1]);
-            formData.append('types', types_value.val());
-            formData.append('image', image[0]);
-            formData.append('source', source.val());
-            formData.append('page', page_value.val());
-            if (checkbox_value[0].checked) {
-                formData.append('date_start', date_from_value.val());
-                formData.append('date_stop', date_to_value.val());
-            }
-            else {
-                formData.append('date', date_value.val());
-            }
+        var image = image_value[0].files;
+        var formData = new FormData();
+        formData.append('api_key', 'd837d31970deb03ee35c416c5a66be1bba9f56d3');
+        formData.append('latitude', current_coordinates[0]);
+        formData.append('longitude', current_coordinates[1]);
+        formData.append('types', types_value.val());
+        formData.append('image', image[0]);
+        formData.append('source', source.val());
+        formData.append('page', page_value.val());
+        if (checkbox_value[0].checked) {
+            formData.append('date_start', date_from_value.val());
+            formData.append('date_stop', date_to_value.val());
+        }
+        else {
+            formData.append('date', date_value.val());
+        }
 
-            if (formData) {
-                $.ajax({
-                    url: ADD_RECORD_URl,
-                    method: 'post',
-                    processData: false,
-                    contentType: false,
-                    data: formData,
-                    enctype: 'multipart/form-data',
-                    success: function (response) {
-                        console.log(response);
-                        if (response['success']) {
-                            $('#success-alert').removeClass('hidden');
-                            clearFormCreate();
-                        } else {
-                            alert(response['reason'])
-                        }
-                    }, error: function (response) {
-                        alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
+        if (formData) {
+            $.ajax({
+                url: ADD_RECORD_URl,
+                method: 'post',
+                processData: false,
+                contentType: false,
+                data: formData,
+                enctype: 'multipart/form-data',
+                success: function (response) {
+                    console.log(response);
+                    if (response['success']) {
+                        $('#success-alert').removeClass('hidden');
+                        clearFormCreate();
+                    } else {
+                        alert(response['reason'])
                     }
-                });
-            }
-        });
+                    current_coordinates = null;
+                }, error: function (response) {
+                    alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
+                }
+            });
+        }
     });
 
     $(".close").click(function () {
