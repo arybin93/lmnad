@@ -3,6 +3,8 @@
 var myMap;
 var RECORDS_URL = 'https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 var SOURCE_URL = 'https://lmnad.nntu.ru/api/v1/sources/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
+var ADD_RECORD_URl = 'https://lmnad.nntu.ru/api/v1/records/';
+
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
 
@@ -158,8 +160,9 @@ function init() {
     }
 
     function clearFormCreate(){
-        $('#id_for_types').val([]);
-        $('#id_for_types').select2({
+        var types_el = $('#id_for_types');
+        types_el.val([]);
+        types_el.select2({
             placeholder: "Select types",
             allowClear: true
         });
@@ -172,20 +175,19 @@ function init() {
         $('#checkbox_for_date_range').removeAttr('checked');
     }
 
-    //handler right click
+    // handler left click
     myMap.events.add('click', function (e) {
-        myMap.hint.open(e.get('coords'), 'Create new record');
         $("#create").modal();
+        console.log('Open modal dialog');
 
         $('#id_for_source').select2({
             ajax: {
                 url: SOURCE_URL,
                 data: function (params) {
-                    var query = {
+                    return {
                         query: params.term,
                         page: params.page || 1
                     }
-                    return query;
                 },
                 processResults: function (data, params) {
                     // parse the results into the format expected by Select2
@@ -208,7 +210,10 @@ function init() {
             }
         });
 
-        $("#add_record_button").click(function (event) {
+        // Handler for Add New Record
+        $("#add_record_button").one('click', function (event) {
+            console.log('Click add record button');
+            event.preventDefault();
             var types_value = $('#id_for_types');
             var date_value = $('#id_for_date');
             var image_value = $('#id_for_image');
@@ -238,7 +243,7 @@ function init() {
 
             if (formData) {
                 $.ajax({
-                    url: 'https://lmnad.nntu.ru/api/v1/records/',
+                    url: ADD_RECORD_URl,
                     method: 'post',
                     processData: false,
                     contentType: false,
@@ -246,26 +251,22 @@ function init() {
                     enctype: 'multipart/form-data',
                     success: function (response) {
                         console.log(response);
-                        clearFormCreate();
-                    }, error: function () {
+                        if (response['success']) {
+                            $('#success-alert').removeClass('hidden');
+                            clearFormCreate();
+                        } else {
+                            alert(response['reason'])
+                        }
+                    }, error: function (response) {
                         alert("INTERNAL SERVER ERROR: please write to arybin93@gmail.com");
                     }
                 });
             }
-            event.preventDefault();
-
         });
-
     });
-    window.alert = null
-    $(document).ready(function () {
-        $("#add_record_button").click(function () {
-            $('#success-alert').removeClass('hidden');
-        });
 
-        $(".close").click(function () {
-            $("#success-alert").addClass('hidden');
-        });
+    $(".close").click(function () {
+        $("#success-alert").addClass('hidden');
     });
 }
 
