@@ -16,7 +16,7 @@
     <tbody>
     {% for people in peoples|dictsort:"order_by" %}
         <tr>
-            <th class="row">{{ people.order_by|add:"+1" }}</th>
+            <th class="row">{{ forloop.counter }}</th>
             <td>
                 {% if people.account %}
                     <a href="{{ people.account.get_absolute_url }}">{{ people.fullname }}</a>
@@ -65,7 +65,7 @@
         <tbody>
         {% for people in peoples_old|dictsort:"order_by" %}
             <tr>
-                <td class="row">{{ people.order_by|add:"+1" }}</td>
+                <td class="row">{{ forloop.counter }}</td>
                 <td>
                     {% if people.account %}
                         <a href="{{ people.account.get_absolute_url }}">{{ people.fullname }}</a>
