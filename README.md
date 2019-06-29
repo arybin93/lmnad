@@ -1,5 +1,6 @@
-# lmnad
-LMNAD project
+# LMNAD project
 
-Wiki:
-https://docs.google.com/document/d/1xYA695ITvBvAQ6PIDJmLBHdLDGaMpHh9LipPwHuzpOo/edit?usp=sharing
+Web Application of Laboratory of Modeling of Natural and Anthropogenic Disasters ([LMNAD](https://lmnad.nntu.ru))
+from Nizhny Novgorod.
+
+---
