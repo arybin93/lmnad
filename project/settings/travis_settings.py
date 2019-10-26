@@ -13,6 +13,6 @@ DATABASES = {
         'USER': 'travis',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
-        'OPTIONS': {'charset': 'utf8mb4'},
+        'PORT': '3306'
     }
 }

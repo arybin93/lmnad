@@ -9,7 +9,7 @@ env:
   matrix:
     - DB=mysql
 before_install:
-  - mysql -e 'CREATE DATABASE travis_ci_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
+  - mysql -e 'CREATE DATABASE travis_ci_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;'
   - python -m pip install --upgrade pip
 install:
   - pip install -r requirements.txt
