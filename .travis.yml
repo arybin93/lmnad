@@ -1,9 +1,13 @@
 language: python
 python:
   - "3.5" # current version
+services:
+  - mysql
 before_install:
   - python -m pip install --upgrade pip
 install:
   - pip install -r requirements.txt
+before_script:
+ - mysql -e 'create database test;' -u root
 script:
   - python manage.py test
