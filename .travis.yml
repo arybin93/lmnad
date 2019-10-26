@@ -3,10 +3,6 @@ python:
   - "3.5" # current version
 services:
   - mysql
-env:
-  - DB_USER=root
-  - DB_PASSWORD=root
-  - DB_USER=localhost
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS lmnad_db;'
   - python -m pip install --upgrade pip
