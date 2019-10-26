@@ -15,6 +15,7 @@ django-suit==0.2.26
 django-suit-ckeditor==0.0.2
 django-suit-redactor==0.0.4
 djangorestframework==3.9.1
+django-geoposition==0.3.1
 django-request-logging
 flower==0.9.2
 lxml==4.2.5
