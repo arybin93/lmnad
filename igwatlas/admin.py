@@ -21,13 +21,10 @@ from lmnad.models import Account
 
 
 class RecordForm(ModelForm):
-    #new_types = forms.MultipleChoiceField(widget=Select2MultipleWidget, choices=Record.TYPES, label='Тип', required=True)
-
     class Meta:
         model = Record
         exclude = [
             'text',
-            'types'    # old types
         ]
         widgets = {
             'date': SuitSplitDateTimeWidget(),
@@ -98,6 +95,7 @@ class SourceForm(ModelForm):
         widgets = {
             'files': Select2MultipleWidget,
         }
+
 
 class SourceAdmin(admin.ModelAdmin):
     list_display = ['source_short', 'link', 'is_verified']
