@@ -3,12 +3,15 @@ python:
   - "3.5" # current version
 services:
   - mysql
+sudo: required
 env:
   global:
     - DJANGO_SETTINGS_MODULE="project.settings.travis_settings"
   matrix:
     - DB=mysql
 before_install:
+  - sudo cp $TRAVIS_BUILD_DIR/_travis/mysql.cnf /etc/mysql/conf.d/
+  - sudo service mysql restart
   - mysql -e 'CREATE DATABASE travis_ci_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;'
   - python -m pip install --upgrade pip
 install:
