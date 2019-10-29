@@ -1,9 +1,7 @@
 from django.db import models
+
 from geoposition.fields import GeopositionField
 from igwcoeffs.models import TimeStampedModel
-
-import re
-
 from lmnad.models import Account
 
 
@@ -37,6 +35,7 @@ class Source(models.Model):
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, blank=True, null=True,
                              related_name='source',
                              verbose_name='Пользователь')
+
     class Meta:
         verbose_name = 'Источник'
         verbose_name_plural = 'Источники'
@@ -70,18 +69,14 @@ class Record(TimeStampedModel):
 
     position = GeopositionField(verbose_name='Координаты')
     new_types = models.ManyToManyField(RecordType, verbose_name='Тип', help_text='Поддерживается несколько типов')
-    types = models.TextField(verbose_name='Тип', blank=True, null=True, choices=TYPES,
-                             help_text='Поддерживается несколько типов')
     date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время наблюдения')
     date_start = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время начала наблюдений',
                                       help_text='Если есть')
     date_stop = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время конца наблюдений',
                                      help_text='Если есть')
-    image = models.ImageField(upload_to='uploads/igwatlas/images', blank=True, verbose_name='Изображение')
+    image = models.ImageField(upload_to='uploads/igwatlas/images', verbose_name='Изображение')
     source = models.ManyToManyField(Source, verbose_name='Источник')
     page = models.CharField(max_length=15, blank=True, null=True, verbose_name='Страницы из источника')
-    data = models.FileField(upload_to='uploads/igwatlas/data', null=True, blank=True,
-                            verbose_name='Оцифрованные данные', help_text='Если есть')
     text = models.TextField(blank=True, null=True, verbose_name='Описание для наблюдения')
     file = models.ForeignKey(File, on_delete=models.CASCADE, blank=True, null=True,
                              verbose_name='Файл, источник изображения',
@@ -102,9 +97,10 @@ class Record(TimeStampedModel):
 
     def get_text_types(self):
         text = ''
-        for type in self.new_types.all():
-            text += type.name + '; '
+        for record_type in self.new_types.all():
+            text += record_type.name + '; '
         return text
+
 
 class PageData(models.Model):
     MAP_TEXT = 0
@@ -123,7 +119,8 @@ class PageData(models.Model):
         (ABOUT_TEXT, 'Текст о проекте'),
     )
 
-    type = models.PositiveIntegerField(default=MAP_TEXT, choices=TYPES, unique=True, verbose_name='Тип данных, страницы')
+    type = models.PositiveIntegerField(default=MAP_TEXT, choices=TYPES, unique=True,
+                                       verbose_name='Тип данных, страницы')
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     text = models.TextField(verbose_name='Текст')
 

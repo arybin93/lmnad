@@ -170,11 +170,11 @@ class RecordsViewSet(viewsets.ViewSet):
             type_list_obj = []
             for type_str in types_lst:
                 try:
-                    type = RecordType.objects.get(value=type_str)
+                    record_type = RecordType.objects.get(value=type_str)
                 except RecordType.DoesNotExist:
                     return Response({"success": False, 'reason': 'RECORD_TYPE_NOT_FOUND'})
                 else:
-                    type_list_obj.append(type)
+                    type_list_obj.append(record_type)
             longitude = round(float(longitude), 3)
             latitude = round(float(latitude), 3)
 
@@ -182,16 +182,14 @@ class RecordsViewSet(viewsets.ViewSet):
             new_record = Record.objects.create(position=position, image=image, page=page, is_verified=False,
                                                date=date, date_start=date_start, date_stop=date_stop, user=user)
 
-            for type in type_list_obj:
-                new_record.new_types.add(type)
+            for record_type in type_list_obj:
+                new_record.new_types.add(record_type)
 
             new_record.source.add(source_obj)
             new_record.save()
             return Response({"success": True})
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
-
-
 
     @property
     def paginator(self):
