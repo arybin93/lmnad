@@ -1,31 +1,23 @@
 # -*- coding: utf-8 -*-
-import os
-
 from django.contrib import admin
-
-from django.forms import ModelForm, forms
-from django import forms
+from django.forms import ModelForm
 from django.utils.html import format_html_join
 from django_select2.forms import Select2MultipleWidget, Select2Widget
-from suit.widgets import SuitSplitDateTimeWidget
-from daterange_filter.filter import DateRangeFilter
-from igwatlas.models import Record, Source, File, PageData
 from django.utils.safestring import mark_safe
-from django.conf import settings
-from suit_redactor.widgets import RedactorWidget
-from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
-from suit_ckeditor.widgets import CKEditorWidget
-from django import forms
 
+from daterange_filter.filter import DateRangeFilter
+from modeltranslation.admin import TabbedTranslationAdmin
+from suit.widgets import SuitSplitDateTimeWidget
+from suit_ckeditor.widgets import CKEditorWidget
+
+from igwatlas.models import Record, Source, File, PageData
 from lmnad.models import Account
 
 
 class RecordForm(ModelForm):
     class Meta:
         model = Record
-        exclude = [
-            'text',
-        ]
+        exclude = []
         widgets = {
             'date': SuitSplitDateTimeWidget(),
             'date_start': SuitSplitDateTimeWidget(),
@@ -51,17 +43,23 @@ class RowDateRangeFilter(DateRangeFilter):
 
 # IGWAtlas
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'image_field','position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source',
+    list_display = ['id', 'image_field', 'get_position', 'get_types', 'date', 'date_start', 'date_stop', 'get_source',
                     'is_verified']
     form = RecordForm
     search_fields = ['id', 'position', 'image', 'source__source_short', 'source__source']
     list_filter = ['is_verified', 'new_types', ('date', RowDateRangeFilter)]
-    list_display_links = ['position', 'image_field']
+    list_display_links = ['get_position', 'image_field']
+
+    def get_position(self, obj):
+        latitude = round(float(obj.position.latitude), 3)
+        longitude = round(float(obj.position.longitude), 3)
+        return '{lat}, {lon}'.format(lat=latitude, lon=longitude)
+    get_position.short_description = 'Координаты (Широта, Долгота)'
 
     def get_types(self, obj):
         types = format_html_join(
             '', u"""{}<br>""",
-            ((type,) for type in obj.new_types.all())
+            ((record_type,) for record_type in obj.new_types.all())
         )
         return types
     get_types.short_description = 'Типы наблюдений'
@@ -75,14 +73,24 @@ class RecordAdmin(admin.ModelAdmin):
     get_source.short_description = 'Источники'
 
     def image_field(self, obj):
-        return mark_safe("""
-            <a target="_blank" href="{}">
-            <img src="{}" style="height: 50px;" /></a><br/>
-        """.format(obj.image.url, obj.image.url))
+        if obj.image:
+            return mark_safe("""
+                <a target="_blank" href="{}">
+                <img src="{}" style="height: 50px;" /></a><br/>
+            """.format(obj.image.url, obj.image.url))
+        else:
+            return 'Нет изображения'
     image_field.short_description = 'Изображение'
 
     def save_model(self, request, obj, form, change):
-        obj.user = Account.objects.get(user = request.user)
+        # round coordinates
+        latitude = round(float(obj.position.latitude), 3)
+        longitude = round(float(obj.position.longitude), 3)
+        obj.position = '{lat}, {lon}'.format(lat=latitude, lon=longitude)
+        try:
+            obj.user = Account.objects.get(user=request.user)
+        except Account.DoesNotExist:
+            pass
         super().save_model(request, obj, form, change)
 
 admin.site.register(Record, RecordAdmin)
@@ -104,7 +112,10 @@ class SourceAdmin(admin.ModelAdmin):
     form = SourceForm
 
     def save_model(self, request, obj, form, change):
-        obj.user = Account.objects.get(user = request.user)
+        try:
+            obj.user = Account.objects.get(user=request.user)
+        except Account.DoesNotExist:
+            pass
         super().save_model(request, obj, form, change)
 
 admin.site.register(Source, SourceAdmin)
