@@ -26,9 +26,13 @@ from datetime import datetime
 
 
 def home(request):
-    home = Page.objects.get(name='home')
+    try:
+        home_page = Page.objects.get(name='home')
+    except Page.DoesNotExist:
+        home_page = None
+
     context = {
-        'home': home
+        'home': home_page
     }
     return render(request, 'lmnad/home.html', context)
 
@@ -41,37 +45,6 @@ def people(request):
         'peoples_old': peoples_old,
     }
     return render(request, 'lmnad/people.html', context)
-
-
-def articles(request):
-    query = request.GET.get('query', None)
-    page = request.GET.get('page', 1)
-
-    if query:
-        try:
-            year = int(query)
-            article_list = Article.objects.filter(year=year)
-        except ValueError:
-            article_list = Article.objects.filter(Q(title__icontains=query) | Q(authors__icontains=query) |
-                                                  Q(abstract__icontains=query))
-    else:
-        article_list = Article.objects.all()
-
-    article_list = article_list.order_by('-year')
-    paginator = Paginator(article_list, 5)
-
-    try:
-        articles = paginator.page(page)
-    except PageNotAnInteger:
-        articles = paginator.page(1)
-    except EmptyPage:
-        articles = paginator.page(paginator.num_pages)
-
-    context = {
-        'articles': articles
-    }
-
-    return render(request, 'lmnad/articles.html', context)
 
 
 def seminars(request):
@@ -94,8 +67,7 @@ def seminars(request):
 
 
 def seminar_detail(request, pk):
-    seminar = Seminar.objects.get(pk=pk)
-
+    seminar = get_object_or_404(Seminar, pk=pk)
     context = {
         'seminar': seminar
     }
@@ -122,17 +94,15 @@ def protections(request):
 
 
 def grants(request):
-    grants = Grant.objects.all()
-
+    all_grants = Grant.objects.all()
     context = {
-        'grants': grants
+        'grants': all_grants
     }
     return render(request, 'lmnad/grants.html', context)
 
 
 def grants_detail(request, number):
-    grant = Grant.objects.get(number=number)
-
+    grant = get_object_or_404(Grant, number=number)
     context = {
         'grant': grant
     }
@@ -140,16 +110,15 @@ def grants_detail(request, number):
 
 
 def projects(request):
-    projects = Project.objects.all()
+    all_projects = Project.objects.all()
     context = {
-        'projects': projects
+        'projects': all_projects
     }
     return render(request, 'lmnad/projects.html', context)
 
 
 def project_detail(request, name):
-    project = Project.objects.get(name=name)
-
+    project = get_object_or_404(Project, name=name)
     context = {
         'project': project
     }
@@ -175,20 +144,12 @@ def events(request):
 
 
 def event_detail(request, pk):
-    event = Event.objects.get(pk=pk)
+    event = get_object_or_404(Event, pk=pk)
 
     context = {
         'event': event
     }
     return render(request, 'lmnad/events_details.html', context)
-
-
-def contacts(request):
-    contacts = Page.objects.get(name='contacts')
-    context = {
-        'contacts': contacts
-    }
-    return render(request, 'lmnad/contacts.html', context)
 
 
 def profile(request, username):
@@ -431,6 +392,7 @@ def profile_add_publication(request, username):
 def profile_edit_publication(request, username, id):
     current_user = get_object_or_404(User, username=username)
     publication = get_object_or_404(Publication, id=id)
+    conference = None
 
     if request.method == 'POST':
         form = PublicationForm(request.POST, instance=publication)
@@ -706,7 +668,10 @@ class ContactForm(forms.Form):
 
 
 def contacts(request):
-    contacts_page = Page.objects.get(name='contacts')
+    try:
+        contacts_page = Page.objects.get(name='contacts')
+    except Page.DoesNotExist:
+        contacts_page = None
 
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -794,9 +759,7 @@ def reset_password(request):
 @require_http_methods(['GET'])
 def pages(request, **kwargs):
     name = kwargs['name']
-
-    project = Page.objects.get(name=name)
-
+    project = get_object_or_404(Page, name=name)
     context = {
         'project': project
     }

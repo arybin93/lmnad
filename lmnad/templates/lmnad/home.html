@@ -1,8 +1,12 @@
 {% extends 'lmnad/base.html' %}
 
 {% block content %}
-    <h3 class="page-header">{{ home.title }}</h3>
-    <p class="text">
-         {{ home.text | safe  }}
-    </p>
+    {% if home %}
+        <h3 class="page-header">{{ home.title }}</h3>
+        <p class="text">
+             {{ home.text | safe  }}
+        </p>
+    {% else %}
+        <p>Not data</p>
+    {% endif %}
 {% endblock %}
