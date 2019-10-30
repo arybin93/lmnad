@@ -12,9 +12,11 @@
                 <input type="submit" class="btn btn-primary" value="{% trans 'Send' %}"/>
             </form>
         </div>
+        {% if contacts %}
         <div class="col-sm-4">
             {{ contacts.text | safe  }}
         </div>
+        {% endif %}
         <div class="col-sm-4">
         <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A455e31b097d6a50db0cee013a20e43484279ba3d221f8b6eeb6c4b8258f10979&amp;width=320&amp;height=300&amp;lang=en_FR&amp;scroll=true"></script>
         </div>
