@@ -30,14 +30,14 @@ def publications(request):
 
     paginator = Paginator(publications_qs, 25)
     try:
-        publications = paginator.page(page)
+        publications_obj = paginator.page(page)
     except PageNotAnInteger:
-        publications = paginator.page(1)
+        publications_obj = paginator.page(1)
     except EmptyPage:
-        publications = paginator.page(paginator.num_pages)
+        publications_obj = paginator.page(paginator.num_pages)
 
     context = {
-        'publications': publications
+        'publications': publications_obj
     }
 
     return render(request, 'publications/page.html', context)

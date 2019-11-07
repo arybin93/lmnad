@@ -11,6 +11,7 @@ from django_select2.forms import Select2Widget
 from modeltranslation.admin import TabbedTranslationAdmin
 from django.db import models
 from suit.widgets import SuitSplitDateTimeWidget
+from suit_ckeditor.widgets import CKEditorWidget
 
 from igwatlas.admin import RowDateRangeFilter
 from publications.functions import export_publication_to_doc, export_conference_to_doc
@@ -24,7 +25,8 @@ from datetime import datetime
 class MixinModelAdmin:
     formfield_overrides = {
         models.ForeignKey: {'widget': Select2Widget},
-        models.OneToOneField: {'widget': Select2Widget}
+        models.OneToOneField: {'widget': Select2Widget},
+        models.TextField: {'widget': CKEditorWidget(editor_options={'startupFocus': True})},
     }
 
 
