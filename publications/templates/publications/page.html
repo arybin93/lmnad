@@ -166,6 +166,7 @@
                             {{ publication.title }}
                         {% endif %}
                         <p>
+                        {% if publication.type not in "Patent,Patent_BD" %}
                         РИНЦ -
                         {% if publication.is_rinc %}
                             <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
@@ -189,6 +190,7 @@
                             <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
                         {% else %}
                             <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
                         {% endif %}
                         </p>
                     </td>

@@ -53,14 +53,14 @@ class Journal(TimeStampedModel):
         date_stop = self.date_stop.strftime('%d.%m.%Y') if self.date_stop else ''
 
         result = '{date_start} - {date_stop}'.format(date_start=date_start,
-                                                      date_stop=date_stop)
+                                                     date_stop=date_stop)
 
         return result
 
     def get_place_dates(self):
         dates = self.get_dates()
         place_and_dates = '{place}, {dates}'.format(place=self.place,
-                                                     dates=dates)
+                                                    dates=dates)
         return place_and_dates
 
     class Meta:
@@ -94,11 +94,11 @@ class Author(TimeStampedModel):
         if self.middle_name:
             short_middle = self.middle_name[0]
             author_str = "{} {}. {}.".format(self.last_name,
-                                              short_name,
-                                              short_middle)
+                                             short_name,
+                                             short_middle)
         else:
             author_str = "{} {}.".format(self.last_name,
-                                          short_name)
+                                         short_name)
         return author_str
 
     def get_short_name_harvard(self, lang=None):
@@ -156,8 +156,10 @@ class Publication(TimeStampedModel):
 
     type = models.CharField(max_length=55, default=ARTICLE, choices=TYPE, verbose_name='Тип публикации')
     title = models.CharField(max_length=200, db_index=True, verbose_name='Название')
+    description = models.TextField(blank=True, null=True, verbose_name='Описание, аннотация')
     authors = models.ManyToManyField(Author, through='AuthorPublication', verbose_name='Авторы')
-    journal = models.ForeignKey(Journal, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Журнал, конференция')
+    journal = models.ForeignKey(Journal, on_delete=models.SET_NULL, blank=True, null=True,
+                                verbose_name='Журнал, конференция')
     year = models.IntegerField(verbose_name='Год')
     date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время')
     volume = models.CharField(max_length=55, blank=True, verbose_name='Том')
@@ -179,7 +181,7 @@ class Publication(TimeStampedModel):
     is_can_download = models.BooleanField(default=False, verbose_name='Можно скачать',
                                           help_text='Отметьте галочку, если файл доступен для скачивания')
     is_show = models.BooleanField(default=True, verbose_name='Показывать на сайте',
-                                  help_text = 'Отметьте галочку, чтобы публикация была доступна на сайте')
+                                  help_text='Отметьте галочку, чтобы публикация была доступна на сайте')
     language = models.CharField(default=RU, max_length=10, choices=LANGUAGES, verbose_name='Основной язык публикации',
                                 help_text='Используется для экпорта/цитирования на сайте в независимости'
                                           ' от выбранного языка на сайте')
@@ -208,17 +210,21 @@ class Publication(TimeStampedModel):
                 date=self.date.strftime('%d.%m.%Y') if self.date else '-'
             )
         else:
-            if self.language == RU:
-                journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
-            else:
-                journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
+            try:
+                journal = ''
+                if self.language == RU:
+                    journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
+                else:
+                    journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
 
-            if self.journal.type == Journal.CONFERENCE:
-                journal = '{journal_name}, {place}, {dates}'.format(journal_name=journal_name,
-                                                                    place=self.journal.place,
-                                                                    dates=self.journal.get_dates())
-            else:
-                journal = '{},'.format(journal_name)
+                    if self.journal.type == Journal.CONFERENCE:
+                        journal = '{journal_name}, {place}, {dates}'.format(journal_name=journal_name,
+                                                                            place=self.journal.place,
+                                                                            dates=self.journal.get_dates())
+                    else:
+                        journal = '{},'.format(journal_name)
+            except Exception:
+                pass
 
             issue = ''
             pages = ''
@@ -281,7 +287,7 @@ class Publication(TimeStampedModel):
             title = self.title_en if self.title_en else self.title
 
         result_authors = ''
-        if self.authors:
+        if self.authors.count():
             authors = self.authors.order_by('authors__order_by')
             if authors.count() > 1:
                 len_authors = authors.count() - 1
@@ -324,17 +330,21 @@ class Publication(TimeStampedModel):
             result = '{authors} {year}. {title}. {journal} {volume}{issue} {pages} {doi}'
             doi = 'doi: {}'.format(self.doi) if self.doi else ''
 
-            if self.language == RU:
-                journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
-            else:
-                journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
+            journal = ''
+            try:
+                if self.language == RU:
+                    journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
+                else:
+                    journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
 
-            if self.journal.type == Journal.CONFERENCE:
-                journal = '{journal_name}, {place}, {dates},'.format(journal_name=journal_name,
-                                                                     place=self.journal.place,
-                                                                     dates=self.journal.get_dates())
-            else:
-                journal = '{},'.format(journal_name)
+                if self.journal.type == Journal.CONFERENCE:
+                    journal = '{journal_name}, {place}, {dates},'.format(journal_name=journal_name,
+                                                                         place=self.journal.place,
+                                                                         dates=self.journal.get_dates())
+                else:
+                    journal = '{},'.format(journal_name)
+            except Exception:
+                pass
 
             issue = ''
             pages = ''
