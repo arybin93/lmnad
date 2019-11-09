@@ -147,7 +147,8 @@ SUIT_CONFIG = {
                 'people',
                 'grant',
                 'project',
-        ]},
+                'UsefulLink'
+            ]},
         {'app': 'publications', 'label': 'Менеджер публикаций', 'models': [
             'publication',
             'conference',

@@ -61,13 +61,6 @@ class AccountAdmin(TabbedTranslationAdmin):
         return result
     is_author.short_description = 'Является автором'
 
-    def thumbnail(self, obj):
-        if obj.image:
-            return '<img src="{}" />'.format(obj.image.url_thumbnail)
-        else:
-            return ""
-    thumbnail.allow_tags = True
-
 admin.site.register(Account, AccountAdmin)
 
 
@@ -86,14 +79,6 @@ class ProtectionAdmin(TranslationAdmin):
     search_fields = ['title']
     form = ProtectionForm
 
-    def thumbnail(self, obj):
-        if obj.image:
-            return '<img src="{}" />'.format(obj.image.url_thumbnail)
-        else:
-            return ""
-
-    thumbnail.allow_tags = True
-
 admin.site.register(Protection, ProtectionAdmin)
 
 
@@ -108,15 +93,6 @@ class PageForm(ModelForm):
 class PageAdmin(TabbedTranslationAdmin):
     list_display = ['name', 'title']
     form = PageForm
-
-    def thumbnail(self, obj):
-        if obj.image:
-            return '<img src="{}" />'.format(obj.image.url_thumbnail)
-        else:
-            return ""
-
-    thumbnail.allow_tags = True
-
 
 admin.site.register(Page, PageAdmin)
 
@@ -139,13 +115,6 @@ class EventAdmin(TabbedTranslationAdmin):
     search_fields = ['title']
     form = EventForm
 
-    def thumbnail(self, obj):
-        if obj.image:
-            return '<img src="{}" />'.format(obj.image.url_thumbnail)
-        else:
-            return ""
-
-    thumbnail.allow_tags = True
 
 admin.site.register(Event, EventAdmin)
 
@@ -167,14 +136,6 @@ class SeminarAdmin(TabbedTranslationAdmin):
     search_fields = ['title']
     fields = ['title', 'text', 'date', 'is_send_email']
     form = SeminarForm
-
-    def thumbnail(self, obj):
-        if obj.image:
-            return '<img src="{}" />'.formtat(obj.image.url_thumbnail)
-        else:
-            return ""
-
-    thumbnail.allow_tags = True
 
 admin.site.register(Seminar, SeminarAdmin)
 
@@ -321,10 +282,30 @@ class WikiForm(ModelForm):
 
 
 class WikiAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['title', 'get_link']
     search_fields = ['title']
     form = WikiForm
 
+    def get_link(self, obj):
+        return format_html('<a href="{}">{}</a>'.format(obj.link, obj.link))
+    get_link.short_description = 'URL'
+    get_link.empty_value_display = 'Не указан'
+
 admin.site.register(Wiki, WikiAdmin)
+
+
+class UsefulLinkAdmin(SortableModelAdmin):
+    list_display = ['title', 'get_link', 'order_by']
+    search_fields = ['title']
+    sortable = 'order_by'
+
+    def get_link(self, obj):
+        return format_html('<a href="{}">{}</a>'.format(obj.link, obj.link))
+    get_link.short_description = 'URL'
+    get_link.empty_value_display = 'Не указан'
+
+admin.site.register(UsefulLink, UsefulLinkAdmin)
+
+
 admin.site.register(Images)
 admin.site.register(File)
