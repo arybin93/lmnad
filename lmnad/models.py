@@ -310,6 +310,22 @@ class Article(models.Model):
         verbose_name_plural = '(Old) Статьи'
 
 
+class UsefulLink(TimeStampedModel):
+    title = models.CharField(max_length=255, verbose_name='Название ссылки, заголовок')
+    link = models.URLField(verbose_name='URL Ссылки', help_text='https:/ya.ru')
+    order_by = models.PositiveIntegerField(verbose_name='Сортировать', default=0)
+
+    class MPTTMeta:
+        order_insertion_by = ['order_by']
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Полезная ссылка'
+        verbose_name_plural = 'Полезные ссылки'
+
+
 class Wiki(models.Model):
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     text = models.TextField(max_length=5000, verbose_name='Текст')

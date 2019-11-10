@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-17 10:01+0300\n"
+"POT-Creation-Date: 2019-11-10 14:11+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,8 @@ msgid "Certificate of state registration"
 msgstr "Свидетельство о государственной регистрации базы данных"
 
 #: .\igwatlas\templates\igwatlas\base.html:117
-#: .\igwatlas\templates\igwatlas\map.html:34
+#: .\igwatlas\templates\igwatlas\map.html:36
+#: .\igwatlas\templates\igwatlas\map.html:113
 msgid "Map"
 msgstr "Карта наблюдений"
 
@@ -43,13 +44,13 @@ msgstr "О проекте"
 
 #: .\igwatlas\templates\igwatlas\base.html:156
 #: .\igwcoeffs\templates\igwcoeffs\base.html:136
-#: .\lmnad\templates\lmnad\base.html:96 .\tank\templates\tank\base.html:123
+#: .\lmnad\templates\lmnad\base.html:98 .\tank\templates\tank\base.html:123
 msgid "My account"
 msgstr "Профиль"
 
 #: .\igwatlas\templates\igwatlas\base.html:157
 #: .\igwcoeffs\templates\igwcoeffs\base.html:137
-#: .\lmnad\templates\lmnad\base.html:97
+#: .\lmnad\templates\lmnad\base.html:100
 #: .\lmnad\templates\lmnad\change_password.html:10
 #: .\lmnad\templates\lmnad\change_password.html:22
 #: .\tank\templates\tank\base.html:124
@@ -58,7 +59,7 @@ msgstr "Сменить пароль"
 
 #: .\igwatlas\templates\igwatlas\base.html:159
 #: .\igwcoeffs\templates\igwcoeffs\base.html:139
-#: .\lmnad\templates\lmnad\base.html:99 .\tank\templates\tank\base.html:126
+#: .\lmnad\templates\lmnad\base.html:102 .\tank\templates\tank\base.html:126
 msgid "Log out"
 msgstr "Выйти"
 
@@ -66,7 +67,7 @@ msgstr "Выйти"
 #: .\igwatlas\templates\igwatlas\base.html:177
 #: .\igwcoeffs\templates\igwcoeffs\base.html:143
 #: .\igwcoeffs\templates\igwcoeffs\base.html:157
-#: .\lmnad\templates\lmnad\base.html:103 .\lmnad\templates\lmnad\login.html:18
+#: .\lmnad\templates\lmnad\base.html:106 .\lmnad\templates\lmnad\login.html:18
 #: .\lmnad\templates\lmnad\register.html:15 .\tank\templates\tank\base.html:130
 #: .\tank\templates\tank\base.html:144
 msgid "Sign up"
@@ -76,7 +77,7 @@ msgstr "Зарегистрироваться"
 #: .\igwatlas\templates\igwatlas\base.html:179
 #: .\igwcoeffs\templates\igwcoeffs\base.html:144
 #: .\igwcoeffs\templates\igwcoeffs\base.html:159
-#: .\lmnad\templates\lmnad\base.html:104 .\lmnad\templates\lmnad\login.html:10
+#: .\lmnad\templates\lmnad\base.html:107 .\lmnad\templates\lmnad\login.html:10
 #: .\lmnad\templates\lmnad\login.html:14
 #: .\lmnad\templates\lmnad\register.html:19 .\tank\templates\tank\base.html:131
 #: .\tank\templates\tank\base.html:146
@@ -157,12 +158,11 @@ msgstr "число наблюдений в базе данных"
 msgid "Years in DB: "
 msgstr "Года:"
 
-#: .\igwatlas\templates\igwatlas\map.html:12
-#: .\igwatlas\templates\igwatlas\map.html:24
-#: .\igwatlas\templates\igwatlas\map.html:80
+#: .\igwatlas\templates\igwatlas\map.html:13
+#: .\igwatlas\templates\igwatlas\map.html:25
+#: .\igwatlas\templates\igwatlas\map.html:87
 #: .\igwatlas\templates\igwatlas\sources.html:16
-#: .\lmnad\templates\lmnad\articles.html:15
-#: .\lmnad\templates\lmnad\profile.html:385
+#: .\lmnad\templates\lmnad\profile.html:389
 #: .\publications\templates\publications\page.html:17
 #: .\publications\templates\publications\page.html:34
 #: .\publications\templates\publications\page.html:121
@@ -170,47 +170,88 @@ msgstr "Года:"
 msgid "Search"
 msgstr "Поиск"
 
-#: .\igwatlas\templates\igwatlas\map.html:30
-#: .\lmnad\templates\lmnad\profile.html:311
+#: .\igwatlas\templates\igwatlas\map.html:31
+#: .\igwatlas\templates\igwatlas\map.html:108
+#: .\lmnad\templates\lmnad\profile.html:315
 #: .\publications\templates\publications\page.html:39
 msgid "Select types"
 msgstr "Выберите тип"
 
-#: .\igwatlas\templates\igwatlas\map.html:35
+#: .\igwatlas\templates\igwatlas\map.html:37
+#: .\igwatlas\templates\igwatlas\map.html:114
 msgid "Graphic"
 msgstr "График"
 
-#: .\igwatlas\templates\igwatlas\map.html:36
+#: .\igwatlas\templates\igwatlas\map.html:38
+#: .\igwatlas\templates\igwatlas\map.html:115
 msgid "Satellite"
 msgstr "Снимок со спутника"
 
-#: .\igwatlas\templates\igwatlas\map.html:37
+#: .\igwatlas\templates\igwatlas\map.html:39
+#: .\igwatlas\templates\igwatlas\map.html:116
 msgid "Record"
 msgstr "Запись с устройств"
 
-#: .\igwatlas\templates\igwatlas\map.html:38
+#: .\igwatlas\templates\igwatlas\map.html:40
+#: .\igwatlas\templates\igwatlas\map.html:117
 msgid "Table"
 msgstr "Таблица"
 
-#: .\igwatlas\templates\igwatlas\map.html:44
+#: .\igwatlas\templates\igwatlas\map.html:46
+#: .\igwatlas\templates\igwatlas\map.html:146
 msgid "Select date from"
 msgstr "Выберите дату от"
 
-#: .\igwatlas\templates\igwatlas\map.html:57
+#: .\igwatlas\templates\igwatlas\map.html:60
+#: .\igwatlas\templates\igwatlas\map.html:160
 msgid "Select date to"
 msgstr "Выберите дату до"
 
-#: .\igwatlas\templates\igwatlas\map.html:70
-#: .\igwatlas\templates\igwatlas\map.html:73
+#: .\igwatlas\templates\igwatlas\map.html:74
+#: .\igwatlas\templates\igwatlas\map.html:78
+#: .\igwatlas\templates\igwatlas\map.html:183
 msgid "Source"
 msgstr "Источник"
 
-#: .\igwatlas\templates\igwatlas\map.html:79
+#: .\igwatlas\templates\igwatlas\map.html:85
+#: .\igwatlas\templates\igwatlas\map.html:205
 msgid "Close and clear"
 msgstr "Закрыть и сбросить"
 
+#: .\igwatlas\templates\igwatlas\map.html:102
+#, fuzzy
+#| msgid "Create new user:"
+msgid "Create record"
+msgstr "Создать нового пользователя"
+
+#: .\igwatlas\templates\igwatlas\map.html:123
+#, fuzzy
+#| msgid "Enable checkboxes below for search"
+msgid "Enable checkboxes below for choose date format "
+msgstr "Включить чекбоксы для поиска"
+
+#: .\igwatlas\templates\igwatlas\map.html:132
+#, fuzzy
+#| msgid "Map of observations"
+msgid "Date of observation"
+msgstr "Карта наблюдений"
+
+#: .\igwatlas\templates\igwatlas\map.html:174
+#, fuzzy
+#| msgid "Parse file"
+msgid "Choose file"
+msgstr "Распознавание файла"
+
+#: .\igwatlas\templates\igwatlas\map.html:191
+#: .\igwatlas\templates\igwatlas\map.html:195
+msgid "Page"
+msgstr ""
+
+#: .\igwatlas\templates\igwatlas\map.html:207
+msgid "Create"
+msgstr ""
+
 #: .\igwatlas\templates\igwatlas\sources.html:14
-#: .\lmnad\templates\lmnad\articles.html:13
 #: .\tank\templates\tank\experiments.html:13
 msgid "Enter query"
 msgstr "Введите запрос"
@@ -307,19 +348,6 @@ msgstr "Результаты в файле, так же проверьте ук�
 msgid "Export to doc"
 msgstr "Экспорт"
 
-#: .\lmnad\templates\lmnad\articles.html:6
-#: .\lmnad\templates\lmnad\profile.html:28
-#: .\lmnad\templates\lmnad\profile.html:54
-#: .\publications\templates\publications\page.html:8
-msgid "Publications"
-msgstr "Публикации"
-
-#: .\lmnad\templates\lmnad\articles.html:26
-#: .\lmnad\templates\lmnad\profile.html:139
-#: .\publications\templates\publications\page.html:213
-msgid "Download"
-msgstr "Скачать"
-
 #: .\lmnad\templates\lmnad\base.html:43
 msgid "Home"
 msgstr "Главная"
@@ -340,30 +368,39 @@ msgstr "Гранты"
 msgid "Projects"
 msgstr "Проекты"
 
-#: .\lmnad\templates\lmnad\base.html:50
+#: .\lmnad\templates\lmnad\base.html:48
+#: .\lmnad\templates\lmnad\useful_links.html:5
+msgid "Useful Links"
+msgstr "Полезные ссылки"
+
+#: .\lmnad\templates\lmnad\base.html:51
 msgid "News"
 msgstr "Новости"
 
-#: .\lmnad\templates\lmnad\base.html:54 .\lmnad\templates\lmnad\seminars.html:5
+#: .\lmnad\templates\lmnad\base.html:55 .\lmnad\templates\lmnad\seminars.html:5
 msgid "Seminars"
 msgstr "Семинары"
 
-#: .\lmnad\templates\lmnad\base.html:55
+#: .\lmnad\templates\lmnad\base.html:56
 msgid "Protections"
 msgstr "Защиты"
 
-#: .\lmnad\templates\lmnad\base.html:56 .\lmnad\templates\lmnad\events.html:6
+#: .\lmnad\templates\lmnad\base.html:57 .\lmnad\templates\lmnad\events.html:6
 msgid "Events"
 msgstr "События"
 
-#: .\lmnad\templates\lmnad\base.html:59 .\lmnad\templates\lmnad\contacts.html:6
+#: .\lmnad\templates\lmnad\base.html:60 .\lmnad\templates\lmnad\contacts.html:6
 msgid "Contacts"
 msgstr "Контакты"
 
-#: .\lmnad\templates\lmnad\base.html:117
+#: .\lmnad\templates\lmnad\base.html:120
+#, fuzzy
+#| msgid ""
+#| "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. "
+#| "R.E. Alekseev  © 2017-2018"
 msgid ""
 "Laboratory of Modeling of Natural and Anthropogenic Disasters, NNSTU n.a. R."
-"E. Alekseev  © 2017-2018"
+"E. Alekseev"
 msgstr ""
 "Лаборатория моделирования природных и техногенных катастроф НГТУ им. Р.Е. "
 "Алексеева © 2017-2018"
@@ -393,38 +430,38 @@ msgstr "Реализуемые гранты, программы, научные 
 
 #: .\lmnad\templates\lmnad\grants.html:9
 #: .\lmnad\templates\lmnad\grants_detail.html:14
-#: .\lmnad\templates\lmnad\profile.html:168
-#: .\lmnad\templates\lmnad\profile.html:210
+#: .\lmnad\templates\lmnad\profile.html:172
+#: .\lmnad\templates\lmnad\profile.html:214
 msgid "Number"
 msgstr "Номер"
 
 #: .\lmnad\templates\lmnad\grants.html:10
 #: .\lmnad\templates\lmnad\grants_detail.html:10
 #: .\lmnad\templates\lmnad\profile.html:58
-#: .\lmnad\templates\lmnad\profile.html:169
-#: .\lmnad\templates\lmnad\profile.html:211
-#: .\lmnad\templates\lmnad\profile.html:253
+#: .\lmnad\templates\lmnad\profile.html:173
+#: .\lmnad\templates\lmnad\profile.html:215
+#: .\lmnad\templates\lmnad\profile.html:257
 #: .\publications\templates\publications\page.html:132
 msgid "Type"
 msgstr "Тип"
 
 #: .\lmnad\templates\lmnad\grants.html:11
-#: .\lmnad\templates\lmnad\profile.html:170
-#: .\lmnad\templates\lmnad\profile.html:212
+#: .\lmnad\templates\lmnad\profile.html:174
+#: .\lmnad\templates\lmnad\profile.html:216
 msgid "Name"
 msgstr "Название"
 
 #: .\lmnad\templates\lmnad\grants.html:12
-#: .\lmnad\templates\lmnad\profile.html:171
-#: .\lmnad\templates\lmnad\profile.html:213
+#: .\lmnad\templates\lmnad\profile.html:175
+#: .\lmnad\templates\lmnad\profile.html:217
 msgid "Superviser"
 msgstr "Руководители"
 
 #: .\lmnad\templates\lmnad\grants.html:13
 #: .\lmnad\templates\lmnad\grants_detail.html:18
-#: .\lmnad\templates\lmnad\profile.html:172
-#: .\lmnad\templates\lmnad\profile.html:214
-#: .\lmnad\templates\lmnad\profile.html:257
+#: .\lmnad\templates\lmnad\profile.html:176
+#: .\lmnad\templates\lmnad\profile.html:218
+#: .\lmnad\templates\lmnad\profile.html:261
 msgid "Dates"
 msgstr "Сроки"
 
@@ -493,7 +530,7 @@ msgid "Profile"
 msgstr "Персональная страница"
 
 #: .\lmnad\templates\lmnad\profile.html:16
-#: .\lmnad\templates\lmnad\profile.html:152
+#: .\lmnad\templates\lmnad\profile.html:155
 msgid "Edit"
 msgstr "Редактировать"
 
@@ -505,8 +542,14 @@ msgstr "Информация не добавлена"
 msgid "Publication activity"
 msgstr "Публикационная активность"
 
+#: .\lmnad\templates\lmnad\profile.html:28
+#: .\lmnad\templates\lmnad\profile.html:54
+#: .\publications\templates\publications\page.html:8
+msgid "Publications"
+msgstr "Публикации"
+
 #: .\lmnad\templates\lmnad\profile.html:29
-#: .\lmnad\templates\lmnad\profile.html:248
+#: .\lmnad\templates\lmnad\profile.html:252
 msgid "Conferences"
 msgstr "Участие в конференциях"
 
@@ -519,7 +562,7 @@ msgid "Add new publication"
 msgstr "Добавить публикацию"
 
 #: .\lmnad\templates\lmnad\profile.html:59
-#: .\lmnad\templates\lmnad\profile.html:255
+#: .\lmnad\templates\lmnad\profile.html:259
 #: .\publications\templates\publications\page.html:133
 msgid "Title"
 msgstr "Название"
@@ -540,146 +583,151 @@ msgid "Year"
 msgstr "Год"
 
 #: .\lmnad\templates\lmnad\profile.html:71
-#: .\lmnad\templates\lmnad\profile.html:315
+#: .\lmnad\templates\lmnad\profile.html:319
 #: .\publications\templates\publications\page.html:43
 #: .\publications\templates\publications\page.html:145
 msgid "Article"
 msgstr "Статья в периодическом издании"
 
 #: .\lmnad\templates\lmnad\profile.html:73
-#: .\lmnad\templates\lmnad\profile.html:316
+#: .\lmnad\templates\lmnad\profile.html:320
 #: .\publications\templates\publications\page.html:44
 #: .\publications\templates\publications\page.html:147
 msgid "Monograph"
 msgstr "Монография"
 
 #: .\lmnad\templates\lmnad\profile.html:75
-#: .\lmnad\templates\lmnad\profile.html:317
+#: .\lmnad\templates\lmnad\profile.html:321
 #: .\publications\templates\publications\page.html:45
 #: .\publications\templates\publications\page.html:149
 msgid "Group Monograph"
 msgstr "Групповая монография"
 
 #: .\lmnad\templates\lmnad\profile.html:77
-#: .\lmnad\templates\lmnad\profile.html:318
+#: .\lmnad\templates\lmnad\profile.html:322
 #: .\publications\templates\publications\page.html:46
 #: .\publications\templates\publications\page.html:151
 msgid "Proceedings"
 msgstr "Статья в сборнике трудов конференции"
 
 #: .\lmnad\templates\lmnad\profile.html:79
-#: .\lmnad\templates\lmnad\profile.html:319
+#: .\lmnad\templates\lmnad\profile.html:323
 #: .\publications\templates\publications\page.html:47
 #: .\publications\templates\publications\page.html:153
 msgid "Theses conference"
 msgstr "Тезисы конференции"
 
 #: .\lmnad\templates\lmnad\profile.html:81
-#: .\lmnad\templates\lmnad\profile.html:320
+#: .\lmnad\templates\lmnad\profile.html:324
 #: .\publications\templates\publications\page.html:48
 #: .\publications\templates\publications\page.html:155
 msgid "Teaching materials"
 msgstr "Учебно-методические материалы"
 
 #: .\lmnad\templates\lmnad\profile.html:83
-#: .\lmnad\templates\lmnad\profile.html:321
+#: .\lmnad\templates\lmnad\profile.html:325
 #: .\publications\templates\publications\page.html:49
 #: .\publications\templates\publications\page.html:157
 msgid "Patent"
 msgstr "Свидетельство о регистрации права на программный продукт"
 
 #: .\lmnad\templates\lmnad\profile.html:85
-#: .\lmnad\templates\lmnad\profile.html:322
+#: .\lmnad\templates\lmnad\profile.html:326
 #: .\publications\templates\publications\page.html:50
 #: .\publications\templates\publications\page.html:159
 msgid "Patent_BD"
 msgstr "Свидетельство о регистрации права на базу данных"
 
-#: .\lmnad\templates\lmnad\profile.html:147
-#: .\publications\templates\publications\page.html:221
+#: .\lmnad\templates\lmnad\profile.html:141
+#: .\publications\templates\publications\page.html:215
+msgid "Download"
+msgstr "Скачать"
+
+#: .\lmnad\templates\lmnad\profile.html:149
+#: .\publications\templates\publications\page.html:223
 msgid "Cite"
 msgstr "Цитировать"
 
-#: .\lmnad\templates\lmnad\profile.html:163
+#: .\lmnad\templates\lmnad\profile.html:167
 msgid "Head of Grants"
 msgstr "Руководитель грантов"
 
-#: .\lmnad\templates\lmnad\profile.html:206
+#: .\lmnad\templates\lmnad\profile.html:210
 msgid "Member of Grants"
 msgstr "Участник грантов"
 
-#: .\lmnad\templates\lmnad\profile.html:252
+#: .\lmnad\templates\lmnad\profile.html:256
 msgid "Name of conference"
 msgstr "Название конференции"
 
-#: .\lmnad\templates\lmnad\profile.html:254
+#: .\lmnad\templates\lmnad\profile.html:258
 msgid "Form"
 msgstr "Форма доклада"
 
-#: .\lmnad\templates\lmnad\profile.html:256
+#: .\lmnad\templates\lmnad\profile.html:260
 msgid "Place"
 msgstr "Место"
 
-#: .\lmnad\templates\lmnad\profile.html:266
+#: .\lmnad\templates\lmnad\profile.html:270
 msgid "International"
 msgstr "Международная"
 
-#: .\lmnad\templates\lmnad\profile.html:268
+#: .\lmnad\templates\lmnad\profile.html:272
 msgid "National"
 msgstr "Российская"
 
-#: .\lmnad\templates\lmnad\profile.html:273
+#: .\lmnad\templates\lmnad\profile.html:277
 msgid "Oral"
 msgstr "Устная"
 
-#: .\lmnad\templates\lmnad\profile.html:275
+#: .\lmnad\templates\lmnad\profile.html:279
 msgid "Poster"
 msgstr "Постер"
 
-#: .\lmnad\templates\lmnad\profile.html:306
+#: .\lmnad\templates\lmnad\profile.html:310
 msgid "Filter"
 msgstr "Фильтр"
 
-#: .\lmnad\templates\lmnad\profile.html:328
-#: .\lmnad\templates\lmnad\profile.html:331
+#: .\lmnad\templates\lmnad\profile.html:332
+#: .\lmnad\templates\lmnad\profile.html:335
 #: .\publications\templates\publications\page.html:64
 #: .\publications\templates\publications\page.html:67
 msgid "Year from"
 msgstr "Год (от)"
 
-#: .\lmnad\templates\lmnad\profile.html:336
-#: .\lmnad\templates\lmnad\profile.html:339
+#: .\lmnad\templates\lmnad\profile.html:340
+#: .\lmnad\templates\lmnad\profile.html:343
 #: .\publications\templates\publications\page.html:72
 #: .\publications\templates\publications\page.html:75
 msgid "Year to"
 msgstr "Год (до)"
 
-#: .\lmnad\templates\lmnad\profile.html:344
+#: .\lmnad\templates\lmnad\profile.html:348
 #: .\publications\templates\publications\page.html:80
 msgid "Enable checkboxes below for search"
 msgstr "Включить чекбоксы для поиска"
 
-#: .\lmnad\templates\lmnad\profile.html:352
+#: .\lmnad\templates\lmnad\profile.html:356
 #: .\publications\templates\publications\page.html:88
 msgid "RINC"
 msgstr "Входит в РИНЦ"
 
-#: .\lmnad\templates\lmnad\profile.html:360
+#: .\lmnad\templates\lmnad\profile.html:364
 #: .\publications\templates\publications\page.html:96
 msgid "VAK"
 msgstr "Входит в ВАК"
 
-#: .\lmnad\templates\lmnad\profile.html:368
+#: .\lmnad\templates\lmnad\profile.html:372
 #: .\publications\templates\publications\page.html:104
 msgid "WOS"
 msgstr "Входит в WOS"
 
-#: .\lmnad\templates\lmnad\profile.html:376
+#: .\lmnad\templates\lmnad\profile.html:380
 #: .\publications\templates\publications\page.html:112
 msgid "SCOPUS"
 msgstr "Входит в SCOPUS"
 
-#: .\lmnad\templates\lmnad\profile.html:384
+#: .\lmnad\templates\lmnad\profile.html:388
 #: .\publications\templates\publications\page.html:120
 msgid "Close"
 msgstr "Закрыть"
@@ -719,7 +767,7 @@ msgstr "Пожалуйста, продолжайте работать с пуб�
 msgid "Edit publication"
 msgstr "Редактировать публикацию"
 
-#: .\lmnad\templates\lmnad\project_details.html:8
+#: .\lmnad\templates\lmnad\project_details.html:9
 msgid "Go to project"
 msgstr "Ссылка на проект"
 
@@ -756,6 +804,11 @@ msgstr "Спасибо"
 msgid "Your letter has been sent"
 msgstr "Ваше письмо отправлено"
 
+#: .\lmnad\templates\lmnad\useful_links.html:12
+msgid "No links"
+msgstr "Ссылки не добавлены"
+
+#: .\lmnad\templates\publications\formsetfield.html:8
 #: .\publications\templates\publications\formsetfield.html:8
 msgid "New Author"
 msgstr "Новый автор"

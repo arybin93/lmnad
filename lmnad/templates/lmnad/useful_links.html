@@ -1,0 +1,15 @@
+{% extends 'lmnad/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<h3 class="page-header">{% trans "Useful Links" %}</h3>
+    <div class="list-group">
+    {% for obj in links|dictsort:"order_by" %}
+      <a href="{{ obj.link }}" class="list-group-item list-group-item-action">
+        {{ obj.title }}
+      </a>
+    {% empty %}
+        <p>{% trans "No links" %}</p>
+    {% endfor %}
+    </div>
+{% endblock %}

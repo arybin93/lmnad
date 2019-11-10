@@ -113,6 +113,14 @@ def grants_detail(request, number):
     return render(request, 'lmnad/grants_detail.html', context)
 
 
+def useful_links(request):
+    links = UsefulLink.objects.all()
+    context = {
+        'links': links
+    }
+    return render(request, 'lmnad/useful_links.html', context)
+
+
 def projects(request):
     all_projects = Project.objects.all()
     context = {

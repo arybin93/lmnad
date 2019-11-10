@@ -147,7 +147,8 @@ SUIT_CONFIG = {
                 'people',
                 'grant',
                 'project',
-        ]},
+                'UsefulLink'
+            ]},
         {'app': 'publications', 'label': 'Менеджер публикаций', 'models': [
             'publication',
             'conference',
@@ -251,8 +252,6 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCLumlxQ35v472UxtM0RupR3cXkxm4nW0I'
-
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PERMISSION_CLASSES': [
@@ -314,6 +313,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-YANDEX_TRANSLATE_API_KEY = 'trnsl.1.1.20180920T154850Z.a2bee67a152acd7d.4c5ab6ccd1dde56613600283456a79ab81cea23b'
+YANDEX_TRANSLATE_API_KEY = os.getenv('YANDEX_TRANSLATE_API_KEY', 'base')
+GEOPOSITION_GOOGLE_MAPS_API_KEY = os.getenv('GEOPOSITION_GOOGLE_MAPS_API_KEY', 'base')
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 12621440
