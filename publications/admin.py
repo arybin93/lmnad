@@ -138,7 +138,7 @@ class PublicationAdmin(MixinModelAdmin, TabbedTranslationAdmin):
                 <strong>Страницы: </strong> {} <br>
                 <strong>DOI: </strong> <a href="{}">{}</a> <br>
                 ''',
-                obj.journal,
+                obj.journal if obj.journal else '-',
                 obj.volume if obj.volume else '-',
                 obj.issue if obj.issue else '-',
                 obj.pages if obj.pages else '-',

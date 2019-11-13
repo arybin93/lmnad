@@ -210,21 +210,19 @@ class Publication(TimeStampedModel):
                 date=self.date.strftime('%d.%m.%Y') if self.date else '-'
             )
         else:
-            try:
-                journal = ''
+            journal = ''
+            if self.journal:
                 if self.language == RU:
                     journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
                 else:
                     journal_name = self.journal.name_en if self.journal.name_en else self.journal.name
 
-                    if self.journal.type == Journal.CONFERENCE:
-                        journal = '{journal_name}, {place}, {dates}'.format(journal_name=journal_name,
-                                                                            place=self.journal.place,
-                                                                            dates=self.journal.get_dates())
-                    else:
-                        journal = '{},'.format(journal_name)
-            except Exception:
-                pass
+                if self.journal.type == Journal.CONFERENCE:
+                    journal = '{journal_name}, {place}, {dates}'.format(journal_name=journal_name,
+                                                                        place=self.journal.place,
+                                                                        dates=self.journal.get_dates())
+                else:
+                    journal = '{},'.format(journal_name)
 
             issue = ''
             pages = ''
@@ -331,7 +329,7 @@ class Publication(TimeStampedModel):
             doi = 'doi: {}'.format(self.doi) if self.doi else ''
 
             journal = ''
-            try:
+            if self.journal:
                 if self.language == RU:
                     journal_name = self.journal.name_ru if self.journal.name_ru else self.journal.name
                 else:
@@ -343,8 +341,6 @@ class Publication(TimeStampedModel):
                                                                          dates=self.journal.get_dates())
                 else:
                     journal = '{},'.format(journal_name)
-            except Exception:
-                pass
 
             issue = ''
             pages = ''
@@ -417,8 +413,7 @@ class Conference(TimeStampedModel):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Докладчик')
 
     def __str__(self):
-        result = '{}'.format(self.publication.journal,
-                              self.publication.journal.place,)
+        result = '{}'.format(self.publication.journal, self.publication.journal.place,)
         return result
 
     def name_conference(self):
