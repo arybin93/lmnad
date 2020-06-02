@@ -12,8 +12,8 @@ from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, PageData
-from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
+from igwatlas.models import Record, Source, PageData, WaveData
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer, WaveDataSerializer
 from lmnad.models import Project
 
 
@@ -163,6 +163,65 @@ class RecordsViewSet(viewsets.ViewSet):
         return self.paginator.get_paginated_response(data)
 
 
+class WaveDataViewSet(viewsets.ViewSet):
+
+    queryset = WaveData.objects.all()
+    serializer_class = WaveDataSerializer
+
+    def list(self, request):
+        """
+           List of records
+           ---
+           parameters_strategy: merge
+           parameters:
+               - name: api_key
+                 required: true
+                 defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+                 description: api key access to API
+                 paramType: query
+                 type: string
+        """
+
+        api_key = request.GET.get('api_key', None)
+        is_yandex_map_params = int(request.GET.get('is_yandex_map_params', 1))
+        wave_types = request.GET.get('wave_types', None)
+        mode = request.GET.get('mode', None)
+        amplitude_from = request.GET.get('amplitude_from', None)
+        amplitude_to = request.GET.get('amplitude_to', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        record = request.GET.get('record', None)
+
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+            wavedata = WaveData.objects.all()
+
+            if wave_types:
+                wavedata = wavedata.filter(types=wave_types)
+
+            if mode:
+                wavedata = wavedata.filter(mode=mode)
+
+            if amplitude_from and amplitude_to:
+                wavedata = wavedata.filter(amplitude__range=(amplitude_from, amplitude_to))
+
+            if date_from and date_to:
+                wavedata = wavedata.filter(Q(record__date__gte=date_from) & Q(record__date__lte=date_to))
+            elif date_from:
+                wavedata = wavedata.filter(record__date__gte=date_from)
+            elif date_to:
+                wavedata = wavedata.filter(record__date__lte=date_to)
+
+            if record:
+                wavedata = wavedata.filter(record__sourse=record)
+
+            result = WaveDataSerializer(wavedata, many=True, context={'request': request}).data
+
+            return Response(result)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+
 class SourceViewSet(viewsets.ModelViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
@@ -271,6 +330,14 @@ def yandex_map(request):
         'project': Project.objects.get(name='igwatlas_online')
     }
     return render(request, 'igwatlas/map.html', context)
+
+
+def yandex_map_params(request):
+    """ IGW Atlas parameters yandex map page and search """
+    context = {
+        'project': Project.objects.get(name='igwatlas_online')
+    }
+    return render(request, 'igwatlas/map_params.html', context)
 
 
 def source(request):

@@ -164,7 +164,8 @@ SUIT_CONFIG = {
             'record',
             'source',
             'file',
-            'pageData'
+            'pageData',
+            'waveData'
         ]},
         {'app': 'lmnad', 'label': 'Wiki', 'models': [
             'wiki',
