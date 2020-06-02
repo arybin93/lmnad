@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.forms import ModelForm
 from django.utils.html import format_html_join
 from django_select2.forms import Select2MultipleWidget, Select2Widget
+from suit.widgets import SuitSplitDateTimeWidget
+from daterange_filter.filter import DateRangeFilter
+from igwatlas.models import Record, Source, File, PageData, WaveData
 from django.utils.safestring import mark_safe
 
 from daterange_filter.filter import DateRangeFilter
@@ -141,3 +144,13 @@ class PageDataAdmin(TabbedTranslationAdmin):
     form = PageDataForm
 
 admin.site.register(PageData, PageDataAdmin)
+
+
+class WaveDataAdmin(admin.ModelAdmin):
+    list_display = ['id', 'record', 'type', 'mode', 'amplitude']
+
+    search_fields = ['id', 'type', 'mode', 'amplitude']
+    list_filter = ['type', 'mode']
+    list_display_links = ['id']
+
+admin.site.register(WaveData, WaveDataAdmin)

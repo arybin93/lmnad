@@ -14,7 +14,6 @@ class File(models.Model):
     class Meta:
         verbose_name = 'Файл'
         verbose_name_plural = 'Файлы'
-
     def __str__(self):
         if self.file:
             return self.file.name
@@ -130,3 +129,30 @@ class PageData(models.Model):
     class Meta:
         verbose_name = 'Данные для страниц'
         verbose_name_plural = 'Данные для страниц'
+
+
+class WaveData(models.Model):
+    LONG_WAVES = 0
+    INTERNAL_BORE = 1
+    SHORT_PERIOD = 2
+
+    TYPES = (
+        (LONG_WAVES, 'Длинные волны'),
+        (INTERNAL_BORE, 'Внутренний бор'),
+        (SHORT_PERIOD, 'Короткопериодные волны'),
+     )
+
+    DEFAULT_MODE = 1
+
+    type = models.PositiveIntegerField(default=SHORT_PERIOD, choices=TYPES, unique=True,
+                                       verbose_name='Тип ВВ')
+    mode = models.PositiveIntegerField(default=DEFAULT_MODE, verbose_name='Мода ВВ')
+    amplitude = models.FloatField(verbose_name='Амплитуда ВВ в метрах')
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, verbose_name='Запись для анализа')
+
+    def __str__(self):
+        return self.get_type_display()
+
+    class Meta:
+        verbose_name = 'Параметры'
+        verbose_name_plural = 'Параметры'

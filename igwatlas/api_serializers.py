@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from igwatlas.models import Record, Source, File, RecordType
+from igwatlas.models import Record, Source, File, RecordType, WaveData
 
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -107,3 +107,24 @@ class RecordSerializer(serializers.ModelSerializer):
     def get_lon(self, obj):
         return obj.position.longitude
 
+
+class WaveDataSerializer(serializers.ModelSerializer):
+    lat = serializers.SerializerMethodField()
+    lon = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WaveData
+        fields = ('id',
+                  'lat',
+                  'lon',
+                  'type',
+                  'mode',
+                  'amplitude',
+                  'record'
+                  )
+
+    def get_lat(self, obj):
+        return obj.record.position.latitude
+
+    def get_lon(self, obj):
+        return obj.record.position.longitude

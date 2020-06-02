@@ -4,7 +4,7 @@ from django.urls import include, path
 from django.contrib import admin
 from rest_framework import routers
 
-from igwatlas.views import RecordsViewSet, SourceViewSet
+from igwatlas.views import RecordsViewSet, WaveDataViewSet, SourceViewSet
 from igwcoeffs.views import CalculationViewSet
 from publications.views import PublicationViewSet
 
@@ -12,6 +12,7 @@ router = routers.DefaultRouter()
 router.register('calculation', CalculationViewSet, base_name='calculation')
 router.register('publication', PublicationViewSet, base_name='publication')
 router.register('records', RecordsViewSet, base_name='records')
+router.register('wave_params', WaveDataViewSet, base_name='wave_params')
 router.register('sources', SourceViewSet, base_name='sources')
 
 urlpatterns = [
