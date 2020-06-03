@@ -156,3 +156,4 @@ class WaveData(models.Model):
     class Meta:
         verbose_name = 'Параметры'
         verbose_name_plural = 'Параметры'
+
