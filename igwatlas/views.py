@@ -13,7 +13,8 @@ from constance import config
 
 # Imports from our apps
 from igwatlas.models import Record, Source, PageData, WaveData
-from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer, WaveDataSerializer
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer, WaveDataSerializer, \
+    WaveDataYandexSerializer
 from lmnad.models import Project
 
 
@@ -215,9 +216,18 @@ class WaveDataViewSet(viewsets.ViewSet):
             if record:
                 wavedata = wavedata.filter(record__sourse=record)
 
-            result = WaveDataSerializer(wavedata, many=True, context={'request': request}).data
+            page_records = wavedata
+            if page_records is None:
+                page_records = wavedata
 
-            return Response(result)
+            if is_yandex_map_params:
+                result = WaveDataYandexSerializer(YandexObject(type='FeatureCollection', features=page_records)).data
+            else:
+                result = WaveDataSerializer(page_records, many=True, context={'request': request}).data
+
+            #result = WaveDataSerializer(wavedata, many=True, context={'request': request}).data
+            #
+            return result
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 

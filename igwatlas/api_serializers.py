@@ -108,6 +108,58 @@ class RecordSerializer(serializers.ModelSerializer):
         return obj.position.longitude
 
 
+class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
+    geometry = serializers.SerializerMethodField()
+    properties = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WaveData
+        fields = ('id',
+                  'type',
+                  'geometry',
+                  'properties'
+                  )
+
+    def get_type(self, obj):
+        return 'Feature'
+
+    def get_geometry(self, obj):
+        lat = obj.record.position.latitude
+        lon = obj.record.position.longitude
+        return {
+            'type': 'Point',
+            'coordinates': [lat, lon]
+        }
+
+    def get_properties(self, obj):
+        short_text_source = ''
+        full_text_source = ''
+        link_text_source = ''
+        for source in obj.record.source.all():
+            short_text_source += source.source_short + ';'
+            full_text_source += source.source + ';'
+            if source.link:
+                link_text_source += source.link + ';'
+
+        date = ''
+        if obj.record.date:
+            date = obj.record.date.strftime('%d-%m-%Y')
+
+        return {
+            'hintContent': short_text_source + str(obj.record.position),
+            # 'balloonContentHeader': str(obj.type) + ' ' + str(obj.mode) + ' ' + str(obj.amplitude),
+            'balloonContentBody': full_text_source + "<br>" + str(obj.record.position) + "<br>",
+            'balloonContentFooter': link_text_source + ' ' + date
+
+        }
+
+
+class WaveDataYandexSerializer(serializers.Serializer):
+    type = serializers.CharField(max_length=200)
+    features = FeatureWaveDataYandexSerialzer(many=True)
+
+
 class WaveDataSerializer(serializers.ModelSerializer):
     lat = serializers.SerializerMethodField()
     lon = serializers.SerializerMethodField()
