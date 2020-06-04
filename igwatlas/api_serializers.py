@@ -146,10 +146,15 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
         if obj.record.date:
             date = obj.record.date.strftime('%d-%m-%Y')
 
+        round_lat = round(obj.record.position.latitude, 3)
+        round_lon = round(obj.record.position.longitude, 3)
         return {
-            'hintContent': short_text_source + str(obj.record.position),
-            # 'balloonContentHeader': str(obj.type) + ' ' + str(obj.mode) + ' ' + str(obj.amplitude),
-            'balloonContentBody': full_text_source + "<br>" + str(obj.record.position) + "<br>",
+            'hintContent': str(round_lat) + ',' + str(round_lon),
+            'balloonContentHeader': "<b>" 'Wave type: ' + obj.get_type_display() + "<br>" +
+                                    "<b>" 'Wave mode: ' + str(obj.mode) + "<br>" + "<b>" 'Wave amplitude: ' +
+                                    str(obj.amplitude) + ' m',
+            'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Coordinates: ' + str(round_lat) + ',' +
+                                  str(round_lon) + "<br>",
             'balloonContentFooter': link_text_source + ' ' + date
 
         }
