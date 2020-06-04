@@ -281,9 +281,7 @@ class WaveDataViewSet(viewsets.ViewSet):
             else:
                 result = WaveDataSerializer(page_records, many=True, context={'request': request}).data
 
-            #result = WaveDataSerializer(wavedata, many=True, context={'request': request}).data
-            #
-            return result
+            return Response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 

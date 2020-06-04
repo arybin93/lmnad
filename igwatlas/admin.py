@@ -32,6 +32,16 @@ class RecordForm(ModelForm):
         }
 
 
+class WaveDataForm(ModelForm):
+
+    class Meta:
+        model = WaveData
+        exclude = []
+        widgets = {
+            'record': Select2Widget
+        }
+
+
 # filters
 class RowDateRangeFilter(DateRangeFilter):
     template = 'admin/daterange_filter.html'
@@ -148,7 +158,7 @@ admin.site.register(PageData, PageDataAdmin)
 
 class WaveDataAdmin(admin.ModelAdmin):
     list_display = ['id', 'record', 'type', 'mode', 'amplitude']
-
+    form = WaveDataForm
     search_fields = ['id', 'type', 'mode', 'amplitude']
     list_filter = ['type', 'mode']
     list_display_links = ['id']
