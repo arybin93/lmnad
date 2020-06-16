@@ -158,16 +158,12 @@ msgid "number of observation in database"
 msgstr "число наблюдений в базе данных"
 
 #: .\igwatlas\templates\igwatlas\igwatlas.html:29
-#, fuzzy
-#| msgid "number of observation in database"
 msgid "number of records in database"
-msgstr "число наблюдений в базе данных"
+msgstr "число записей в базе данных"
 
 #: .\igwatlas\templates\igwatlas\igwatlas.html:30
-#, fuzzy
-#| msgid "number of observation in database"
 msgid "number of analyzed records in database"
-msgstr "число наблюдений в базе данных"
+msgstr "число проанализированнах записей в базе данных"
 
 #: .\igwatlas\templates\igwatlas\igwatlas.html:31
 msgid "Years in DB: "

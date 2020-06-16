@@ -25,7 +25,6 @@ function init () {
 
      });
      myMap.geoObjects.add(objectManager);
-     console.log('хочу спать');
      fetchData(objectManager, PARAMS_URL);
 
      // search form
