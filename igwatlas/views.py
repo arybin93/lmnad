@@ -324,6 +324,8 @@ def igwatlas(request):
 
     sources_count = Source.objects.all().count()
     observation_count = Record.objects.all().count()
+    count_params = WaveData.objects.all().count()
+    count_records = Record.objects.filter(new_types__value=Record.RECORD).count()
 
     min_date = Record.objects.all().aggregate(Min('date'))
     max_date = Record.objects.all().aggregate(Max('date'))
@@ -332,6 +334,8 @@ def igwatlas(request):
     context['max_date'] = max_date['date__max']
     context['count_observation'] = observation_count
     context['count_sources'] = sources_count
+    context['count_params'] = count_params
+    context['count_records'] = count_records
     context['project'] = Project.objects.get(name='igwatlas_online')
 
     return render(request, 'igwatlas/igwatlas.html', context)
