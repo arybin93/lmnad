@@ -152,7 +152,8 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
             'hintContent': str(round_lat) + ',' + str(round_lon),
             'balloonContentHeader': "<b>" 'Wave type: ' + obj.get_type_display() + "<br>" +
                                     "<b>" 'Wave mode: ' + str(obj.mode) + "<br>" + "<b>" 'Wave amplitude: ' +
-                                    str(obj.amplitude) + ' m',
+                                    str(obj.amplitude) + ' m' + "<br>" + "<b>" 'Wave period: ' +
+                                    str(obj.period) + ' h',
             'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Coordinates: ' + str(round_lat) + ',' +
                                   str(round_lon) + "<br>",
             'balloonContentFooter': link_text_source + ' ' + date
@@ -177,6 +178,7 @@ class WaveDataSerializer(serializers.ModelSerializer):
                   'type',
                   'mode',
                   'amplitude',
+                  'period',
                   'record'
                   )
 

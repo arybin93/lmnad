@@ -32,11 +32,9 @@ function init () {
      $('.datepicker').datepicker();
 
     var types_multi_select = $(".types_multiple").select2({
-        placeholder: "Select types",
+        placeholder: "Select type",
         allowClear: true
     });
-
-    var source_value = $('#id_label_sources');
 
     $("#search_btn").click(function(event) {
 
@@ -51,13 +49,14 @@ function init () {
                 type: 'get',
                 data: {
                     api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
-                    wave_types: $('#wave_types').val(),
-                    mode: $('#mode').val(),
-                    amplitude_from: $('#amplitude_from').val(),
-                    amplitude_to: $('#amplitude_to').val(),
+                    wave_types: $('#id_label_types').val()[0],
+                    mode: $('#wave_mode').val(),
+                    amplitude_from: $('#wave_amplitude_from').val(),
+                    amplitude_to: $('#wave_amplitude_to').val(),
+                    period_from: $('#wave_period_from').val(),
+                    period_to: $('#wave_period_to').val(),
                     date_from: $('#date_from').val(),
                     date_to: $('#date_to').val(),
-                    record: source_value.val()
                 }
             }).done(function(data) {
                 objectManager.add(data);
@@ -65,24 +64,27 @@ function init () {
             });
         }
 
-        fetchSearchData('http://localhost:8000/api/v1/wave_params/?api_key=');
-
+        fetchSearchData('http://localhost:8000/api/v1/wave_params/');
+        console.log($('#id_label_types').val()[0]);
         event.preventDefault();
     });
 
     $("#search_cancel").click(function(event) {
         console.log('reset');
         // close and clear, and get all records
+        types_multi_select.val([]);
         $(".types_multiple").select2({
-            placeholder: "Select types",
+            placeholder: "Select type",
             allowClear: true
         });
-        $('#mode').val('');
-        $('#amplitude_from').val('');
-        $('#amplitude_to').val('');
+        $('#id_label_types').val('');
+        $('#wave_mode').val('');
+        $('#wave_amplitude_from').val('');
+        $('#wave_amplitude_to').val('');
+        $('#wave_period_from').val('');
+        $('#wave_period_to').val('');
         $('#date_from').val('');
         $('#date_to').val('');
-        source_value.val('');
         reset_request()
     });
 
