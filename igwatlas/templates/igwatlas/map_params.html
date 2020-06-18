@@ -68,6 +68,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="id_label_polarity" class="col-sm-2 control-label">
+                                    {% trans 'Select polarity of wave' %}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select class="polarity_multiple" id="id_label_polarity" multiple="multiple" style="width: 100%">
+                                        <option value="3">{% trans "Negative" %}</option>
+                                        <option value="4">{% trans "Positive" %}</option>
+                                        <option value="5">{% trans "Convex" %}</option>
+                                        <option value="6">{% trans "Concave" %}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="date_from" class="col-sm-2 control-label">
                                     {% trans "Select date from" %}
                                 </label>

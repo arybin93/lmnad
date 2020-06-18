@@ -14,6 +14,7 @@ class File(models.Model):
     class Meta:
         verbose_name = 'Файл'
         verbose_name_plural = 'Файлы'
+
     def __str__(self):
         if self.file:
             return self.file.name
@@ -140,7 +141,19 @@ class WaveData(models.Model):
         (LONG_WAVES, 'Длинные волны'),
         (INTERNAL_BORE, 'Внутренний бор'),
         (SHORT_PERIOD, 'Короткопериодные волны'),
-     )
+    )
+
+    NEGATIVE = 0
+    POSITIVE = 1
+    CONVEX = 2
+    CONCAVE = 3
+
+    POLARITY = (
+        (NEGATIVE, 'Отрицательная'),
+        (POSITIVE, 'Положительная'),
+        (CONVEX, 'Выпуклая'),
+        (CONCAVE, 'Вогнутая')
+    )
 
     DEFAULT_MODE = 1
 
@@ -149,6 +162,8 @@ class WaveData(models.Model):
     mode = models.PositiveIntegerField(default=DEFAULT_MODE, verbose_name='Мода ВВ')
     amplitude = models.FloatField(verbose_name='Амплитуда ВВ в метрах')
     period = models.FloatField(blank=True, null=True, verbose_name='Период ВВ в часах')
+    polarity = models.PositiveIntegerField(verbose_name='Полярность ВВ', blank=True, null=True, choices=POLARITY,
+                                unique=True)
     record = models.ForeignKey(Record, on_delete=models.CASCADE, verbose_name='Запись для анализа')
 
     def __str__(self):
@@ -157,4 +172,3 @@ class WaveData(models.Model):
     class Meta:
         verbose_name = 'Параметры'
         verbose_name_plural = 'Параметры'
-

@@ -157,10 +157,10 @@ admin.site.register(PageData, PageDataAdmin)
 
 
 class WaveDataAdmin(admin.ModelAdmin):
-    list_display = ['id', 'record', 'type', 'mode', 'amplitude', 'period']
+    list_display = ['id', 'record', 'type', 'mode', 'amplitude', 'period', 'polarity']
     form = WaveDataForm
-    search_fields = ['id', 'type', 'mode', 'amplitude', 'period']
-    list_filter = ['type', 'mode']
+    search_fields = ['id', 'type', 'mode', 'amplitude', 'period', 'polarity']
+    list_filter = ['type', 'mode', 'polarity']
     list_display_links = ['id']
 
 
