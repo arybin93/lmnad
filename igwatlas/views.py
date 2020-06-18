@@ -191,6 +191,7 @@ class WaveDataViewSet(viewsets.ViewSet):
         amplitude_to = request.GET.get('amplitude_to', None)
         period_from = request.GET.get('period_from', None)
         period_to = request.GET.get('period_to', None)
+        polarity = request.GET.get('polarity', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         record = request.GET.get('record', None)
@@ -210,6 +211,9 @@ class WaveDataViewSet(viewsets.ViewSet):
 
             if period_from and period_to:
                 wavedata = wavedata.filter(period__range=(period_from, period_to))
+
+            if polarity:
+                wavedata = wavedata.filter(polarity=polarity)
 
             if date_from and date_to:
                 wavedata = wavedata.filter(Q(record__date__gte=date_from) & Q(record__date__lte=date_to))

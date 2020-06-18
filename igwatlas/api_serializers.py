@@ -148,13 +148,15 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
 
         round_lat = round(obj.record.position.latitude, 3)
         round_lon = round(obj.record.position.longitude, 3)
+
         return {
             'hintContent': str(round_lat) + ',' + str(round_lon),
-            'balloonContentHeader': "<b>" 'Wave type: ' + obj.get_type_display() + "<br>" +
-                                    "<b>" 'Wave mode: ' + str(obj.mode) + "<br>" + "<b>" 'Wave amplitude: ' +
-                                    str(obj.amplitude) + ' m' + "<br>" + "<b>" 'Wave period: ' +
-                                    str(obj.period) + ' h',
-            'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Coordinates: ' + str(round_lat) + ',' +
+            'balloonContentHeader': "<b>" 'Тип ВГВ: ' + obj.get_type_display() + "<br>" +
+                                    "<b>" 'Мода ВГВ: ' + str(obj.mode) + "<br>" + "<b>" 'Амплитуда ВГВ: ' +
+                                    str(obj.amplitude) + ' м' + "<br>" + "<b>" 'Период ВГВ: ' +
+                                    str(obj.period) + ' ч' "<br>" + "<b>" 'Полярность ВГВ: ' +
+                                    str(obj.polarity),
+            'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Координаты: ' + str(round_lat) + ',' +
                                   str(round_lon) + "<br>",
             'balloonContentFooter': link_text_source + ' ' + date
 
@@ -179,6 +181,7 @@ class WaveDataSerializer(serializers.ModelSerializer):
                   'mode',
                   'amplitude',
                   'period',
+                  'polarity',
                   'record'
                   )
 

@@ -34,6 +34,10 @@ function init () {
         placeholder: "Select type",
         allowClear: true
     });
+        var polarity_multi_select = $(".polarity_multiple").select2({
+        placeholder: "Select polarity",
+        allowClear: true
+    });
 
     $("#search_btn").click(function(event) {
 
@@ -54,6 +58,7 @@ function init () {
                     amplitude_to: $('#wave_amplitude_to').val(),
                     period_from: $('#wave_period_from').val(),
                     period_to: $('#wave_period_to').val(),
+                    polarity: $('#id_label_polarity').val()[0],
                     date_from: $('#date_from').val(),
                     date_to: $('#date_to').val(),
                 }
@@ -64,7 +69,6 @@ function init () {
         }
 
         fetchSearchData('http://localhost:8000/api/v1/wave_params/');
-        console.log($('#id_label_types').val()[0]);
         event.preventDefault();
     });
 
@@ -76,12 +80,18 @@ function init () {
             placeholder: "Select type",
             allowClear: true
         });
+        polarity_multi_select.val([]);
+        $(".polarity_multiple").select2({
+            placeholder: "Select polarity",
+            allowClear: true
+        });
         $('#id_label_types').val('');
         $('#wave_mode').val('');
         $('#wave_amplitude_from').val('');
         $('#wave_amplitude_to').val('');
         $('#wave_period_from').val('');
         $('#wave_period_to').val('');
+        $('#polarity').val('');
         $('#date_from').val('');
         $('#date_to').val('');
         reset_request()
