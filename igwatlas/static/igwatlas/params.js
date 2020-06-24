@@ -1,7 +1,7 @@
 "use strict";
 
 var myMap;
-var PARAMS_URL = 'http://localhost:8000/api/v1/wave_params/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
+var PARAMS_URL = 'https://lmnad.nntu.ru/api/v1/wave_params/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
 
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
@@ -111,27 +111,4 @@ function init () {
             objectManager.add(data);
         });
     }
-
-//    function fetchData(objectManager, url) {
-//        $.ajax({
-//            url: url
-//        }).done(function(data) {
-//            objectManager.add({
-//                type: 'Feature',
-//                id: data[0]['id'],
-//                geometry: {
-//                type: 'Point',
-//                coordinates: [data[0]['lat'], data[0]['lon']]
-//                },
-//        properties: {
-//        hintContent: 'Содержание всплывающей подсказки',
-//        balloonContent: 'Содержание балуна'
-//        }
-//         });
-//
-//            //if (data['next']) {
-//           //     fetchData(objectManager, data['next'])
-//           // }
-//        });
-//    }
 }
