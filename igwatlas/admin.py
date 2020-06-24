@@ -42,6 +42,16 @@ class WaveDataForm(ModelForm):
         }
 
 
+class WaveDataForm(ModelForm):
+
+    class Meta:
+        model = WaveData
+        exclude = []
+        widgets = {
+            'record': Select2Widget
+        }
+
+
 # filters
 class RowDateRangeFilter(DateRangeFilter):
     template = 'admin/daterange_filter.html'
