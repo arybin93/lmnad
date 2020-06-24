@@ -306,6 +306,10 @@ LOGGING = {
     },
 }
 
+if not os.path.exists('{}/log/request.log'.format(BASE_DIR)):
+    del LOGGING['handlers']['request']
+    del LOGGING['loggers']['django.request']
+
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
     messages.INFO: 'alert-info',
