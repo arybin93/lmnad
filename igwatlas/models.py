@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext as _
 
 from geoposition.fields import GeopositionField
 from igwcoeffs.models import TimeStampedModel
@@ -138,9 +139,9 @@ class WaveData(models.Model):
     SHORT_PERIOD = 2
 
     TYPES = (
-        (LONG_WAVES, 'Длинные волны'),
-        (INTERNAL_BORE, 'Внутренний бор'),
-        (SHORT_PERIOD, 'Короткопериодные волны'),
+        (LONG_WAVES, _('Long wave')),            # 'Длинные волны'
+        (INTERNAL_BORE, _('Internal bore')),     # 'Внутренний бор'
+        (SHORT_PERIOD, _('Short period wave')),  # 'Короткопериодные волны'
     )
 
     NEGATIVE = 0
@@ -149,10 +150,10 @@ class WaveData(models.Model):
     CONCAVE = 3
 
     POLARITY = (
-        (NEGATIVE, 'Отрицательная'),
-        (POSITIVE, 'Положительная'),
-        (CONVEX, 'Выпуклая'),
-        (CONCAVE, 'Вогнутая')
+        (NEGATIVE, _('Negative')),    # 'Отрицательная'
+        (POSITIVE, _('Positive')),    # 'Положительная'
+        (CONVEX,  _('Convex')),       # 'Выпуклая'
+        (CONCAVE,  _('Concave'))      # 'Вогнутая'
     )
 
     DEFAULT_MODE = 1

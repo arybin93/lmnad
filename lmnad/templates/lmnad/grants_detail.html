@@ -19,7 +19,7 @@
             <th>{{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }}</th>
         </tr>
         <tr>
-            <th><b>{% trans "Supervisers" %}</b></th>
+            <th><b>{% trans "Supervisors" %}</b></th>
             <th>
                 {% for head in grant.head.all %}
                     {% if head.account %}

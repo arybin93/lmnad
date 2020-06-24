@@ -9,6 +9,7 @@ ENV PYTHONUNBUFFERED 1
 # Install Python and Package Libraries
 RUN apt-get update && apt-get upgrade -y && apt-get autoremove && apt-get autoclean
 RUN apt-get install -y \
+    gettext \
     libffi-dev \
     libssl-dev \
     libxml2-dev \
