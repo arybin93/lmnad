@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from igwatlas.models import Record, Source, File, RecordType
+from igwatlas.models import Record, Source, File, RecordType, WaveData
 
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -107,3 +107,86 @@ class RecordSerializer(serializers.ModelSerializer):
     def get_lon(self, obj):
         return obj.position.longitude
 
+
+class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
+    geometry = serializers.SerializerMethodField()
+    properties = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WaveData
+        fields = ('id',
+                  'type',
+                  'geometry',
+                  'properties'
+                  )
+
+    def get_type(self, obj):
+        return 'Feature'
+
+    def get_geometry(self, obj):
+        lat = obj.record.position.latitude
+        lon = obj.record.position.longitude
+        return {
+            'type': 'Point',
+            'coordinates': [lat, lon]
+        }
+
+    def get_properties(self, obj):
+        short_text_source = ''
+        full_text_source = ''
+        link_text_source = ''
+        for source in obj.record.source.all():
+            short_text_source += source.source_short + ';'
+            full_text_source += source.source + ';'
+            if source.link:
+                link_text_source += source.link + ';'
+
+        date = ''
+        if obj.record.date:
+            date = obj.record.date.strftime('%d-%m-%Y')
+
+        round_lat = round(obj.record.position.latitude, 3)
+        round_lon = round(obj.record.position.longitude, 3)
+
+        return {
+            'hintContent': str(round_lat) + ',' + str(round_lon),
+            'balloonContentHeader': "<b>" 'Тип ВГВ: ' + obj.get_type_display() + "<br>" +
+                                    "<b>" 'Мода ВГВ: ' + str(obj.mode) + "<br>" + "<b>" 'Амплитуда ВГВ: ' +
+                                    str(obj.amplitude) + ' м' + "<br>" + "<b>" 'Период ВГВ: ' +
+                                    str(obj.period) + ' ч' "<br>" + "<b>" 'Полярность ВГВ: ' +
+                                    str(obj.polarity),
+            'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Координаты: ' + str(round_lat) + ',' +
+                                  str(round_lon) + "<br>",
+            'balloonContentFooter': link_text_source + ' ' + date
+
+        }
+
+
+class WaveDataYandexSerializer(serializers.Serializer):
+    type = serializers.CharField(max_length=200)
+    features = FeatureWaveDataYandexSerialzer(many=True)
+
+
+class WaveDataSerializer(serializers.ModelSerializer):
+    lat = serializers.SerializerMethodField()
+    lon = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WaveData
+        fields = ('id',
+                  'lat',
+                  'lon',
+                  'type',
+                  'mode',
+                  'amplitude',
+                  'period',
+                  'polarity',
+                  'record'
+                  )
+
+    def get_lat(self, obj):
+        return obj.record.position.latitude
+
+    def get_lon(self, obj):
+        return obj.record.position.longitude

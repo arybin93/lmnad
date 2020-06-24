@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext as _
 
 from geoposition.fields import GeopositionField
 from igwcoeffs.models import TimeStampedModel
@@ -130,3 +131,45 @@ class PageData(models.Model):
     class Meta:
         verbose_name = 'Данные для страниц'
         verbose_name_plural = 'Данные для страниц'
+
+
+class WaveData(models.Model):
+    LONG_WAVES = 0
+    INTERNAL_BORE = 1
+    SHORT_PERIOD = 2
+
+    TYPES = (
+        (LONG_WAVES, _('Long wave')),            # 'Длинные волны'
+        (INTERNAL_BORE, _('Internal bore')),     # 'Внутренний бор'
+        (SHORT_PERIOD, _('Short period wave')),  # 'Короткопериодные волны'
+    )
+
+    NEGATIVE = 0
+    POSITIVE = 1
+    CONVEX = 2
+    CONCAVE = 3
+
+    POLARITY = (
+        (NEGATIVE, _('Negative')),    # 'Отрицательная'
+        (POSITIVE, _('Positive')),    # 'Положительная'
+        (CONVEX,  _('Convex')),       # 'Выпуклая'
+        (CONCAVE,  _('Concave'))      # 'Вогнутая'
+    )
+
+    DEFAULT_MODE = 1
+
+    type = models.PositiveIntegerField(default=SHORT_PERIOD, choices=TYPES, unique=True,
+                                       verbose_name='Тип ВВ')
+    mode = models.PositiveIntegerField(default=DEFAULT_MODE, verbose_name='Мода ВВ')
+    amplitude = models.FloatField(verbose_name='Амплитуда ВВ в метрах')
+    period = models.FloatField(blank=True, null=True, verbose_name='Период ВВ в часах')
+    polarity = models.PositiveIntegerField(verbose_name='Полярность ВВ', blank=True, null=True, choices=POLARITY,
+                                unique=True)
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, verbose_name='Запись для анализа')
+
+    def __str__(self):
+        return self.get_type_display()
+
+    class Meta:
+        verbose_name = 'Параметры'
+        verbose_name_plural = 'Параметры'

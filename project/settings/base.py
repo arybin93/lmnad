@@ -106,7 +106,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, '../locale'),
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
@@ -165,7 +165,8 @@ SUIT_CONFIG = {
             'record',
             'source',
             'file',
-            'pageData'
+            'pageData',
+            'waveData'
         ]},
         {'app': 'lmnad', 'label': 'Wiki', 'models': [
             'wiki',
@@ -304,6 +305,10 @@ LOGGING = {
         },
     },
 }
+
+if not os.path.exists('{}/log/request.log'.format(BASE_DIR)):
+    del LOGGING['handlers']['request']
+    del LOGGING['loggers']['django.request']
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',

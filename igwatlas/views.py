@@ -12,8 +12,9 @@ from rest_framework.response import Response
 from constance import config
 
 # Imports from our apps
-from igwatlas.models import Record, Source, PageData, RecordType, File
-from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer
+from igwatlas.models import Record, Source, PageData, RecordType, File, WaveData
+from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer, WaveDataSerializer, \
+    WaveDataYandexSerializer
 from lmnad.models import Project
 
 
@@ -220,6 +221,80 @@ class RecordsViewSet(viewsets.ViewSet):
         return self.paginator.get_paginated_response(data)
 
 
+class WaveDataViewSet(viewsets.ViewSet):
+    queryset = WaveData.objects.all()
+    serializer_class = WaveDataSerializer
+
+    def list(self, request):
+        """
+           List of records
+           ---
+           parameters_strategy: merge
+           parameters:
+               - name: api_key
+                 required: true
+                 defaultValue: d837d31970deb03ee35c416c5a66be1bba9f56d3
+                 description: api key access to API
+                 paramType: query
+                 type: string
+        """
+
+        api_key = request.GET.get('api_key', None)
+        is_yandex_map_params = int(request.GET.get('is_yandex_map_params', 1))
+        wave_types = request.GET.get('wave_types', None)
+        mode = request.GET.get('mode', None)
+        amplitude_from = request.GET.get('amplitude_from', None)
+        amplitude_to = request.GET.get('amplitude_to', None)
+        period_from = request.GET.get('period_from', None)
+        period_to = request.GET.get('period_to', None)
+        polarity = request.GET.get('polarity', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        record = request.GET.get('record', None)
+
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+            wavedata = WaveData.objects.all()
+
+            if wave_types:
+                wavedata = wavedata.filter(type=wave_types)
+
+            if mode:
+                wavedata = wavedata.filter(mode=mode)
+
+            if amplitude_from and amplitude_to:
+                wavedata = wavedata.filter(amplitude__range=(amplitude_from, amplitude_to))
+
+            if period_from and period_to:
+                wavedata = wavedata.filter(period__range=(period_from, period_to))
+
+            if polarity:
+                wavedata = wavedata.filter(polarity=polarity)
+
+            if date_from and date_to:
+                wavedata = wavedata.filter(Q(record__date__gte=date_from) & Q(record__date__lte=date_to))
+            elif date_from:
+                wavedata = wavedata.filter(record__date__gte=date_from)
+            elif date_to:
+                wavedata = wavedata.filter(record__date__lte=date_to)
+
+            if record:
+                wavedata = wavedata.filter(record__sourse=record)
+
+            page_records = wavedata
+            if page_records is None:
+                page_records = wavedata
+
+            if is_yandex_map_params:
+                result = WaveDataYandexSerializer(YandexObject(type='FeatureCollection', features=page_records)).data
+            else:
+                result = WaveDataSerializer(page_records, many=True, context={'request': request}).data
+
+            return Response(result)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+
 class SourceViewSet(viewsets.ViewSet):
     queryset = Source.objects.all()
     serializer_class = SourceSerializer
@@ -374,6 +449,8 @@ def igwatlas(request):
 
     sources_count = Source.objects.all().count()
     observation_count = Record.objects.all().count()
+    count_params = WaveData.objects.all().count()
+    count_records = Record.objects.filter(new_types__value=Record.RECORD).count()
 
     min_date = Record.objects.all().aggregate(Min('date'))
     max_date = Record.objects.all().aggregate(Max('date'))
@@ -382,6 +459,8 @@ def igwatlas(request):
     context['max_date'] = max_date['date__max']
     context['count_observation'] = observation_count
     context['count_sources'] = sources_count
+    context['count_params'] = count_params
+    context['count_records'] = count_records
     context['project'] = Project.objects.get(name='igwatlas_online')
 
     return render(request, 'igwatlas/igwatlas.html', context)
@@ -393,6 +472,14 @@ def yandex_map(request):
         'project': Project.objects.get(name='igwatlas_online')
     }
     return render(request, 'igwatlas/map.html', context)
+
+
+def yandex_map_params(request):
+    """ IGW Atlas parameters yandex map page and search """
+    context = {
+        'project': Project.objects.get(name='igwatlas_online')
+    }
+    return render(request, 'igwatlas/map_params.html', context)
 
 
 def source(request):
