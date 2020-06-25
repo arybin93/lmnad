@@ -158,13 +158,12 @@ class WaveData(models.Model):
 
     DEFAULT_MODE = 1
 
-    type = models.PositiveIntegerField(default=SHORT_PERIOD, choices=TYPES, unique=True,
+    type = models.PositiveIntegerField(default=SHORT_PERIOD, choices=TYPES,
                                        verbose_name='Тип ВВ')
     mode = models.PositiveIntegerField(default=DEFAULT_MODE, verbose_name='Мода ВВ')
     amplitude = models.FloatField(verbose_name='Амплитуда ВВ в метрах')
     period = models.FloatField(blank=True, null=True, verbose_name='Период ВВ в часах')
-    polarity = models.PositiveIntegerField(verbose_name='Полярность ВВ', blank=True, null=True, choices=POLARITY,
-                                unique=True)
+    polarity = models.PositiveIntegerField(verbose_name='Полярность ВВ', blank=True, null=True, choices=POLARITY)
     record = models.ForeignKey(Record, on_delete=models.CASCADE, verbose_name='Запись для анализа')
 
     def __str__(self):
