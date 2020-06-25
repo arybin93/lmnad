@@ -167,7 +167,10 @@ class WaveData(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE, verbose_name='Запись для анализа')
 
     def __str__(self):
-        return self.get_type_display()
+        if self.type:
+            return self.get_type_display()
+        if self.polarity:
+            return self.get_polarity_display()
 
     class Meta:
         verbose_name = 'Параметры'
