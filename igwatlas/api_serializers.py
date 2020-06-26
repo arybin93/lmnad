@@ -142,6 +142,9 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
             if source.link:
                 link_text_source += source.link + ';'
 
+        period_str = str(obj.period) if obj.period else '-'
+        polarity_str = obj.get_polarity_display() if obj.polarity else '-'
+
         date = ''
         if obj.record.date:
             date = obj.record.date.strftime('%d-%m-%Y')
@@ -154,10 +157,10 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
             'balloonContentHeader': "<b>" 'Тип ВГВ: ' + obj.get_type_display() + "<br>" +
                                     "<b>" 'Мода ВГВ: ' + str(obj.mode) + "<br>" + "<b>" 'Амплитуда ВГВ: ' +
                                     str(obj.amplitude) + ' м' + "<br>" + "<b>" 'Период ВГВ: ' +
-                                    str(obj.period) + ' ч' "<br>" + "<b>" 'Полярность ВГВ: ' +
-                                    obj.get_polarity_display(),
+                                    period_str + ' ч' "<br>" + "<b>" 'Полярность ВГВ: ' +
+                                    str(polarity_str),
             'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Координаты: ' + str(round_lat) + ',' +
-                                  str(round_lon) + "<br>",
+                                    str(round_lon) + "<br>",
             'balloonContentFooter': link_text_source + ' ' + date
 
         }
