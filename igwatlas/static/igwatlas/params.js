@@ -68,7 +68,7 @@ function init () {
             });
         }
 
-        fetchSearchData('http://localhost:8000/api/v1/wave_params/');
+        fetchSearchData(' https://lmnad.nntu.ru/api/v1/wave_params/');
         event.preventDefault();
     });
 

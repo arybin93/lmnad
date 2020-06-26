@@ -155,7 +155,7 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
                                     "<b>" 'Мода ВГВ: ' + str(obj.mode) + "<br>" + "<b>" 'Амплитуда ВГВ: ' +
                                     str(obj.amplitude) + ' м' + "<br>" + "<b>" 'Период ВГВ: ' +
                                     str(obj.period) + ' ч' "<br>" + "<b>" 'Полярность ВГВ: ' +
-                                    str(obj.polarity),
+                                    obj.get_polarity_display(),
             'balloonContentBody': full_text_source + "<br>" + "<br>" + "<b>" 'Координаты: ' + str(round_lat) + ',' +
                                   str(round_lon) + "<br>",
             'balloonContentFooter': link_text_source + ' ' + date
