@@ -165,7 +165,7 @@ msgstr "Детали"
 
 #: .\igwatlas\templates\igwatlas\igwatlas.html:23
 msgid "World Ocean"
-msgstr "Мировой океа"
+msgstr "Мировой океан"
 
 #: .\igwatlas\templates\igwatlas\igwatlas.html:24
 msgid "IGWAtlas contains observations of "
@@ -464,7 +464,7 @@ msgstr "Семинары"
 
 #: .\lmnad\templates\lmnad\base.html:56
 msgid "Protections"
-msgstr "Зашиты"
+msgstr "Защиты"
 
 #: .\lmnad\templates\lmnad\base.html:57 .\lmnad\templates\lmnad\events.html:6
 msgid "Events"
