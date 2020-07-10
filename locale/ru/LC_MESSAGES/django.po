@@ -164,7 +164,7 @@ msgstr "Детали"
 
 #: igwatlas/templates/igwatlas/igwatlas.html:23
 msgid "World Ocean"
-msgstr "Мировой океа"
+msgstr "Мировой океан"
 
 #: igwatlas/templates/igwatlas/igwatlas.html:24
 msgid "IGWAtlas contains observations of "
