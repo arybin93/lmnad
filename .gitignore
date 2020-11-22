@@ -1,5 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtualenv
+.venv
+venv/
+
 *.pyc
-*.log
+*.logd
 /media/*
 /.idea/*
 /static/*
