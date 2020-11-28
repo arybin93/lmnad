@@ -34,11 +34,12 @@ PREREQ_APPS = [
 ]
 
 PROJECT_APPS = [
-   'lmnad',
-   'igwatlas',
-   'igwcoeffs',
-   'tank',
-   'publications'
+    'lmnad',
+    'igwatlas',
+    'igwcoeffs',
+    'tank',
+    'publications',
+    'phenomenon_db'
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -164,6 +165,9 @@ SUIT_CONFIG = {
             'file',
             'pageData',
             'waveData'
+        ]},
+        {'app': 'phenomenon_db', 'label': 'Сахалин', 'models': [
+            'SeaPhenomenon',
         ]},
         {'app': 'lmnad', 'label': 'Wiki', 'models': [
             'wiki',

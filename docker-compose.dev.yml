@@ -17,7 +17,7 @@ services:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     volumes:
-      - .:/lmnad3
+      - .:/lmnad
     depends_on:
       - db
     ports:
