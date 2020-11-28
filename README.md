@@ -56,11 +56,6 @@ These instructions for getting the copy of project in local machine for testing 
 
 Project LMNAD without data was deployed locally, congratulations!
 
-
-### Setting up Database
-If you need data from site LMNAD locally (for testing and development goals),  
-send request for getting data to arybin93@email.com
-
 ### Running celery worker
 1. Install Rabbit MQ
 2. Run celery with active venv and from root of project lmnad:
@@ -69,10 +64,55 @@ send request for getting data to arybin93@email.com
    ```
 
 ### Setting up project via Docker
-    TBD
+#### Production env
+Prepare .env file or env variables on host and run
+```
+docker-compose up -d 
+```
+with building if required
+```
+docker-compose up -d --build
+```
+#### Development (local) env
+Prepare .env file or env variables on host and run
+```
+docker-compose -f docker-compose.dev.yml up -d --build
+```
+Run migration manually or restore DB dump
 
-### Deployment
-    TBD
+### Setting up Database and media
+If you need data from site LMNAD locally (for testing and development goals),  
+send request for getting data to arybin93@email.com
 
-### Backup
-    TBD
+### Restore DB backup
+1. Unzip
+    ```
+    gzip -d backup_22_11_2020.sql
+    ```
+2. Copy to mysql container (for dev `lmnad_mysql_dev`)
+    ```
+    docker cp backup_22_11_2020.sql lmnad_mysql:/tmp
+    ```
+3. Run SQL script
+    ```
+    docker exec -ti lmnad_mysql bash
+    mysql -u root -p lmnad_db < /tmp/backup_22_11_2020.sql
+    ```
+
+### Restore media Backup
+1. Copy backup to container
+    ```
+    docker cp backup.lmnad_uploads_22_11_2020.tar.gz lmnad_web:/tmp
+    ```
+2. Unzip 
+    ```
+    cd /tmp
+    tar -xfv backup.lmnad_uploads_22_11_2020.tar.gz
+    ```
+3. Copy to folder `/lmnad/project/media`
+    ```
+   cd /tmp/var/www/site/lmnad/project/media
+   cp -r uploads/ /lmnad/project/media/
+   rm -rf backup.lmnad_uploads_22_11_2020.tar.gz
+   rm -rf /tmp/var
+   ```

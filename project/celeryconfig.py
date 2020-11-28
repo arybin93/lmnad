@@ -1,6 +1,6 @@
 import os
 
-broker_url = os.environ.get('CELERY_BROKER', 'amqp://guest:guest@localhost//')
+broker_url = os.environ.get('CELERY_BROKER_URL', 'amqp://guest:guest@localhost//')
 result_backend = os.environ.get('CELERY_RESULT_BACKEND', 'rpc://')
 task_serializer = 'json'
 result_serializer = 'json'
