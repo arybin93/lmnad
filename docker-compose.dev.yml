@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  django:
+    image: lmnad_base_dev
+    container_name: lmnad_web_dev
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+    environment:
+      - DJANGO_DEBUG=True
+      - DJANGO_ALLOWED_HOSTS=*
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    volumes:
+      - .:/lmnad
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+    tty: true
+    networks:
+      - lmnad_net_dev
+
+  db:
+    container_name: lmnad_mysql_dev
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=lmnad_db
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - lmnad_net_dev
+
+networks:
+  lmnad_net_dev:
+
+volumes:
+  mysql_data:
+    driver: local

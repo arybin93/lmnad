@@ -34,11 +34,12 @@ PREREQ_APPS = [
 ]
 
 PROJECT_APPS = [
-   'lmnad',
-   'igwatlas',
-   'igwcoeffs',
-   'tank',
-   'publications'
+    'lmnad',
+    'igwatlas',
+    'igwcoeffs',
+    'tank',
+    'publications',
+    'phenomenon_db'
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -113,14 +114,11 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATIC_ROOT = os.path.join(BASE_DIR, "../static/")
-
-STATIC_URL = '/static/'
-
-MEDIA_URL = '/media/'
-
-MEDIA_ROOT = 'media/'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 FAVICON_PATH = STATIC_URL + 'lmnad/favicon.ico'
 
@@ -167,6 +165,9 @@ SUIT_CONFIG = {
             'file',
             'pageData',
             'waveData'
+        ]},
+        {'app': 'phenomenon_db', 'label': 'Сахалин', 'models': [
+            'SeaPhenomenon',
         ]},
         {'app': 'lmnad', 'label': 'Wiki', 'models': [
             'wiki',

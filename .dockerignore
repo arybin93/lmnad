@@ -1,0 +1,16 @@
+.idea
+.git
+.pytest_cache
+_travis
+._travis
+__pycache__
+.cache
+*cache
+*pyc
+
+docker
+
+docker-compose.yml
+Dockerfile
+requirements_win.txt
+README.md
