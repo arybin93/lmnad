@@ -4,7 +4,6 @@
 
 Web Application of Laboratory of Modeling of Natural and Anthropogenic Disasters ([LMNAD](https://lmnad.nntu.ru))
 from Nizhny Novgorod
-
 ---
 
 ## Getting Started
@@ -87,7 +86,7 @@ send request for getting data to arybin93@email.com
 ### Restore DB backup
 1. Unzip
     ```
-    gzip -d backup_22_11_2020.sql
+    gzip -d backup_22_11_2020.sql.gz
     ```
 2. Copy to mysql container (for dev `lmnad_mysql_dev`)
     ```
@@ -104,10 +103,11 @@ send request for getting data to arybin93@email.com
     ```
     docker cp backup.lmnad_uploads_22_11_2020.tar.gz lmnad_web:/tmp
     ```
-2. Unzip 
+2. Go to container and Unzip 
     ```
+    docker exec -ti lmnad_web bash
     cd /tmp
-    tar -xfv backup.lmnad_uploads_22_11_2020.tar.gz
+    tar -xvf backup.lmnad_uploads_22_11_2020.tar.gz
     ```
 3. Copy to folder `/lmnad/project/media`
     ```
@@ -116,3 +116,11 @@ send request for getting data to arybin93@email.com
    rm -rf backup.lmnad_uploads_22_11_2020.tar.gz
    rm -rf /tmp/var
    ```
+
+### Setup https
+According to [article](https://miki725.com/docker/crypto/2017/01/29/docker+nginx+letsencrypt.html)
+
+```bash
+docker run -t --rm -v lmnad_certs:/etc/letsencrypt -v lmnad_certs_data:/data/letsencrypt deliverous/certbot renew --webroot --webroot-path=/data/letsencrypt
+docker-compose kill -s HUP nginx
+```

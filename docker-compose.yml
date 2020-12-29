@@ -14,6 +14,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - YANDEX_TRANSLATE_API_KEY=${YANDEX_TRANSLATE_API_KEY}
+      - GEOPOSITION_GOOGLE_MAPS_API_KEY=${GEOPOSITION_GOOGLE_MAPS_API_KEY}
     depends_on:
       - db
     restart: always
@@ -50,8 +52,11 @@ services:
     volumes:
       - static_data:/lmnad/project/static
       - media_data:/lmnad/project/media
+      - certs:/etc/letsencrypt
+      - certs_data:/data/letsencrypt
     ports:
       - "80:80"
+      - "443:443"
     restart: always
     depends_on:
       - django
@@ -63,7 +68,8 @@ services:
     image: lmnad_base
     build:
       context: .
-    container_name: lmnad_celery # rabbitmq:5672 && wait-for app:8000
+    container_name: lmnad_celery
+    hostname: celery_worker
     command: sh -c "wait-for broker:5672 && wait-for django:8000 -- celery worker -A project -l info"
     environment:
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
@@ -110,4 +116,8 @@ volumes:
   media_data:
     driver: local
   mysql_data:
+    driver: local
+  certs:
+    driver: local
+  certs_data:
     driver: local
