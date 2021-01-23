@@ -31,10 +31,10 @@ services:
     image: mysql:5.7
     environment:
       - MYSQL_DATABASE=lmnad_db
-      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     ports:
       - "3306:3306"
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
