@@ -21,8 +21,8 @@ These instructions for getting the copy of project in local machine for testing 
     ```
     git clone git@github.com:arybin93/lmnad.git
     ```
-2. Install python 3.5.4
-    Download Python 3.5.4 from [python.org](https://www.python.org) according to your OS.
+2. Install python 3.7
+    Download Python 3.7 from [python.org](https://www.python.org) according to your OS.
 
 3. Create virtual environment
     ```
