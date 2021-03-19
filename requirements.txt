@@ -14,7 +14,7 @@ django-rest-swagger==2.2.0
 django-suit==0.2.26
 django-suit-ckeditor==0.0.2
 django-suit-redactor==0.0.4
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 django-geoposition-2==0.3.11
 django-modeltranslation==0.13
 django-request-logging==0.7.2
