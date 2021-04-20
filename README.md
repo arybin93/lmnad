@@ -83,6 +83,14 @@ Run migration manually or restore DB dump
 If you need data from site LMNAD locally (for testing and development goals),  
 send request for getting data to arybin93@email.com
 
+###Perform DB backup
+1. Go to the project directory
+
+2. Run bash-script
+'''
+./backup.sh
+'''
+
 ### Restore DB backup
 1. Unzip
     ```
