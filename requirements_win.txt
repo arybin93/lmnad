@@ -23,7 +23,7 @@ lxml==4.2.5
 numpy==1.15.2
 Pillow==6.2.0
 python-docx==0.8.10
-PyYAML==4.2b1
+PyYAML==5.4
 requests==2.20.0
 scipy==1.1.0
 yandex.translate==0.3.5
