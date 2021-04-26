@@ -158,4 +158,13 @@ docker-compose kill -s HUP nginx
 ### Translation 
 
 [Django translation](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/)
-
+1. Generate message
+        ```
+        docker exec -ti lmnad_web_dev bash
+        python manage.py makemessages -l ru
+        ```
+2. Put translation in `locale` folder
+3. Run compile messages
+        ```
+        python manage.py compilemessages
+        ```
