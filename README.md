@@ -63,7 +63,7 @@ Project LMNAD without data was deployed locally, congratulations!
    ```
 
 ### Setting up project via Docker
-Just for example of .env file:
+Just for example of .env file (dev.env as example):
 ```
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SECRET_KEY
 DJANGO_SECRET_KEY=dev
@@ -154,3 +154,8 @@ According to [article](https://miki725.com/docker/crypto/2017/01/29/docker+nginx
 docker run -t --rm -v lmnad_certs:/etc/letsencrypt -v lmnad_certs_data:/data/letsencrypt deliverous/certbot renew --webroot --webroot-path=/data/letsencrypt
 docker-compose kill -s HUP nginx
 ```
+
+### Translation 
+
+[Django translation](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/)
+

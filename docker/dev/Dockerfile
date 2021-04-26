@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     git \
     netcat \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Install any needed packages specified in requirements.txt
