@@ -6,6 +6,7 @@ services:
     container_name: lmnad_web
     build:
       context: .
+    command: sh -c "wait-for db:3306 && /lmnad/run_app.sh"
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}

@@ -63,6 +63,36 @@ Project LMNAD without data was deployed locally, congratulations!
    ```
 
 ### Setting up project via Docker
+Just for example of .env file (dev.env as example):
+```
+# https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SECRET_KEY
+DJANGO_SECRET_KEY=dev
+# https://docs.djangoproject.com/en/3.1/topics/settings/#designating-the-settings
+DJANGO_SETTINGS_MODULE=project.settings.server
+
+# Database connection (MySQL)
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+DB_HOST=db         # HOST
+DB_USER=dev        # USER
+DB_PASSWORD=dev    # PASSWORD
+
+# Celery broker settings Rabbit MQ 
+# https://docs.celeryproject.org/en/master/getting-started/backends-and-brokers/rabbitmq.html#installation-configuration
+CELERY_BROKER_URL=amqp://guest:guest@broker:5672    # Broker
+CELERY_RESULT_BACKEND=rpc://                        # Backend
+
+# Credentials for MySQL container
+MYSQL_ROOT_HOST=%
+MYSQL_ROOT_PASSWORD=root
+
+# Usign Yandex Translate https://yandex.com/dev/translate/
+YANDEX_TRANSLATE_API_KEY=base
+
+# https://developers.google.com/maps/documentation/javascript/get-api-key
+# For using Google Map in admin panel
+GEOPOSITION_GOOGLE_MAPS_API_KEY=base
+```
+
 #### Production env
 Prepare .env file or env variables on host and run
 ```
@@ -124,3 +154,17 @@ According to [article](https://miki725.com/docker/crypto/2017/01/29/docker+nginx
 docker run -t --rm -v lmnad_certs:/etc/letsencrypt -v lmnad_certs_data:/data/letsencrypt deliverous/certbot renew --webroot --webroot-path=/data/letsencrypt
 docker-compose kill -s HUP nginx
 ```
+
+### Translation 
+
+[Django translation](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/)
+1. Generate message
+        ```
+        docker exec -ti lmnad_web_dev bash
+        python manage.py makemessages -l ru
+        ```
+2. Put translation in `locale` folder
+3. Run compile messages
+        ```
+        python manage.py compilemessages
+        ```

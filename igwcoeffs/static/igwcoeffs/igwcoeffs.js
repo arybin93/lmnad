@@ -1,7 +1,7 @@
 "use strict";
 
 const MAIN_URL = window.location.protocol + "//" + window.location.host + "/api/v1/";
-const KEY = 'd837d31970deb03ee35c416c5a66be1bba9f56d3';
+const API_KEY = 'd837d31970deb03ee35c416c5a66be1bba9f56d3';
 const LOAD_FILE = 'LOAD_FILE';
 const PARSE_FILE = 'PARSE_FILE';
 const CALCULATION_START = 'CALCULATION_START';
@@ -58,7 +58,7 @@ function send(job_id) {
         type: "get",
         data: {
             job_id: job_id,
-            api_key: KEY
+            api_key: API_KEY
         },
         success:function(data)
         {
@@ -127,7 +127,7 @@ function update_page(current_state, data) {
             formData.append('file', files[0]);
             formData.append('separator', separator.val());
             formData.append('name', name.val());
-            formData.append('api_key', KEY);
+            formData.append('api_key', API_KEY);
             if (formData) {
                 $.ajax({
                     url: MAIN_URL + 'calculation/load_file/',
@@ -174,7 +174,7 @@ function update_page(current_state, data) {
                 formData.append('parse_from', startFrom.val());
                 formData.append('parse_field', mapping);
                 formData.append('calc_id', calculation_id);
-                formData.append('api_key', KEY);
+                formData.append('api_key', API_KEY);
                 if (formData) {
                     $.ajax({
                         url: MAIN_URL + 'calculation/parse_file/',
@@ -213,7 +213,7 @@ function update_page(current_state, data) {
                 formData.append('email', email.val());
                 formData.append('mode', mode.val());
                 formData.append('calc_id', calculation_id);
-                formData.append('api_key', KEY);
+                formData.append('api_key', API_KEY);
                 if (formData) {
                     $.ajax({
                         url: MAIN_URL + 'calculation/start_calculation/',
