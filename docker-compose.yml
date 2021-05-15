@@ -108,6 +108,21 @@ services:
     networks:
       - lmnad_net
 
+#  grafana:
+#    image: grafana/grafana:7.3.6
+#    container_name: lmnad_grafana
+#    hostname: lmnad_grafana
+#    restart: always
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+#      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - lmnad_net
+
 networks:
   lmnad_net:
 
@@ -121,4 +136,6 @@ volumes:
   certs:
     driver: local
   certs_data:
+    driver: local
+  grafana_data:
     driver: local
