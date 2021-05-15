@@ -1,14 +1,17 @@
 "use strict";
 
 var myMap;
-var RECORDS_URL = 'https://lmnad.nntu.ru/api/v1/records/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
-var SOURCE_URL = 'https://lmnad.nntu.ru/api/v1/sources/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
-var ADD_RECORD_URl = 'https://lmnad.nntu.ru/api/v1/records/';
-var current_coordinates = null;
 
+const API_KEY = 'd837d31970deb03ee35c416c5a66be1bba9f56d3'
+
+var RECORDS_URL = `/api/v1/records/?api_key=${API_KEY}`;
+var SOURCE_URL = `/api/v1/sources/?api_key=${API_KEY}`;
+var ADD_RECORD_URl = `/api/v1/records/${API_KEY}`;
+var current_coordinates = null;
 
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
+
 
 function getCookie(name) {
     var cookieValue = null;
@@ -41,16 +44,21 @@ function init() {
             date_from_value.hide();
             date_to_value.hide();
         }
-    });
-    myMap = new ymaps.Map(
-        'map',
-        {
+    })
+
+    myMap = new ymaps.Map('map', {
             center: [53.97, 148.50],
             zoom: 5,
             type: 'yandex#satellite',
-            controls: ['zoomControl', 'fullscreenControl']
-        }
-    );
+            controls: ['zoomControl', 'fullscreenControl', 'rulerControl']
+        });
+
+    var coord_lat = $("#coords_lat")
+    var coord_lon = $("#coords_lon")
+    myMap.events.add('mousemove', function (e) {
+        coord_lat.text(Number.parseFloat(e.get('coords')[0]).toPrecision(5))
+        coord_lon.text(Number.parseFloat(e.get('coords')[1]).toPrecision(5))
+    });
 
     //set CSRF token
     var csrftoken = getCookie('csrftoken');
@@ -67,14 +75,59 @@ function init() {
             }
         }
     });
+
     var objectManager = new ymaps.ObjectManager({
-        clusterize: true,
+        clusterize: document.getElementById("cluster-checkbox").checked,
         gridSize: 32,
-        clusterDisableClickZoom: true
+        geoObjectOpenBalloonOnClick: false,
+        clusterDisableClickZoom: false,
+        clusterIconLayout: 'default#pieChart',
+        clusterIconPieChartRadius: 25,
+        clusterIconPieChartCoreRadius: 10,
+        clusterIconPieChartStrokeWidth: 3,
     });
+    objectManager.objects.options.set({
+        preset: 'islands#blueCircleIcon'
+    });
+
     myMap.geoObjects.add(objectManager);
 
     fetchData(objectManager, RECORDS_URL);
+
+    // Function that emulates a request for data to the server.
+    function loadBalloonData (objectId) {
+        $.ajax({
+            url: '/api/v1/records/' + objectId + '/',
+            type: 'get',
+            data: {
+                api_key: API_KEY,
+                is_yandex_map_labels: document.getElementById("labels-checkbox").checked | 0
+            }
+        }).done(function (data) {
+            console.log(data);
+            var obj = objectManager.objects.getById(objectId);
+            obj.properties.balloonContentHeader = data['properties']['balloonContentHeader'];
+            obj.properties.balloonContentBody = data['properties']['balloonContentBody'];
+            obj.properties.balloonContentFooter = data['properties']['balloonContentFooter'];
+            obj.properties.clusterCaption = data['properties']['clusterCaption'];
+            objectManager.objects.balloon.open(objectId);
+        });
+    }
+
+    function hasBalloonData (objectId) {
+        var object = objectManager.objects.getById(objectId);
+        return objectManager.objects.getById(objectId).properties.balloonContent;
+    }
+    // Upload data by click
+    objectManager.objects.events.add('click', function (e) {
+        var objectId = e.get('objectId');
+        if (hasBalloonData(objectId)) {
+            objectManager.objects.balloon.open(objectId);
+        } else {
+            loadBalloonData(objectId);
+        }
+    });
+
 
     // search form
     $('.datepicker').datepicker();
@@ -108,11 +161,12 @@ function init() {
                 url: url,
                 type: 'get',
                 data: {
-                    api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
+                    api_key: API_KEY,
                     types: types,
                     date_from: $('#date_from').val(),
                     date_to: $('#date_to').val(),
-                    source_text: source_value.val()
+                    source_text: source_value.val(),
+                    is_yandex_map_labels: document.getElementById("labels-checkbox").checked | 0
                 }
             }).done(function (data) {
                 objectManager.add(data['results']);
@@ -123,7 +177,7 @@ function init() {
             });
         }
 
-        fetchSearchData('https://lmnad.nntu.ru/api/v1/records/?api_key=');
+        fetchSearchData('/api/v1/records/?api_key=');
 
         event.preventDefault();
     });
@@ -150,13 +204,20 @@ function init() {
     }
 
     function fetchData(objectManager, url) {
+        var info = $("#info")
+        info.text('Please wait. Points are loading...')
         $.ajax({
-            url: url
+            url: url,
+            data: {
+                is_yandex_map_labels: document.getElementById("labels-checkbox").checked | 0
+            }
         }).done(function (data) {
             objectManager.add(data['results']);
             console.log(data);
             if (data['next']) {
                 fetchData(objectManager, data['next'])
+            } else {
+                info.text('')
             }
         });
     }
@@ -230,7 +291,7 @@ function init() {
 
         var image = image_value[0].files;
         var formData = new FormData();
-        formData.append('api_key', 'd837d31970deb03ee35c416c5a66be1bba9f56d3');
+        formData.append('api_key', API_KEY);
         formData.append('latitude', current_coordinates[0]);
         formData.append('longitude', current_coordinates[1]);
         formData.append('types', types_value.val());
@@ -272,6 +333,29 @@ function init() {
     $(".close").click(function () {
         $("#success-alert").addClass('hidden');
     });
+
+    $("#cluster-checkbox").click(function (event) {
+        var url = window.location.href;
+
+        if (url.indexOf('?') > -1){
+            if (url.indexOf('clusterize') !== -1) {
+                if (event.target.checked) {
+                    url = url.replace('clusterize=false','clusterize=true');
+                } else {
+                    url = url.replace('clusterize=true','clusterize=false');
+                }
+            } else {
+                url += `&clusterize=${event.target.checked}`
+            }
+        } else {
+           url += `?clusterize=${event.target.checked}`
+        }
+
+        location.replace(url)
+    });
+
+    $("#labels-checkbox").click(function (event) {
+        // Update all items
+        reset_request()
+    });
 }
-
-

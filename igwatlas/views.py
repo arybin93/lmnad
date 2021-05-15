@@ -14,7 +14,7 @@ from constance import config
 # Imports from our apps
 from igwatlas.models import Record, Source, PageData, RecordType, File, WaveData
 from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordYandexSerializer, WaveDataSerializer, \
-    WaveDataYandexSerializer
+    WaveDataYandexSerializer, YandexBalloonSerializer, RecordYandexLabelsSerializer
 from lmnad.models import Project
 
 
@@ -59,6 +59,12 @@ class RecordsViewSet(viewsets.ViewSet):
               description: return objects for yandex map
               paramType: query
               type: boolean
+            - name: is_yandex_map_labels
+              required: false
+              defaultValue: 0
+              description: Return labels for yandex map object
+              paramType: query
+              type: boolean
             - name: types
               required: false
               defaultValue: 0,1,2
@@ -98,11 +104,11 @@ class RecordsViewSet(viewsets.ViewSet):
         """
         api_key = request.GET.get('api_key', None)
         is_yandex_map = int(request.GET.get('is_yandex_map', 1))
+        is_yandex_map_labels = int(request.GET.get('is_yandex_map_labels', 0))
         types = request.GET.get('types', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         source_text = request.GET.get('source_text', None)
-        # TODO: params for rectangle zone: two points
 
         user = authenticate(api_key)
         if api_key and (api_key == config.API_KEY_IGWATLAS or user):
@@ -122,18 +128,44 @@ class RecordsViewSet(viewsets.ViewSet):
             if source_text:
                 records = records.filter(source__source__icontains=source_text)
 
+            if is_yandex_map_labels:
+                records = records.prefetch_related('new_types')
+
             page_records = self.paginate_queryset(records)
             if page_records is None:
                 page_records = records
 
             if is_yandex_map:
-                result = RecordYandexSerializer(YandexObject(type='FeatureCollection', features=page_records)).data
+                if is_yandex_map_labels:
+                    result = RecordYandexLabelsSerializer(YandexObject(type='FeatureCollection',
+                                                                       features=page_records)).data
+                else:
+                    result = RecordYandexSerializer(YandexObject(type='FeatureCollection',
+                                                                 features=page_records)).data
             else:
                 result = RecordSerializer(page_records, many=True, context={'request': request}).data
 
             return self.get_paginated_response(result)
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
+    def retrieve(self, request, pk=None):
+        api_key = request.GET.get('api_key', None)
+        is_yandex_map = int(request.GET.get('is_yandex_map', 1))
+
+        user = authenticate(api_key)
+        if api_key and (api_key == config.API_KEY_IGWATLAS or user):
+            qs = Record.objects.all()
+            record = get_object_or_404(qs, pk=pk)
+            if is_yandex_map:
+                result = YandexBalloonSerializer(record).data
+            else:
+                result = RecordSerializer(record).data
+
+            return Response(result)
+        else:
+            return Response({"success": False, 'reason': 'WRONG_API_KEY'})
+
 
     def create(self, request):
         api_key = request.POST.get('api_key', None)
@@ -408,6 +440,7 @@ class SourceViewSet(viewsets.ViewSet):
         else:
             return Response({"success": False, 'reason': 'WRONG_API_KEY'})
 
+
 def igwatlas(request):
     """ IGW Atlas main page """
     context = {}
@@ -468,8 +501,15 @@ def igwatlas(request):
 
 def yandex_map(request):
     """ IGW Atlas yandex map page and search """
+    clusterize_str = request.GET.get('clusterize', 'true')
+    if clusterize_str in ['true']:
+        clusterize = True
+    else:
+        clusterize = False
+
     context = {
-        'project': Project.objects.get(name='igwatlas_online')
+        'project': Project.objects.get(name='igwatlas_online'),
+        'clusterize': clusterize
     }
     return render(request, 'igwatlas/map.html', context)
 

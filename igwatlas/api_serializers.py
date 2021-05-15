@@ -1,3 +1,4 @@
+import random
 from rest_framework import serializers
 from igwatlas.models import Record, Source, File, RecordType, WaveData
 
@@ -19,40 +20,96 @@ class RecordTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'value', 'name')
 
 
-class FeatureRecordYandexSerialzer(serializers.ModelSerializer):
+class FeatureRecordYandexSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     type = serializers.SerializerMethodField()
     geometry = serializers.SerializerMethodField()
     properties = serializers.SerializerMethodField()
 
     class Meta:
-        model = Record
         fields = ('id',
                   'type',
                   'geometry',
-                  'properties'
+                  'properties',
                   )
 
     def get_type(self, obj):
         return 'Feature'
 
     def get_geometry(self, obj):
-        lat = obj.position.latitude
-        lon = obj.position.longitude
+        lat = float(obj.position.latitude) + random.uniform(0, 0.03)
+        lon = float(obj.position.longitude) + random.uniform(0, 0.03)
         return {
             'type': 'Point',
             'coordinates': [lat, lon]
         }
 
     def get_properties(self, obj):
-        short_text_source = ''
-        full_text_source = ''
-        link_text_source = ''
-        for source in obj.source.all():
-            short_text_source += source.source_short + ';'
-            full_text_source += source.source + ';'
-            if source.link:
-                link_text_source += source.link + ';'
+        return {
+            'hintContent': str(obj.position),
+        }
 
+
+class RecordYandexSerializer(serializers.Serializer):
+    type = serializers.CharField(max_length=200, read_only=True)
+    features = FeatureRecordYandexSerializer(many=True, read_only=True)
+
+
+class FeatureRecordLabelsYandexSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    type = serializers.SerializerMethodField()
+    geometry = serializers.SerializerMethodField()
+    properties = serializers.SerializerMethodField()
+    options = serializers.SerializerMethodField()
+
+    class Meta:
+        fields = (
+            'id',
+            'type',
+            'geometry',
+            'properties',
+            'options',
+        )
+
+    def get_type(self, obj):
+        return 'Feature'
+
+    def get_geometry(self, obj):
+        lat = float(obj.position.latitude) + random.uniform(0, 0.03)
+        lon = float(obj.position.longitude) + random.uniform(0, 0.03)
+        return {
+            'type': 'Point',
+            'coordinates': [lat, lon]
+        }
+
+    def get_properties(self, obj):
+        return {
+            'hintContent': str(obj.position),
+            'iconContent': obj.get_first_type_label()
+        }
+
+    def get_options(self, obj):
+        return {
+            'preset': obj.get_first_type_color(),
+        }
+
+
+class RecordYandexLabelsSerializer(serializers.Serializer):
+    type = serializers.CharField(max_length=200, read_only=True)
+    features = FeatureRecordLabelsYandexSerializer(many=True, read_only=True)
+
+
+class YandexBalloonSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    properties = serializers.SerializerMethodField()
+
+    class Meta:
+        fields = (
+            'id',
+            'properties'
+        )
+
+    def get_properties(self, obj):
         date = ''
         if obj.date:
             date = obj.date.strftime('%d-%m-%Y')
@@ -68,17 +125,12 @@ class FeatureRecordYandexSerialzer(serializers.ModelSerializer):
             )
 
         return {
-            'hintContent': short_text_source + str(obj.position),
+            'hintContent': str(obj.position),
             'balloonContentHeader': obj.get_text_types(),
-            'balloonContentBody': full_text_source + "<br>" + img + "<br>" + str(obj.position),
-            'balloonContentFooter': link_text_source + ' ' + date,
+            'balloonContentBody': obj.get_sources() + "<br>" + img + "<br>" + str(obj.position),
+            'balloonContentFooter': date,
             'clusterCaption': obj.get_text_types()
         }
-
-
-class RecordYandexSerializer(serializers.Serializer):
-    type = serializers.CharField(max_length=200)
-    features = FeatureRecordYandexSerialzer(many=True)
 
 
 class RecordSerializer(serializers.ModelSerializer):

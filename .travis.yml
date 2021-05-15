@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.5" # current version
+  - "3.7" # current version
 services:
   - mysql
 sudo: required

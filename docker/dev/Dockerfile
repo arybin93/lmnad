@@ -1,4 +1,4 @@
-FROM python:3.5-slim
+FROM python:3.7-slim
 
 # The enviroment variable ensures that the python output is set straight
 # to the terminal with out buffering it first
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     git \
     netcat \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Install any needed packages specified in requirements.txt

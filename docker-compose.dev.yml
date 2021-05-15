@@ -7,15 +7,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    environment:
-      - DJANGO_DEBUG=True
-      - DJANGO_ALLOWED_HOSTS=*
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    env_file:
+      - dev.env
+    command: sh -c "wait-for db:3306 && python manage.py runserver 0.0.0.0:8001"
     volumes:
       - .:/lmnad
     depends_on:
@@ -29,12 +23,8 @@ services:
   db:
     container_name: lmnad_mysql_dev
     image: mysql:5.7
-    environment:
-      - MYSQL_DATABASE=lmnad_db
-      - MYSQL_ROOT_HOST=%
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    env_file:
+      - dev.env
     ports:
       - "3306:3306"
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']

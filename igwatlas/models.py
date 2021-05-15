@@ -68,6 +68,22 @@ class Record(TimeStampedModel):
         (TABLE, 'Таблица')
     )
 
+    MAP_LABEL = {
+        MAP: 'M',
+        GRAPHIC: 'G',
+        SATELLITE: 'S',
+        RECORD: 'R',
+        TABLE: 'T'
+    }
+
+    MAP_COLORS = {
+        MAP: 'islands#nightCircleIcon',
+        GRAPHIC: 'islands#darkOrangeCircleIcon',
+        SATELLITE: 'islands#blueCircleIcon',
+        RECORD: 'islands#redCircleIcon',
+        TABLE: 'islands#brownCircleIcon'
+    }
+
     position = GeopositionField(verbose_name='Координаты')
     new_types = models.ManyToManyField(RecordType, verbose_name='Тип', help_text='Поддерживается несколько типов')
     date = models.DateTimeField(blank=True, null=True, verbose_name='Дата и время наблюдения')
@@ -101,6 +117,21 @@ class Record(TimeStampedModel):
         for record_type in self.new_types.all():
             text += record_type.name + '; '
         return text
+
+    def get_first_type_label(self):
+        first = self.new_types.first()
+        return self.MAP_LABEL[first.value]
+
+    def get_first_type_color(self):
+        first = self.new_types.first()
+        return self.MAP_COLORS[first.value]
+
+    def get_sources(self):
+        full_text_source = ''
+        for source in self.source.all():
+            source_txt = f'<a target="_blank" href="{source.link}">{source.source}</a><br>'
+            full_text_source += source_txt
+        return full_text_source
 
 
 class PageData(models.Model):

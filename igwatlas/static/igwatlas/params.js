@@ -1,7 +1,8 @@
 "use strict";
 
 var myMap;
-var PARAMS_URL = 'https://lmnad.nntu.ru/api/v1/wave_params/?api_key=d837d31970deb03ee35c416c5a66be1bba9f56d3';
+const API_KEY = 'd837d31970deb03ee35c416c5a66be1bba9f56d3'
+var PARAMS_URL = `/api/v1/wave_params/?api_key=${API_KEY}`;
 
 // Waiting for the API to load and DOM to be ready.
 ymaps.ready(init);
@@ -51,7 +52,7 @@ function init () {
                 url: url,
                 type: 'get',
                 data: {
-                    api_key: 'd837d31970deb03ee35c416c5a66be1bba9f56d3',
+                    api_key: API_KEY,
                     wave_types: $('#id_label_types').val()[0],
                     mode: $('#wave_mode').val(),
                     amplitude_from: $('#wave_amplitude_from').val(),
@@ -68,7 +69,7 @@ function init () {
             });
         }
 
-        fetchSearchData(' https://lmnad.nntu.ru/api/v1/wave_params/');
+        fetchSearchData('/api/v1/wave_params/');
         event.preventDefault();
     });
 
