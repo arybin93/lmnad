@@ -12,5 +12,4 @@ urlpatterns = [
     path('igwatlas_params/', yandex_map_params, name='parameters'),
     path('igwatlas_source/', source, name='source'),
     path('igwatlas_about/', about, name='about'),
-
 ]
