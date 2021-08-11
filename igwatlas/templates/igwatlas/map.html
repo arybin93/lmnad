@@ -32,6 +32,19 @@
                 <span for="coords">{% trans 'Coordinates (lat, lon)' %}: </span>
                 <span id="coords_lat">0</span>, <span id="coords_lon">0</span>
             </div>
+            {% if source %}
+                <div class="col-sm-8">
+                    <span for="source_link">{% trans 'Source' %}: </span>
+                    <input type="hidden" id="source_link_id" value="{{ source.id }}">
+                    <span id="source_link">
+                    {% if source.link %}
+                        <a href={{ source.link }}>{{ source.source_short }}</a>
+                    {% else %}
+                        {{ source.source_short }}
+                    {% endif %}
+                    </span>
+                </div>
+            {% endif %}
 
             <!-- Modal -->
             <div id="search" class="modal fade" role="dialog">

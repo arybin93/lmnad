@@ -29,8 +29,13 @@
                 <tbody>
                     {% for source in sources %}
                       <tr>
-                          <td>{{ source.source_short }}</td>
+                        {% if source.link %}
+                            <td><a href={{ source.link }}>{{ source.source_short }}</a></td>
+                        {% else %}
+                            <td>{{ source.source_short }}</td>
+                        {% endif %}
                           <td>{{ source.source }}</td>
+                          <td><a href="{{ source.get_link_to_map }}">{% trans 'Show on map' %}</a></td>
                       </tr>
                     {% endfor %}
                 </tbody>

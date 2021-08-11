@@ -1,7 +1,6 @@
 "use strict";
 
 var myMap;
-const API_KEY = 'd837d31970deb03ee35c416c5a66be1bba9f56d3'
 var PARAMS_URL = `/api/v1/wave_params/?api_key=${API_KEY}`;
 
 // Waiting for the API to load and DOM to be ready.

@@ -55,6 +55,7 @@ function init() {
 
     var coord_lat = $("#coords_lat")
     var coord_lon = $("#coords_lon")
+    var source_id = $('#source_link_id');
     myMap.events.add('mousemove', function (e) {
         coord_lat.text(Number.parseFloat(e.get('coords')[0]).toPrecision(5))
         coord_lon.text(Number.parseFloat(e.get('coords')[1]).toPrecision(5))
@@ -166,6 +167,7 @@ function init() {
                     date_from: $('#date_from').val(),
                     date_to: $('#date_to').val(),
                     source_text: source_value.val(),
+                    source_id: source_id.val(),
                     is_yandex_map_labels: document.getElementById("labels-checkbox").checked | 0
                 }
             }).done(function (data) {
@@ -209,6 +211,7 @@ function init() {
         $.ajax({
             url: url,
             data: {
+                source_id: source_id.val(),
                 is_yandex_map_labels: document.getElementById("labels-checkbox").checked | 0
             }
         }).done(function (data) {

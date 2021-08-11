@@ -89,6 +89,12 @@ class RecordsViewSet(viewsets.ViewSet):
               description: get records by source
               paramType: query
               type: string
+            - name: source_id
+              required: false
+              defaultValue: 1
+              description: get records by source id
+              paramType: query
+              type: string
             - name: limit
               required: false
               defaultValue: 100
@@ -109,6 +115,7 @@ class RecordsViewSet(viewsets.ViewSet):
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         source_text = request.GET.get('source_text', None)
+        source_id = request.GET.get('source_id', None)
 
         user = authenticate(api_key)
         if api_key and (api_key == config.API_KEY_IGWATLAS or user):
@@ -130,6 +137,13 @@ class RecordsViewSet(viewsets.ViewSet):
 
             if is_yandex_map_labels:
                 records = records.prefetch_related('new_types')
+
+            if source_id:
+                try:
+                    source_obj = Source.objects.get(id=source_id)
+                    records = records.filter(source__exact=source_obj)
+                except Source.DoesNotExist:
+                    pass
 
             page_records = self.paginate_queryset(records)
             if page_records is None:
@@ -353,13 +367,12 @@ class SourceViewSet(viewsets.ViewSet):
         """
         api_key = request.GET.get('api_key', None)
         query = request.GET.get('query', None)
+        sources_list = Source.objects.filter(is_verified=True)
 
         if api_key and api_key == config.API_KEY_IGWATLAS:
 
             if query:
-                sources_list = Source.objects.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
-            else:
-                sources_list = Source.objects.all()
+                sources_list = sources_list.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
 
             page_sources = self.paginate_queryset(sources_list)
             if page_sources is None:
@@ -502,6 +515,7 @@ def igwatlas(request):
 def yandex_map(request):
     """ IGW Atlas yandex map page and search """
     clusterize_str = request.GET.get('clusterize', 'true')
+    source_id = request.GET.get('source_id', None)
     if clusterize_str in ['true']:
         clusterize = True
     else:
@@ -511,6 +525,13 @@ def yandex_map(request):
         'project': Project.objects.get(name='igwatlas_online'),
         'clusterize': clusterize
     }
+
+    if source_id:
+        try:
+            context['source'] = Source.objects.get(id=source_id)
+        except Source.DoesNotExist:
+            pass
+
     return render(request, 'igwatlas/map.html', context)
 
 
@@ -526,11 +547,9 @@ def source(request):
     """ IGW Atlas table of source page """
     query = request.GET.get('query', None)
     page = request.GET.get('page', 1)
-
+    sources_list = Source.objects.filter(is_verified=True)
     if query:
         sources_list = Source.objects.filter(Q(source_short__icontains=query) | Q(source__icontains=query))
-    else:
-        sources_list = Source.objects.all()
 
     paginator = Paginator(sources_list, 15)
 
