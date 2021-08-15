@@ -37,6 +37,9 @@ class Source(models.Model):
                              related_name='source',
                              verbose_name='Пользователь')
 
+    def get_link_to_map(self):
+        return '/igwatlas_map/?source_id={}'.format(self.id)
+
     class Meta:
         verbose_name = 'Источник'
         verbose_name_plural = 'Источники'

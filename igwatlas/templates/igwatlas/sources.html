@@ -1,6 +1,7 @@
 {% extends 'igwatlas/base.html' %}
 {% load staticfiles %}
 {% load i18n %}
+{% load igwatlas_tags %}
 
 {% block content %}
     <div class="container" >
@@ -29,8 +30,13 @@
                 <tbody>
                     {% for source in sources %}
                       <tr>
-                          <td>{{ source.source_short }}</td>
+                        {% if source.link %}
+                            <td><a href={{ source.link }}>{{ source.source_short }}</a></td>
+                        {% else %}
+                            <td>{{ source.source_short }}</td>
+                        {% endif %}
                           <td>{{ source.source }}</td>
+                          <td><a href="{{ source.get_link_to_map }}">{% trans 'Show on map' %}</a></td>
                       </tr>
                     {% endfor %}
                 </tbody>
@@ -39,7 +45,7 @@
             {% if sources.has_other_pages %}
               <ul class="pagination">
                 {% if sources.has_previous %}
-                  <li><a href="?page={{ sources.previous_page_number }}">&laquo;</a></li>
+                  <li><a href="?{% param_replace page=sources.previous_page_number %}">&laquo;</a></li>
                 {% else %}
                   <li class="disabled"><span>&laquo;</span></li>
                 {% endif %}
@@ -47,11 +53,11 @@
                   {% if sources.number == i %}
                     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                   {% else %}
-                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    <li><a href="?{% param_replace page=i %}">{{ i }}</a></li>
                   {% endif %}
                 {% endfor %}
                 {% if sources.has_next %}
-                  <li><a href="?page={{ sources.next_page_number }}">&raquo;</a></li>
+                  <li><a href="?{% param_replace page=sources.next_page_number %}">&raquo;</a></li>
                 {% else %}
                   <li class="disabled"><span>&raquo;</span></li>
                 {% endif %}

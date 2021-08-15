@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-26 07:29+0000\n"
+"POT-Creation-Date: 2021-08-15 06:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,31 +20,31 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: igwatlas/models.py:173
+#: igwatlas/models.py:176
 msgid "Long wave"
 msgstr "Длинные волны"
 
-#: igwatlas/models.py:174 igwatlas/templates/igwatlas/map_params.html:35
+#: igwatlas/models.py:177 igwatlas/templates/igwatlas/map_params.html:35
 msgid "Internal bore"
 msgstr "Внутренний бор"
 
-#: igwatlas/models.py:175
+#: igwatlas/models.py:178
 msgid "Short period wave"
 msgstr "Короткопериодные волны"
 
-#: igwatlas/models.py:184 igwatlas/templates/igwatlas/map_params.html:76
+#: igwatlas/models.py:187 igwatlas/templates/igwatlas/map_params.html:76
 msgid "Negative"
 msgstr "Отрицательная"
 
-#: igwatlas/models.py:185 igwatlas/templates/igwatlas/map_params.html:77
+#: igwatlas/models.py:188 igwatlas/templates/igwatlas/map_params.html:77
 msgid "Positive"
 msgstr "Положительная"
 
-#: igwatlas/models.py:186 igwatlas/templates/igwatlas/map_params.html:78
+#: igwatlas/models.py:189 igwatlas/templates/igwatlas/map_params.html:78
 msgid "Convex"
 msgstr "Выпуклая"
 
-#: igwatlas/models.py:187 igwatlas/templates/igwatlas/map_params.html:79
+#: igwatlas/models.py:190 igwatlas/templates/igwatlas/map_params.html:79
 msgid "Concave"
 msgstr "Вогнутая"
 
@@ -54,8 +54,8 @@ msgid "Certificate of state registration"
 msgstr "Свидетельство о государственной регистрации базы данных"
 
 #: igwatlas/templates/igwatlas/base.html:123
-#: igwatlas/templates/igwatlas/map.html:54
-#: igwatlas/templates/igwatlas/map.html:131
+#: igwatlas/templates/igwatlas/map.html:67
+#: igwatlas/templates/igwatlas/map.html:144
 msgid "Map"
 msgstr "Карта наблюдений"
 
@@ -65,7 +65,7 @@ msgstr "Параметры ВГВ"
 
 #: igwatlas/templates/igwatlas/base.html:125
 #: igwatlas/templates/igwatlas/igwatlas.html:17
-#: igwatlas/templates/igwatlas/sources.html:8
+#: igwatlas/templates/igwatlas/sources.html:9
 msgid "Sources"
 msgstr "Источники"
 
@@ -199,12 +199,12 @@ msgid "Years in DB: "
 msgstr "Года: "
 
 #: igwatlas/templates/igwatlas/map.html:13
-#: igwatlas/templates/igwatlas/map.html:43
-#: igwatlas/templates/igwatlas/map.html:105
+#: igwatlas/templates/igwatlas/map.html:56
+#: igwatlas/templates/igwatlas/map.html:118
 #: igwatlas/templates/igwatlas/map_params.html:12
 #: igwatlas/templates/igwatlas/map_params.html:24
 #: igwatlas/templates/igwatlas/map_params.html:113
-#: igwatlas/templates/igwatlas/sources.html:16
+#: igwatlas/templates/igwatlas/sources.html:17
 #: lmnad/templates/lmnad/profile.html:389
 #: publications/templates/publications/page.html:17
 #: publications/templates/publications/page.html:34
@@ -233,79 +233,80 @@ msgstr "Пояснения"
 msgid "Coordinates (lat, lon)"
 msgstr "Координаты (Широта, Долгота)"
 
-#: igwatlas/templates/igwatlas/map.html:49
-#: igwatlas/templates/igwatlas/map.html:126
+#: igwatlas/templates/igwatlas/map.html:37
+#: igwatlas/templates/igwatlas/map.html:105
+#: igwatlas/templates/igwatlas/map.html:109
+#: igwatlas/templates/igwatlas/map.html:214
+msgid "Source"
+msgstr "Источник"
+
+#: igwatlas/templates/igwatlas/map.html:62
+#: igwatlas/templates/igwatlas/map.html:139
 #: lmnad/templates/lmnad/profile.html:315
 #: publications/templates/publications/page.html:39
 msgid "Select types"
 msgstr "Выберите тип"
 
-#: igwatlas/templates/igwatlas/map.html:55
-#: igwatlas/templates/igwatlas/map.html:132
+#: igwatlas/templates/igwatlas/map.html:68
+#: igwatlas/templates/igwatlas/map.html:145
 msgid "Graphic"
 msgstr "График"
 
-#: igwatlas/templates/igwatlas/map.html:56
-#: igwatlas/templates/igwatlas/map.html:133
+#: igwatlas/templates/igwatlas/map.html:69
+#: igwatlas/templates/igwatlas/map.html:146
 msgid "Satellite"
 msgstr "Снимок со спутника"
 
-#: igwatlas/templates/igwatlas/map.html:57
-#: igwatlas/templates/igwatlas/map.html:134
+#: igwatlas/templates/igwatlas/map.html:70
+#: igwatlas/templates/igwatlas/map.html:147
 msgid "Record"
 msgstr "Запись с устройств"
 
-#: igwatlas/templates/igwatlas/map.html:58
-#: igwatlas/templates/igwatlas/map.html:135
+#: igwatlas/templates/igwatlas/map.html:71
+#: igwatlas/templates/igwatlas/map.html:148
 msgid "Table"
 msgstr "Таблица"
 
-#: igwatlas/templates/igwatlas/map.html:64
-#: igwatlas/templates/igwatlas/map.html:164
+#: igwatlas/templates/igwatlas/map.html:77
+#: igwatlas/templates/igwatlas/map.html:177
 #: igwatlas/templates/igwatlas/map_params.html:85
 msgid "Select date from"
 msgstr "Выберите дату от"
 
-#: igwatlas/templates/igwatlas/map.html:78
-#: igwatlas/templates/igwatlas/map.html:178
+#: igwatlas/templates/igwatlas/map.html:91
+#: igwatlas/templates/igwatlas/map.html:191
 #: igwatlas/templates/igwatlas/map_params.html:98
 msgid "Select date to"
 msgstr "Выберите дату до"
 
-#: igwatlas/templates/igwatlas/map.html:92
-#: igwatlas/templates/igwatlas/map.html:96
-#: igwatlas/templates/igwatlas/map.html:201
-msgid "Source"
-msgstr "Источник"
-
-#: igwatlas/templates/igwatlas/map.html:103
-#: igwatlas/templates/igwatlas/map.html:223
+#: igwatlas/templates/igwatlas/map.html:116
+#: igwatlas/templates/igwatlas/map.html:236
 #: igwatlas/templates/igwatlas/map_params.html:112
 msgid "Close and clear"
 msgstr "Закрыть и сбросить"
 
-#: igwatlas/templates/igwatlas/map.html:120
+#: igwatlas/templates/igwatlas/map.html:133
 msgid "Create record"
 msgstr "Добавить наблюдение"
 
-#: igwatlas/templates/igwatlas/map.html:141
+#: igwatlas/templates/igwatlas/map.html:154
 msgid "Enable checkboxes below for choose date format "
 msgstr "Активируйте чекбокс для выбора даты"
 
-#: igwatlas/templates/igwatlas/map.html:150
+#: igwatlas/templates/igwatlas/map.html:163
 msgid "Date of observation"
 msgstr "Дата наблюдения"
 
-#: igwatlas/templates/igwatlas/map.html:192
+#: igwatlas/templates/igwatlas/map.html:205
 msgid "Choose file"
 msgstr "Выберите файл"
 
-#: igwatlas/templates/igwatlas/map.html:209
-#: igwatlas/templates/igwatlas/map.html:213
+#: igwatlas/templates/igwatlas/map.html:222
+#: igwatlas/templates/igwatlas/map.html:226
 msgid "Page"
 msgstr "Страница"
 
-#: igwatlas/templates/igwatlas/map.html:225
+#: igwatlas/templates/igwatlas/map.html:238
 msgid "Create"
 msgstr "Создать"
 
@@ -351,18 +352,22 @@ msgstr "Выберите период в часах"
 msgid "Select polarity of wave"
 msgstr "Выберите полярность"
 
-#: igwatlas/templates/igwatlas/sources.html:14
+#: igwatlas/templates/igwatlas/sources.html:15
 #: tank/templates/tank/experiments.html:13
 msgid "Enter query"
 msgstr "Введите запрос"
 
-#: igwatlas/templates/igwatlas/sources.html:25
+#: igwatlas/templates/igwatlas/sources.html:26
 msgid "Short description"
 msgstr ""
 
-#: igwatlas/templates/igwatlas/sources.html:26
+#: igwatlas/templates/igwatlas/sources.html:27
 msgid "Full description"
 msgstr "Полное описание"
+
+#: igwatlas/templates/igwatlas/sources.html:39
+msgid "Show on map"
+msgstr "На карте"
 
 #: igwcoeffs/templates/igwcoeffs/igwcoeffs.html:12
 #: igwcoeffs/templates/igwcoeffs/igwcoeffs.html:39
