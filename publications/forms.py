@@ -88,11 +88,15 @@ class AddJournalForm(ModelForm):
         fields = [
             'type',
             'name_ru',
+            'short_name',
             'conf_type',
             'date_start',
             'date_stop',
             'place',
-            'organizer'
+            'organizer',
+            'description',
+            'conf_link',
+            'conf_checkbox',
         ]
 
     class Media:
