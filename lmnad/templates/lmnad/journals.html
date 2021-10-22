@@ -5,7 +5,7 @@
 
 {% block content %}
    
-	<h3 class="page-header">{% trans "Journal" %}</h3>
+	<h3 class="page-header">{% trans "Journals" %}</h3>
 
 	<div class="row">
 		{% for journal in journals %}
@@ -28,7 +28,6 @@
 				<b>Время проведения конференции:</b>
 				{{ journal.date_start | date:"j b. Y, H:i" }} — {{ journal.date_stop | date:"j b. Y, H:i" }}
 			</p>
-			<p>{{ journal.desciprtion }}</p>
 			{% if journal.conf_link %}
 				<p>
 					<b>Страница конференции:</b>
@@ -56,7 +55,7 @@
 			{% endif %}
 			<hr>
 		{% empty %}
-			<p>{% trans "No journal" %}</p>
+			<p>{% trans "No journals" %}</p>
 	    {% endfor %}
 
 

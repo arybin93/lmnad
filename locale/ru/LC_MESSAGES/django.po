@@ -493,6 +493,14 @@ msgstr "Защиты"
 msgid "Events"
 msgstr "События"
 
+#: lmnad/templates/lmnad/base.html:58 lmnad/templates/lmnad/journals.html:8
+msgid "Journals"
+msgstr "Конференции"
+
+#: lmnad/templates/lmnad/base.html:58 lmnad/templates/lmnad/journals.html:8
+msgid "No journals"
+msgstr "Нет конференций"
+
 #: lmnad/templates/lmnad/base.html:60 lmnad/templates/lmnad/contacts.html:6
 msgid "Contacts"
 msgstr "Контакты"
