@@ -15,6 +15,7 @@ urlpatterns = [
     path('projects/<str:name>/', views.project_detail, name='project_details'),
     path('events/', views.events, name='events'),
     path('events/<int:pk>/', views.event_detail, name='event_details'),
+    path('journals/', views.journals, name="journals"),
     path('contacts/', views.contacts, name='contacts'),
     path('register/', views.RegisterFormView.as_view(), name='register'),
     path('login/', views.LoginFormView.as_view(), name='login'),

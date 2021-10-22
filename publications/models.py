@@ -73,6 +73,8 @@ class Journal(TimeStampedModel):
 
 
 class Files(TimeStampedModel):
+    filename = models.CharField(max_length=255, blank=True, verbose_name="Название файла",
+                                help_text="Если поле не заполнено, у документа останется прежнее название")
     file = models.FileField(upload_to='uploads/conference/files', verbose_name='Файл')
     conference = models.ForeignKey(Journal, on_delete=models.CASCADE, verbose_name='Журнал/Конференция',
                                    related_name='files')
