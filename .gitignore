@@ -11,6 +11,7 @@ venv/
 *.pyc
 *.logd
 /media/*
+/project/media/*
 /.idea/*
 /static/*
 !static/lmnad/
