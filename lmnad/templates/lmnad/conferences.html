@@ -5,41 +5,37 @@
 
 {% block content %}
    
-	<h3 class="page-header">{% trans "Journals" %}</h3>
+	<h3 class="page-header">{% trans "Conferences" %}</h3>
 
 	<div class="row">
-		{% for journal in journals %}
+		{% for conference in conferences %}
 			<h3>
-				{{ journal.name }}
-				{% if journal.short_name %}
-					({{ journal.short_name }})
-				{% endif %}
+				<a href="{{ conference.conf_link }}" target="_blank" title="Перейти на страницу конференции">
+					{{ conference.name }}
+					{% if conference.short_name %}
+						({{ conference.short_name }})
+					{% endif %}
+				</a>
 			</h3>
-			{{ journal.description | safe }}
+			{{ conference.description | safe }}
 			<p>
 				<b>Классификация:</b>
-				{% if journal.conf_type == 'international' %}
+				{% if conference.conf_type == 'international' %}
 					Международная
-				{% elif journal.conf_type == 'national' %}
+				{% elif conference.conf_type == 'national' %}
 					Российская
 				{% endif %}
 			</p>
 			<p>
 				<b>Время проведения конференции:</b>
-				{{ journal.date_start | date:"j b. Y, H:i" }} — {{ journal.date_stop | date:"j b. Y, H:i" }}
+				{{ conference.date_start | date:"j b. Y, H:i" }} — {{ conference.date_stop | date:"j b. Y, H:i" }}
 			</p>
-			{% if journal.conf_link %}
-				<p>
-					<b>Страница конференции:</b>
-					<a href="{{ journal.conf_link }}" target="_blank">{{ journal.conf_link }}</a>
-				</p>
-			{% endif %}
-			{% if journal.files.all %}
+			{% if conference.files.all %}
 				<p>
 					<b>Приложенные документы:</b>
 					<br>
 					<ul>
-						{% for document in journal.files.all %}
+						{% for document in conference.files.all %}
 							{% if document.filename %}
 								<li>
 									<a href="{{ document.file.url }}">{{ document.filename }}</a>
@@ -55,27 +51,27 @@
 			{% endif %}
 			<hr>
 		{% empty %}
-			<p>{% trans "No journals" %}</p>
+			<p>{% trans "No conferences" %}</p>
 	    {% endfor %}
 
 
 
-	    {% if journals.has_other_pages %}
+	    {% if conferences.has_other_pages %}
               <ul class="pagination">
-                {% if journals.has_previous %}
-                  <li><a href="?page={{ journals.previous_page_number }}">&laquo;</a></li>
+                {% if conferences.has_previous %}
+                  <li><a href="?page={{ conferences.previous_page_number }}">&laquo;</a></li>
                 {% else %}
                   <li class="disabled"><span>&laquo;</span></li>
                 {% endif %}
-                {% for i in journals.paginator.page_range %}
-                  {% if journals.number == i %}
+                {% for i in conferences.paginator.page_range %}
+                  {% if conferences.number == i %}
                     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                   {% else %}
                     <li><a href="?page={{ i }}">{{ i }}</a></li>
                   {% endif %}
                 {% endfor %}
-                {% if journals.has_next %}
-                  <li><a href="?page={{ journals.next_page_number }}">&raquo;</a></li>
+                {% if conferences.has_next %}
+                  <li><a href="?page={{ conferences.next_page_number }}">&raquo;</a></li>
                 {% else %}
                   <li class="disabled"><span>&raquo;</span></li>
                 {% endif %}

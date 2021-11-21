@@ -164,23 +164,23 @@ def event_detail(request, pk):
     return render(request, 'lmnad/events_details.html', context)
 
 
-def journals(request):
-    journals_list = Journal.objects.filter(conf_checkbox=True).order_by('-date_start')
+def conferences(request):
+    conferences_list = Journal.objects.filter(conf_checkbox=True).order_by('-date_start')
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(journals_list, 5)
+    paginator = Paginator(conferences_list, 5)
     try:
-        journals_page = paginator.page(page)
+        conferences_page = paginator.page(page)
     except PageNotAnInteger:
-        journals_page = paginator.page(1)
+        conferences_page = paginator.page(1)
     except EmptyPage:
-        journals_page = paginator.page(paginator.num_pages)
+        conferences_page = paginator.page(paginator.num_pages)
 
     context = {
-        'journals': journals_page,
+        'conferences': conferences_page,
     }
 
-    return render(request, 'lmnad/journals.html', context)
+    return render(request, 'lmnad/conferences.html', context)
 
 
 def profile(request, username):
