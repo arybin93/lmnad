@@ -19,7 +19,7 @@ django-geoposition-2==0.3.11
 django-modeltranslation==0.13
 django-request-logging==0.7.2
 flower==0.9.5
-lxml==4.2.5
+lxml==4.6.5
 numpy==1.15.2
 Pillow==6.2.0
 python-docx==0.8.10
