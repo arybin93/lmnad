@@ -33,7 +33,7 @@ WORKDIR /$PROJECT
 
 # copy project
 COPY . .
-RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for
+RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for && sed -i 's/\r//' /bin/wait-for
 
 EXPOSE 8001
 
