@@ -36,6 +36,7 @@ class Journal(TimeStampedModel):
     name = models.CharField(max_length=255, verbose_name='Название журнала, конференции')
 
     # Fields for conference
+    short_name = models.CharField(max_length=55, verbose_name='Сокращенное название конференции', blank=True)
     conf_type = models.CharField(max_length=25, default=NATIONAL, choices=TYPES_CONF, verbose_name='Классификация')
     date_start = models.DateTimeField(verbose_name='Дата и время, начало', null=True, blank=True,
                                       help_text='Начало конференции')
@@ -44,6 +45,9 @@ class Journal(TimeStampedModel):
     place = models.CharField(max_length=255, blank=True, verbose_name='Место проведения',
                              help_text='Например: Страна, город, университет')
     organizer = models.CharField(max_length=550, blank=True, verbose_name='Организатор')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    conf_link = models.CharField(max_length=100, blank=True, verbose_name='Ссылка на страницу конференции')
+    conf_checkbox = models.BooleanField(default=False, verbose_name="Отображение на странице конференций")
 
     def __str__(self):
         return self.name
@@ -66,6 +70,25 @@ class Journal(TimeStampedModel):
     class Meta:
         verbose_name = 'Журнал/Конференция'
         verbose_name_plural = 'Журналы/Конференции'
+
+
+class Files(TimeStampedModel):
+    filename = models.CharField(max_length=255, blank=True, verbose_name="Название файла",
+                                help_text="Если поле не заполнено, у документа останется прежнее название")
+    file = models.FileField(upload_to='uploads/conference/files', verbose_name='Файл')
+    conference = models.ForeignKey(Journal, on_delete=models.CASCADE, verbose_name='Журнал/Конференция',
+                                   related_name='files')
+
+    class Meta:
+        verbose_name = 'Файл'
+        verbose_name_plural = 'Файлы'
+
+    def __str__(self):
+        return self.file.name
+
+    @classmethod
+    def name(self):
+        return self.file.name.split('/')[-1]
 
 
 class Author(TimeStampedModel):

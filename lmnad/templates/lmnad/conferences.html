@@ -1,0 +1,82 @@
+{% extends 'lmnad/base.html' %}
+{% load i18n %}
+{% load filename %}
+
+
+{% block content %}
+   
+	<h3 class="page-header">{% trans "Conferences" %}</h3>
+
+	<div class="row">
+		{% for conference in conferences %}
+			<h3>
+				<a href="{{ conference.conf_link }}" target="_blank" title="Перейти на страницу конференции">
+					{{ conference.name }}
+					{% if conference.short_name %}
+						({{ conference.short_name }})
+					{% endif %}
+				</a>
+			</h3>
+			{{ conference.description | safe }}
+			<p>
+				<b>Классификация:</b>
+				{% if conference.conf_type == 'international' %}
+					Международная
+				{% elif conference.conf_type == 'national' %}
+					Российская
+				{% endif %}
+			</p>
+			<p>
+				<b>Время проведения конференции:</b>
+				{{ conference.date_start | date:"j b. Y, H:i" }} — {{ conference.date_stop | date:"j b. Y, H:i" }}
+			</p>
+			{% if conference.files.all %}
+				<p>
+					<b>Приложенные документы:</b>
+					<br>
+					<ul>
+						{% for document in conference.files.all %}
+							{% if document.filename %}
+								<li>
+									<a href="{{ document.file.url }}">{{ document.filename }}</a>
+								</li>
+							{% else %}
+								<li>
+									<a href="{{ document.file.url }}">{{ document.file|getfilename }}</a>
+								</li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</p>
+			{% endif %}
+			<hr>
+		{% empty %}
+			<p>{% trans "No conferences" %}</p>
+	    {% endfor %}
+
+
+
+	    {% if conferences.has_other_pages %}
+              <ul class="pagination">
+                {% if conferences.has_previous %}
+                  <li><a href="?page={{ conferences.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in conferences.paginator.page_range %}
+                  {% if conferences.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if conferences.has_next %}
+                  <li><a href="?page={{ conferences.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+              </ul>
+        {% endif %}
+	</div>
+
+{% endblock %}

@@ -26,7 +26,7 @@
         <div class="row">
             <h3 class="page-header">{% trans "Publication activity" %}:</h3>
             <p><b>{% trans "Publications" %}:</b> {{ stats.publication_count }} </p>
-            <p><b>{% trans "Conferences" %}:</b> {{ stats.conferences }} </p>
+            <p><b>{% trans "Participation in conferences" %}:</b> {{ stats.conferences }} </p>
         </div>
     {% endif %}
     <div class="row">
@@ -249,7 +249,7 @@
 
     {% if conferences %}
         <div class="row">
-        <h3 class="page-header">{% trans "Conferences" %}:</h3>
+        <h3 class="page-header">{% trans "Participation in conferences" %}:</h3>
         <table class="table table-hover">
         <thead>
             <tr>

@@ -15,7 +15,7 @@ from suit_ckeditor.widgets import CKEditorWidget
 
 from igwatlas.admin import RowDateRangeFilter
 from publications.functions import export_publication_to_doc, export_conference_to_doc
-from publications.models import Publication, Author, Journal, AuthorPublication, Conference
+from publications.models import Publication, Author, Journal, AuthorPublication, Conference, Files
 from django.conf.urls import url
 
 from publications.views import cite_view
@@ -203,6 +203,13 @@ admin.site.register(Author, AuthorAdmin)
 
 
 class JournalForm(ModelForm):
+    class Meta:
+        model = Journal
+        fields = "__all__"
+        widgets = {
+            'description': CKEditorWidget(),
+        }
+
     def clean(self):
         if self.cleaned_data['type'] == Journal.CONFERENCE:
             if 'date_start' in self.cleaned_data or 'date_stop' in self.cleaned_data:
@@ -219,10 +226,16 @@ class JournalForm(ModelForm):
         js = ('admin/journals.js',)
 
 
+class FilesInline(StackedInline):
+    model = Files
+    extra = 0
+
+
 class JournalAdmin(TabbedTranslationAdmin):
     list_display = ['name']
     list_filter = ['type', 'conf_type']
     search_fields = ['name_ru', 'name_en']
+    inlines = [FilesInline]
     form = JournalForm
 
 admin.site.register(Journal, JournalAdmin)

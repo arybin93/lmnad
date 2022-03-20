@@ -164,6 +164,25 @@ def event_detail(request, pk):
     return render(request, 'lmnad/events_details.html', context)
 
 
+def conferences(request):
+    conferences_list = Journal.objects.filter(conf_checkbox=True).order_by('-date_start')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(conferences_list, 5)
+    try:
+        conferences_page = paginator.page(page)
+    except PageNotAnInteger:
+        conferences_page = paginator.page(1)
+    except EmptyPage:
+        conferences_page = paginator.page(paginator.num_pages)
+
+    context = {
+        'conferences': conferences_page,
+    }
+
+    return render(request, 'lmnad/conferences.html', context)
+
+
 def profile(request, username):
     user = get_object_or_404(User, username=username)
 
