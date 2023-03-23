@@ -39,7 +39,8 @@ PROJECT_APPS = [
     'igwcoeffs',
     'tank',
     'publications',
-    'phenomenon_db'
+    'phenomenon_db',
+    'geocalcmap'
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
