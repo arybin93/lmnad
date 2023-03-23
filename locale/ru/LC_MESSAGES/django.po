@@ -944,3 +944,11 @@ msgstr "Сроки"
 #: tank/templates/tank/experiments.html:62
 msgid "Coming soon..."
 msgstr "Проводятся эксперименты"
+
+#: geocalcmap/templates/default.html:7
+msgid "Online geographic information system for calculating internal wave parameters"
+msgstr "Геоинформационная онлайн система для расчёта параметров внутренних волн"
+
+#: geocalcmap/templates/default.html:10
+msgid "Selected point"
+msgstr "Выбранная точка"

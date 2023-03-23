@@ -32,6 +32,7 @@ urlpatterns += i18n_patterns(
     path('', include('igwcoeffs.urls')),
     path('', include('publications.urls')),
     path('', include('tank.urls')),
+    path('', include('geocalcmap.urls')),
     path('', include('favicon.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('select2/', include('django_select2.urls'))
