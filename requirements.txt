@@ -26,7 +26,7 @@ Pillow==6.2.0
 python-docx==0.8.10
 PyYAML==4.2b1
 requests==2.20.0
-scipy==1.1.0
+scipy==1.10.0
 yandex.translate==0.3.5
 django-rest-auth==0.9.5
 django-select2==6.3.1
