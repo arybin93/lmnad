@@ -109,6 +109,20 @@ docker-compose -f docker-compose.dev.yml up -d --build
 ```
 Run migration manually or restore DB dump
 
+```
+docker exec -ti lmnad_web_dev bash
+
+# and then run manually
+
+python manage.py migrate
+
+```
+
+Check url from browser [http://127.0.0.1:8001/](http://127.0.0.1:8001/)
+
+Project LMNAD without data was deployed locally, congratulations!
+
+
 ### Setting up Database and media
 If you need data from site LMNAD locally (for testing and development goals),  
 send request for getting data to arybin93@email.com
