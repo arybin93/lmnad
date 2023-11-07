@@ -114,7 +114,7 @@ docker exec -ti lmnad_web_dev bash
 
 # and then run manually
 
-pythin manage.py migrate
+python manage.py migrate
 
 ```
 
