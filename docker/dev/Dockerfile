@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     net-tools \
     vim \
     git \
-    netcat \
+    netcat-traditional \
     gettext \
     && rm -rf /var/lib/apt/lists/*
 
@@ -37,4 +37,4 @@ RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for && sed -i 's/\r//' /bin/
 
 EXPOSE 8001
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
