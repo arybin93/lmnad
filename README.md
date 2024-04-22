@@ -65,32 +65,19 @@ Project LMNAD without data was deployed locally, congratulations!
 ### Setting up project via Docker
 Just for example of .env file (dev.env as example):
 ```
-# https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SECRET_KEY
-DJANGO_SECRET_KEY=dev
-# https://docs.djangoproject.com/en/3.1/topics/settings/#designating-the-settings
+DJANGO_SECRET_KEY=prod_local
 DJANGO_SETTINGS_MODULE=project.settings.server
+DB_HOST=db
+DB_USER=lmnad_prod_local
+DB_PASSWORD=12345
+CELERY_BROKER_URL=amqp://guest:guest@broker:5672
+CELERY_RESULT_BACKEND=rpc://
 
-# Database connection (MySQL)
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-DB_HOST=db         # HOST
-DB_USER=dev        # USER
-DB_PASSWORD=dev    # PASSWORD
-
-# Celery broker settings Rabbit MQ 
-# https://docs.celeryproject.org/en/master/getting-started/backends-and-brokers/rabbitmq.html#installation-configuration
-CELERY_BROKER_URL=amqp://guest:guest@broker:5672    # Broker
-CELERY_RESULT_BACKEND=rpc://                        # Backend
-
-# Credentials for MySQL container
 MYSQL_ROOT_HOST=%
-MYSQL_ROOT_PASSWORD=root
+MYSQL_ROOT_PASSWORD=78910
 
-# Usign Yandex Translate https://yandex.com/dev/translate/
-YANDEX_TRANSLATE_API_KEY=base
-
-# https://developers.google.com/maps/documentation/javascript/get-api-key
-# For using Google Map in admin panel
-GEOPOSITION_GOOGLE_MAPS_API_KEY=base
+YANDEX_TRANSLATE_API_KEY=local
+GEOPOSITION_GOOGLE_MAPS_API_KEY=local
 ```
 
 #### Production env
@@ -102,7 +89,22 @@ with building if required
 ```
 docker-compose up -d --build
 ```
-#### Development (local) env
+
+#### Production (local) env, full set of containers without SSL
+Prepare .env file or env variables on host and run
+```
+docker-compose -f docker-compose.prod.local.yml up -d
+```
+with building if required
+```
+docker-compose -f docker-compose.prod.local.yml up -d --build
+```
+
+Check url from browser [http://127.0.0.1/](http://127.0.0.1/)
+
+Project LMNAD prod (without data and SSL) was deployed locally, congratulations!
+
+#### Development (local) env, only two containers with Django dev server
 Prepare .env file or env variables on host and run
 ```
 docker-compose -f docker-compose.dev.yml up -d --build

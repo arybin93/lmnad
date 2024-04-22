@@ -1,0 +1,123 @@
+version: '3'
+
+services:
+  django:
+    image: lmnad_base
+    container_name: lmnad_web
+    build:
+      context: .
+    command: sh -c "wait-for db:3306 && /lmnad/run_app.sh"
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+      - YANDEX_TRANSLATE_API_KEY=${YANDEX_TRANSLATE_API_KEY}
+      - GEOPOSITION_GOOGLE_MAPS_API_KEY=${GEOPOSITION_GOOGLE_MAPS_API_KEY}
+    depends_on:
+      - db
+    restart: always
+    tty: true
+    volumes:
+      - static_data:/lmnad/project/static
+      - media_data:/lmnad/project/media
+    networks:
+      - lmnad_net
+
+  db:
+    container_name: lmnad_mysql
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=lmnad_db
+      - MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    networks:
+      - lmnad_net
+
+  nginx:
+    image: lmnad_nginx
+    container_name: lmnad_nginx
+    build:
+      context: ./docker/nginx_local
+    volumes:
+      - static_data:/lmnad/project/static
+      - media_data:/lmnad/project/media
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - django
+      - flower
+    networks:
+      - lmnad_net
+
+  celery:
+    image: lmnad_base
+    build:
+      context: .
+    container_name: lmnad_celery
+    hostname: celery_worker
+    command: sh -c "wait-for broker:5672 && wait-for django:8000 -- celery worker -A project -l info"
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    depends_on:
+      - broker
+      - django
+      - db
+    restart: always
+    networks:
+      - lmnad_net
+
+  flower:
+    image: mher/flower:0.9.4
+    container_name: lmnad_flower
+    command: flower --port=5555 --url_prefix=flower
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    ports:
+      - "5555:5555"
+    depends_on:
+      - broker
+    restart: always
+    networks:
+      - lmnad_net
+
+  broker:
+    image: rabbitmq:3
+    container_name: lmnad_rabbitmq
+    restart: always
+    networks:
+      - lmnad_net
+
+networks:
+  lmnad_net:
+
+volumes:
+  static_data:
+    driver: local
+  media_data:
+    driver: local
+  mysql_data:
+    driver: local
+  certs:
+    driver: local
+  certs_data:
+    driver: local
+  grafana_data:
+    driver: local
