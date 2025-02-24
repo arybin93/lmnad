@@ -17,6 +17,8 @@ from igwatlas.api_serializers import RecordSerializer, SourceSerializer, RecordY
     WaveDataYandexSerializer, YandexBalloonSerializer, RecordYandexLabelsSerializer
 from lmnad.models import Project
 
+from django.conf import settings
+
 
 class YandexObject:
     def __init__(self, type, features):
@@ -222,8 +224,8 @@ class RecordsViewSet(viewsets.ViewSet):
                     return Response({"success": False, 'reason': 'RECORD_TYPE_NOT_FOUND'})
                 else:
                     type_list_obj.append(record_type)
-            longitude = round(float(longitude), 3)
-            latitude = round(float(latitude), 3)
+            longitude = round(float(longitude), settings.IGWATLAS_POINT_PRECISION)
+            latitude = round(float(latitude), settings.IGWATLAS_POINT_PRECISION)
 
             position = '{}, {}'.format(latitude, longitude)
             new_record = Record.objects.create(position=position, image=image, page=page, is_verified=False,

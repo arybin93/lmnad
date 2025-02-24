@@ -2,6 +2,8 @@ import random
 from rest_framework import serializers
 from igwatlas.models import Record, Source, File, RecordType, WaveData
 
+from django.conf import settings
+
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,8 +39,9 @@ class FeatureRecordYandexSerializer(serializers.Serializer):
         return 'Feature'
 
     def get_geometry(self, obj):
-        lat = float(obj.position.latitude) + random.uniform(0, 0.03)
-        lon = float(obj.position.longitude) + random.uniform(0, 0.03)
+        # Рандомно разбрасываем точки, чтобы точки с одинаковыми координатами, были в разных местах карты
+        lat = float(obj.position.latitude) + random.uniform(0, 0.003)
+        lon = float(obj.position.longitude) + random.uniform(0, 0.003)
         return {
             'type': 'Point',
             'coordinates': [lat, lon]
@@ -75,8 +78,9 @@ class FeatureRecordLabelsYandexSerializer(serializers.Serializer):
         return 'Feature'
 
     def get_geometry(self, obj):
-        lat = float(obj.position.latitude) + random.uniform(0, 0.03)
-        lon = float(obj.position.longitude) + random.uniform(0, 0.03)
+        # Рандомно разбрасываем точки, чтобы точки с одинаковыми координатами, были в разных местах карты
+        lat = float(obj.position.latitude) + random.uniform(0, 0.003)
+        lon = float(obj.position.longitude) + random.uniform(0, 0.003)
         return {
             'type': 'Point',
             'coordinates': [lat, lon]
@@ -201,8 +205,8 @@ class FeatureWaveDataYandexSerialzer(serializers.ModelSerializer):
         if obj.record.date:
             date = obj.record.date.strftime('%d-%m-%Y')
 
-        round_lat = round(obj.record.position.latitude, 3)
-        round_lon = round(obj.record.position.longitude, 3)
+        round_lat = round(obj.record.position.latitude, settings.IGWATLAS_POINT_PRECISION)
+        round_lon = round(obj.record.position.longitude, settings.IGWATLAS_POINT_PRECISION)
 
         return {
             'hintContent': str(round_lat) + ',' + str(round_lon),
