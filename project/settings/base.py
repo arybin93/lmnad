@@ -183,6 +183,8 @@ CONSTANCE_CONFIG = {
     'API_KEY_IGWATLAS': ('d837d31970deb03ee35c416c5a66be1bba9f56d3', 'Ключ для доступа к API IGWAtlas', str)
 }
 
+IGWATLAS_POINT_PRECISION = 4
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.mail.ru'

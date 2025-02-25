@@ -16,6 +16,8 @@ from suit_ckeditor.widgets import CKEditorWidget
 from igwatlas.models import Record, Source, File, PageData
 from lmnad.models import Account
 
+from django.conf import settings
+
 
 class RecordForm(ModelForm):
     class Meta:
@@ -74,8 +76,8 @@ class RecordAdmin(admin.ModelAdmin):
     list_display_links = ['get_position', 'image_field']
 
     def get_position(self, obj):
-        latitude = round(float(obj.position.latitude), 3)
-        longitude = round(float(obj.position.longitude), 3)
+        latitude = round(float(obj.position.latitude), settings.IGWATLAS_POINT_PRECISION)
+        longitude = round(float(obj.position.longitude), settings.IGWATLAS_POINT_PRECISION)
         return '{lat}, {lon}'.format(lat=latitude, lon=longitude)
     get_position.short_description = 'Координаты (Широта, Долгота)'
 
@@ -107,8 +109,8 @@ class RecordAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         # round coordinates
-        latitude = round(float(obj.position.latitude), 3)
-        longitude = round(float(obj.position.longitude), 3)
+        latitude = round(float(obj.position.latitude), settings.IGWATLAS_POINT_PRECISION)
+        longitude = round(float(obj.position.longitude), settings.IGWATLAS_POINT_PRECISION)
         obj.position = '{lat}, {lon}'.format(lat=latitude, lon=longitude)
         try:
             obj.user = Account.objects.get(user=request.user)
